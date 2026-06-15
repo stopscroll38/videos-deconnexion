@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>La Machine à Sous - 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* CANVAS NATIF 2160x3840 — Pour OBS : source Navigateur 2160x3840 */
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.07); }
+}
+
+/* Fond qui vire au rouge casino puis revient */
+.bg-pulse {
+    position: absolute;
+    inset: 0;
+    background: #FDFBF7;
+    animation: bgShift 33s ease-in-out forwards;
+    z-index: 0;
+}
+@keyframes bgShift {
+    0%   { background: #FDFBF7; }
+    40%  { background: #FDF4F0; }
+    55%  { background: #2a0e0e; }
+    78%  { background: #2a0e0e; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ TÉLÉPHONE ============ */
+.phone-wrap {
+    position: relative;
+    margin-bottom: 130px;
+    z-index: 5;
+}
+
+.phone {
+    position: relative;
+    width: 720px;
+    height: 1420px;
+    border: 14px solid #1A1D21;
+    border-radius: 110px;
+    background: #fff;
+    box-shadow: 0 40px 140px rgba(0,0,0,0.22);
+    overflow: hidden;
+}
+
+.notch {
+    position: absolute;
+    top: 30px; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 70px;
+    background: #1A1D21;
+    border-radius: 0 0 50px 50px;
+    z-index: 30;
+}
+
+/* Barre de refresh en haut */
+.refresh-bar {
+    position: absolute;
+    top: 130px; left: 50%;
+    transform: translateX(-50%);
+    width: 90px; height: 90px;
+    z-index: 25;
+    opacity: 0;
+}
+.refresh-bar.show { animation: spinnerFade 1.2s ease forwards; }
+.refresh-bar .ring {
+    width: 100%; height: 100%;
+    border: 10px solid #E5E7EB;
+    border-top-color: #14B8A6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spinnerFade {
+    0% { opacity: 0; } 30% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; }
+}
+
+/* ============ ROULEAUX SLOT ============ */
+.slot {
+    position: absolute;
+    top: 320px; left: 50%;
+    transform: translateX(-50%);
+    width: 580px; height: 620px;
+    background: #0f1115;
+    border-radius: 50px;
+    border: 12px solid #14B8A6;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 30px;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.6), 0 0 80px rgba(20,184,166,0.25);
+    z-index: 10;
+}
+
+.reel {
+    width: 150px; height: 540px;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 20px 40px rgba(0,0,0,0.25), inset 0 -20px 40px rgba(0,0,0,0.25);
+}
+
+.reel-strip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 0; left: 0; right: 0;
+}
+
+.symbol {
+    height: 180px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 110px;
+    flex-shrink: 0;
+}
+
+/* Ligne gagnante au centre */
+.payline {
+    position: absolute;
+    top: 50%; left: -20px; right: -20px;
+    height: 6px;
+    background: #E24B4A;
+    transform: translateY(-50%);
+    z-index: 12;
+    opacity: 0.7;
+    box-shadow: 0 0 30px rgba(226,75,74,0.8);
+}
+
+/* Spin states */
+.r1.spinning .reel-strip { animation: reelSpin 0.25s linear infinite; }
+.r2.spinning .reel-strip { animation: reelSpin 0.22s linear infinite; }
+.r3.spinning .reel-strip { animation: reelSpin 0.28s linear infinite; }
+@keyframes reelSpin {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-540px); }
+}
+
+/* ============ POUCE ============ */
+.thumb {
+    position: absolute;
+    bottom: 80px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 220px;
+    z-index: 20;
+    animation: thumbPull 2.2s ease-in-out infinite;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+}
+@keyframes thumbPull {
+    0%   { transform: translateX(-50%) translateY(0); }
+    30%  { transform: translateX(-50%) translateY(-180px); }
+    60%  { transform: translateX(-50%) translateY(0); }
+    100% { transform: translateX(-50%) translateY(0); }
+}
+
+/* Flash JACKPOT / PERDU */
+.verdict {
+    position: absolute;
+    top: 1000px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 130px;
+    font-weight: 800;
+    z-index: 22;
+    opacity: 0;
+    letter-spacing: -2px;
+    text-align: center;
+    width: 100%;
+}
+.verdict.flash { animation: verdictPop 1.6s ease forwards; }
+@keyframes verdictPop {
+    0%   { opacity: 0; transform: translateX(-50%) scale(0.5); }
+    25%  { opacity: 1; transform: translateX(-50%) scale(1.1); }
+    75%  { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(1); }
+}
+
+/* ============ TEXTES ============ */
+.txt {
+    position: absolute;
+    width: 1900px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -2.5px;
+    opacity: 0;
+    z-index: 6;
+}
+.t-top { top: 230px; font-size: 110px; }
+
+.t1 { animation: fadeTxt 4.5s ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s ease-in-out forwards 4.5s; }
+.t3 { animation: fadeTxt 4s ease-in-out forwards 8.5s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 12.5s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 17s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 21.5s; }
+.t7 { animation: fadeTxt 5s ease-in-out forwards 26s; }
+
+/* Textes clairs sur fond rouge sombre (phases 4-6) */
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq  { color: #14B8A6; }
+.rd  { color: #E24B4A; }
+.tqd { color: #2BD9A8; }
+.gold { color: #FFB347; }
+
+/* Barre globale */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">▶ Relancer</button>
+
+<div class="stage">
+    <div class="bg-pulse"></div>
+
+    <!-- 7 phases -->
+    <div class="txt t-top t1">Tu connais ce geste.<br>Tu tires vers le bas<br>pour <span class="rd">rafraîchir</span>.</div>
+    <div class="txt t-top t2">C'est exactement<br>le geste d'une<br><span class="rd">machine à sous</span>.</div>
+    <div class="txt t-top t3">Tu tires le levier.<br>Parfois rien.<br>Parfois <span class="tq">un like</span>.</div>
+    <div class="txt t-top t4">Cette récompense<br><span class="rd">aléatoire</span>,<br>ton cerveau l'adore.</div>
+    <div class="txt t-top t5">Las Vegas a payé des<br>neuroscientifiques<br>pour créer <span class="gold">cet effet</span>.</div>
+    <div class="txt t-top t6">Au casino tu perds<br>de l'argent.<br>Là, tu perds <span class="rd">ta vie</span>.</div>
+    <div class="txt t-top t7">Sors de la machine.<br>Le protocole te déprogramme<br>en <span class="tq">7 jours</span>. <span class="tq">Test en bio 🧠</span></div>
+
+    <div class="phone-wrap">
+        <div class="phone" id="phone">
+            <div class="notch"></div>
+            <div class="refresh-bar" id="refresh"><div class="ring"></div></div>
+
+            <div class="slot">
+                <div class="payline"></div>
+                <div class="reel r1 spinning" id="r1">
+                    <div class="reel-strip">
+                        <div class="symbol">❤️</div><div class="symbol">🔁</div><div class="symbol">💬</div>
+                        <div class="symbol">❤️</div><div class="symbol">🔁</div><div class="symbol">💬</div>
+                    </div>
+                </div>
+                <div class="reel r2 spinning" id="r2">
+                    <div class="reel-strip">
+                        <div class="symbol">🔁</div><div class="symbol">💬</div><div class="symbol">❤️</div>
+                        <div class="symbol">🔁</div><div class="symbol">💬</div><div class="symbol">❤️</div>
+                    </div>
+                </div>
+                <div class="reel r3 spinning" id="r3">
+                    <div class="reel-strip">
+                        <div class="symbol">💬</div><div class="symbol">❤️</div><div class="symbol">🔁</div>
+                        <div class="symbol">💬</div><div class="symbol">❤️</div><div class="symbol">🔁</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verdict" id="verdict"></div>
+            <div class="thumb">👇</div>
+        </div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const r1 = document.getElementById('r1');
+const r2 = document.getElementById('r2');
+const r3 = document.getElementById('r3');
+const verdict = document.getElementById('verdict');
+const refresh = document.getElementById('refresh');
+
+// Cycle de spin : les rouleaux tournent, puis s'arrêtent sur un résultat
+function stopReels(win) {
+    r1.classList.remove('spinning');
+    setTimeout(() => r2.classList.remove('spinning'), 250);
+    setTimeout(() => {
+        r3.classList.remove('spinning');
+        verdict.textContent = win ? '+1 like ❤️' : 'Rien.';
+        verdict.style.color = win ? '#2BD9A8' : '#E24B4A';
+        verdict.classList.add('flash');
+        setTimeout(() => verdict.classList.remove('flash'), 1600);
+    }, 500);
+}
+
+function startReels() {
+    r1.classList.add('spinning');
+    r2.classList.add('spinning');
+    r3.classList.add('spinning');
+    refresh.classList.add('show');
+    setTimeout(() => refresh.classList.remove('show'), 1200);
+}
+
+// Timeline des "tirages" synchronisée avec le pouce (2.2s par cycle)
+// On alterne gain / rien pour montrer la récompense aléatoire
+const draws = [
+    { t: 1800,  win: false },
+    { t: 4000,  win: true  },
+    { t: 6200,  win: false },
+    { t: 8400,  win: false },
+    { t: 10600, win: true  },
+    { t: 12800, win: false },
+    { t: 15000, win: true  },
+    { t: 17200, win: false },
+    { t: 19400, win: false }
+];
+
+draws.forEach(d => {
+    setTimeout(() => stopReels(d.win), d.t);
+    setTimeout(startReels, d.t + 700);
+});
+
+// À 21s : on fige tout (fin de la démo machine), rouleaux arrêtés
+setTimeout(() => {
+    r1.classList.remove('spinning');
+    r2.classList.remove('spinning');
+    r3.classList.remove('spinning');
+}, 21000);
+</script>
+</body>
+</html>

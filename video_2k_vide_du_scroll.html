@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Le Vide du Scroll - 2K TikTok 32s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* CANVAS NATIF 2160x3840 — Pour OBS : source Navigateur 2160x3840 */
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: slowZoom 32s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+}
+
+/* ============ BACKGROUND PULSE ============ */
+.bg-pulse {
+    position: absolute;
+    inset: 0;
+    background: #FDFBF7;
+    animation: bgDrain 32s ease-in-out forwards;
+    z-index: 0;
+}
+
+@keyframes bgDrain {
+    0%   { background: #FDFBF7; }
+    45%  { background: #F0EDE6; }
+    65%  { background: #1A1D21; }
+    80%  { background: #1A1D21; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ TÉLÉPHONE ============ */
+.phone-wrap {
+    position: relative;
+    margin-bottom: 130px;
+    z-index: 5;
+}
+
+.phone {
+    position: relative;
+    width: 700px;
+    height: 1400px;
+    border: 14px solid #1A1D21;
+    border-radius: 110px;
+    background: #fff;
+    box-shadow: 0 40px 140px rgba(0,0,0,0.20);
+    overflow: hidden;
+}
+
+.notch {
+    position: absolute;
+    top: 30px; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 70px;
+    background: #1A1D21;
+    border-radius: 0 0 50px 50px;
+    z-index: 20;
+}
+
+/* ============ FLUX DE CONTENU ============ */
+.feed {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 100px;
+    overflow: hidden;
+    animation: scrollSlow 6s linear 0s forwards,
+               scrollFast 9s linear 6s forwards;
+    transform-origin: top center;
+}
+
+@keyframes scrollSlow {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-1200px); }
+}
+
+@keyframes scrollFast {
+    from { transform: translateY(-1200px); }
+    to   { transform: translateY(-4000px); }
+}
+
+.card {
+    flex-shrink: 0;
+    width: 100%;
+    height: 460px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 44px;
+}
+
+.card-bg {
+    position: absolute;
+    inset: 0;
+}
+
+.card-bar {
+    position: relative;
+    height: 38px;
+    border-radius: 19px;
+    background: rgba(255,255,255,0.3);
+    margin-bottom: 18px;
+    z-index: 2;
+}
+
+.card-icon {
+    position: absolute;
+    top: 44px; right: 44px;
+    width: 120px; height: 120px;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    z-index: 2;
+}
+
+.c1 .card-bg { background: linear-gradient(160deg, #FE2C55 0%, #ff6b8a 100%); }
+.c2 .card-bg { background: linear-gradient(160deg, #833AB4 0%, #FD1D1D 50%, #FCB045 100%); }
+.c3 .card-bg { background: linear-gradient(160deg, #0866FF 0%, #34b7f1 100%); }
+.c4 .card-bg { background: linear-gradient(160deg, #FF6B00 0%, #FFB347 100%); }
+.c5 .card-bg { background: linear-gradient(160deg, #1A1D21 0%, #4a4d52 100%); }
+.c6 .card-bg { background: linear-gradient(160deg, #14B8A6 0%, #2BD9A8 100%); }
+.c7 .card-bg { background: linear-gradient(160deg, #E24B4A 0%, #ffadad 100%); }
+.c8 .card-bg { background: linear-gradient(160deg, #9333ea 0%, #c084fc 100%); }
+.c9 .card-bg  { background: linear-gradient(160deg, #FE2C55 0%, #833AB4 100%); }
+.c10 .card-bg { background: linear-gradient(160deg, #0866FF 0%, #9333ea 100%); }
+.c11 .card-bg { background: linear-gradient(160deg, #FF6B00 0%, #FE2C55 100%); }
+.c12 .card-bg { background: linear-gradient(160deg, #14B8A6 0%, #0866FF 100%); }
+
+/* ============ TIMER ============ */
+.timer-badge {
+    position: absolute;
+    top: 110px; right: 44px;
+    background: rgba(26,29,33,0.82);
+    color: #fff;
+    font-size: 58px;
+    font-weight: 800;
+    padding: 22px 48px;
+    border-radius: 44px;
+    z-index: 15;
+    letter-spacing: -1px;
+    backdrop-filter: blur(6px);
+}
+
+/* ============ ÉCRAN NOIR / VIDE ============ */
+.blank-screen {
+    position: absolute;
+    inset: 0;
+    background: #0f1115;
+    border-radius: 96px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 12;
+    gap: 60px;
+}
+
+.blank-screen.show {
+    animation: revealBlank 0.8s ease-out forwards;
+}
+
+@keyframes revealBlank {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.qmark {
+    font-size: 380px;
+    color: #FDFBF7;
+    opacity: 0;
+    line-height: 1;
+    filter: drop-shadow(0 0 80px rgba(253,251,247,0.25));
+}
+
+.qmark.show {
+    animation: popQ 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.5s;
+}
+
+@keyframes popQ {
+    0%   { opacity: 0; transform: scale(0.2) rotate(-15deg); }
+    60%  { opacity: 1; transform: scale(1.1) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.blank-sub {
+    font-size: 96px;
+    font-weight: 800;
+    color: rgba(253,251,247,0.22);
+    letter-spacing: -2px;
+    opacity: 0;
+}
+
+.blank-sub.show {
+    animation: fadeSub 0.8s ease-out forwards 1.4s;
+}
+
+@keyframes fadeSub {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Recharge — éclair vert */
+.recharge {
+    position: absolute;
+    inset: 0;
+    background: #0f1115;
+    border-radius: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    z-index: 13;
+    font-size: 500px;
+    filter: drop-shadow(0 0 100px rgba(20,184,166,0.8));
+}
+
+.recharge.show {
+    animation: rechargeFlash 1.2s ease-out forwards;
+}
+
+@keyframes rechargeFlash {
+    0%   { opacity: 0; transform: scale(0.5); }
+    30%  { opacity: 1; transform: scale(1.15); }
+    60%  { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0.9); }
+}
+
+/* Barre de progression interne */
+.phone-progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 12px;
+    background: #222;
+    z-index: 14;
+}
+
+.phone-progress-fill {
+    height: 100%;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillPhone 32s linear forwards;
+}
+
+@keyframes fillPhone { from { width: 0%; } to { width: 100%; } }
+
+/* ============ TEXTES ============ */
+.txt {
+    position: absolute;
+    width: 1880px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -2.5px;
+    opacity: 0;
+    z-index: 6;
+    transition: color 0.5s;
+}
+
+.t-top { top: 240px; font-size: 112px; }
+
+/* 7 phases */
+.t1 { animation: fadeTxt 4.5s ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s ease-in-out forwards 4.5s; }
+.t3 { animation: fadeTxt 4s ease-in-out forwards 8.5s; }
+.t4 { animation: fadeTxt 4s ease-in-out forwards 14s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 18s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 22.5s; }
+.t7 { animation: fadeTxt 5s ease-in-out forwards 27s; }
+
+/* Textes clairs sur fond sombre (phases 4-6) */
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq  { color: #14B8A6; }
+.rd  { color: #E24B4A; }
+.tqd { color: #2BD9A8; } /* teal clair sur fond sombre */
+
+/* ============ BARRE GLOBALE ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 32s linear forwards;
+    z-index: 50;
+}
+
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+/* Bouton replay */
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">▶ Relancer</button>
+
+<div class="stage">
+    <div class="bg-pulse"></div>
+
+    <!-- 7 phases texte -->
+    <div class="txt t-top t1">Hier soir, 22h47.<br>Tu ouvres TikTok.<br><span class="rd">Juste 5 minutes.</span></div>
+    <div class="txt t-top t2">Le feed commence.<br>Une vidéo. Deux vidéos.<br><span class="rd">Dix vidéos.</span></div>
+    <div class="txt t-top t3">Le timer tourne.<br>Tu scrolles encore.<br><span class="rd">Et encore.</span></div>
+    <div class="txt t-top t4">23h34.<br><span class="tqd">47 minutes</span> se sont<br>évaporées.</div>
+    <div class="txt t-top t5">Tu te souviens<br>de <span class="rd">quoi</span> ?<br>Exactement. <span class="rd">Rien.</span></div>
+    <div class="txt t-top t6">C'est le <span class="tqd">vide du scroll</span>.<br>Ton cerveau a consommé<br>sans rien retenir.</div>
+    <div class="txt t-top t7">Le protocole de déconnexion<br>brise cette boucle<br>en <span class="tq">7 jours</span>. <span class="tq">Test en bio 🧠</span></div>
+
+    <!-- Téléphone -->
+    <div class="phone-wrap">
+        <div class="phone" id="phone">
+            <div class="notch"></div>
+
+            <!-- Timer -->
+            <div class="timer-badge" id="timer">22:47</div>
+
+            <!-- Flux -->
+            <div class="feed" id="feed">
+                <div class="card c1"><div class="card-bg"></div><div class="card-icon">🔥</div><div class="card-bar" style="width:78%"></div><div class="card-bar" style="width:52%"></div></div>
+                <div class="card c2"><div class="card-bg"></div><div class="card-icon">✨</div><div class="card-bar" style="width:65%"></div><div class="card-bar" style="width:80%"></div></div>
+                <div class="card c3"><div class="card-bg"></div><div class="card-icon">😂</div><div class="card-bar" style="width:82%"></div><div class="card-bar" style="width:48%"></div></div>
+                <div class="card c4"><div class="card-bg"></div><div class="card-icon">💰</div><div class="card-bar" style="width:60%"></div><div class="card-bar" style="width:75%"></div></div>
+                <div class="card c5"><div class="card-bg"></div><div class="card-icon">🎵</div><div class="card-bar" style="width:88%"></div><div class="card-bar" style="width:55%"></div></div>
+                <div class="card c6"><div class="card-bg"></div><div class="card-icon">💪</div><div class="card-bar" style="width:70%"></div><div class="card-bar" style="width:88%"></div></div>
+                <div class="card c7"><div class="card-bg"></div><div class="card-icon">😱</div><div class="card-bar" style="width:85%"></div><div class="card-bar" style="width:58%"></div></div>
+                <div class="card c8"><div class="card-bg"></div><div class="card-icon">🚀</div><div class="card-bar" style="width:62%"></div><div class="card-bar" style="width:78%"></div></div>
+                <div class="card c9"><div class="card-bg"></div><div class="card-icon">❤️</div><div class="card-bar" style="width:90%"></div><div class="card-bar" style="width:52%"></div></div>
+                <div class="card c10"><div class="card-bg"></div><div class="card-icon">🤯</div><div class="card-bar" style="width:68%"></div><div class="card-bar" style="width:82%"></div></div>
+                <div class="card c11"><div class="card-bg"></div><div class="card-icon">🎯</div><div class="card-bar" style="width:76%"></div><div class="card-bar" style="width:60%"></div></div>
+                <div class="card c12"><div class="card-bg"></div><div class="card-icon">⚡</div><div class="card-bar" style="width:84%"></div><div class="card-bar" style="width:70%"></div></div>
+            </div>
+
+            <!-- Écran vide -->
+            <div class="blank-screen" id="blank">
+                <div class="qmark" id="qmark">?</div>
+                <div class="blank-sub" id="sub">Rien.</div>
+            </div>
+
+            <!-- Éclair recharge -->
+            <div class="recharge" id="recharge">⚡</div>
+
+            <div class="phone-progress"><div class="phone-progress-fill"></div></div>
+        </div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+// Préview : scale la page ET la centre dans la fenêtre
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+// Timer : monte de 22:47 à 23:34 sur 13s (phases scroll)
+const timerEl = document.getElementById('timer');
+let totalMinutes = 22 * 60 + 47;
+const targetMinutes = 23 * 60 + 34;
+const durationMs = 13000;
+const steps = targetMinutes - totalMinutes; // 47 steps
+const stepMs = durationMs / steps;
+
+const timerInterval = setInterval(() => {
+    totalMinutes++;
+    if (totalMinutes >= targetMinutes) {
+        totalMinutes = targetMinutes;
+        clearInterval(timerInterval);
+    }
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    timerEl.textContent = h + ':' + String(m).padStart(2, '0');
+}, stepMs);
+
+// À 14s : écran noir + ?
+setTimeout(() => {
+    const blank = document.getElementById('blank');
+    blank.classList.add('show');
+    setTimeout(() => document.getElementById('qmark').classList.add('show'), 500);
+    setTimeout(() => document.getElementById('sub').classList.add('show'), 1500);
+    // Masquer le timer
+    timerEl.style.transition = 'opacity 0.6s';
+    timerEl.style.opacity = '0';
+}, 14000);
+
+// À 27s : éclair recharge (transition vers la solution)
+setTimeout(() => {
+    document.getElementById('recharge').classList.add('show');
+}, 27000);
+</script>
+</body>
+</html>

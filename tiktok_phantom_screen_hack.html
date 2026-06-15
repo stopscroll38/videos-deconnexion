@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Hack de l'Écran Fantôme - TikTok</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn-control {
+            padding: 12px 24px;
+            background: #14B8A6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .btn-control:active {
+            transform: translateY(0);
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 360px;
+            aspect-ratio: 9 / 16;
+            background: #FDFBF7;
+            border-radius: 40px;
+            border: 12px solid #1A1D21;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slowZoom 15s ease-in-out forwards;
+        }
+
+        @keyframes slowZoom {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.08);
+            }
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* Téléphone Line Art CSS */
+        .phone-device {
+            position: relative;
+            width: 180px;
+            height: 280px;
+            background: transparent;
+            margin: 0 auto 20px;
+        }
+
+        .phone-outer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2.5px solid #1A1D21;
+            border-radius: 24px;
+            background: transparent;
+            box-shadow: inset 0 0 0 1px #1A1D21;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 22px;
+            background: #1A1D21;
+            border-radius: 0 0 16px 16px;
+            z-index: 5;
+        }
+
+        .phone-screen {
+            position: absolute;
+            top: 28px;
+            left: 8px;
+            width: calc(100% - 16px);
+            height: calc(100% - 48px);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            animation: colorfulFlash 2s ease-in-out infinite;
+        }
+
+        /* Animation colorée vibrante (0-4s) */
+        @keyframes colorfulFlash {
+            0% {
+                background: linear-gradient(135deg, #FF006E, #FFB703);
+                filter: none;
+            }
+            25% {
+                background: linear-gradient(135deg, #00D9FF, #FF006E);
+                filter: none;
+            }
+            50% {
+                background: linear-gradient(135deg, #00FF88, #00D9FF);
+                filter: none;
+            }
+            75% {
+                background: linear-gradient(135deg, #FFB703, #00FF88);
+                filter: none;
+            }
+            100% {
+                background: linear-gradient(135deg, #FF006E, #FFB703);
+                filter: none;
+            }
+        }
+
+        /* État gris strict (après 4s) */
+        .phone-screen.grayscale {
+            animation: grayscaleMode 4s ease-in-out forwards;
+            animation-delay: 4s;
+        }
+
+        @keyframes grayscaleMode {
+            0% {
+                background: linear-gradient(135deg, #FF006E, #FFB703);
+                filter: grayscale(0%);
+            }
+            50% {
+                background: linear-gradient(135deg, #333, #666);
+                filter: grayscale(100%);
+            }
+            100% {
+                background: linear-gradient(135deg, #444, #666);
+                filter: grayscale(100%);
+            }
+        }
+
+        .phone-home {
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: #1A1D21;
+            border-radius: 2px;
+        }
+
+        /* Texte animé */
+        .text-block {
+            position: absolute;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1A1D21;
+            letter-spacing: -0.4px;
+            opacity: 0;
+            max-width: 300px;
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        .text-block.block1 {
+            top: 20px;
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 0s;
+            font-size: 20px;
+        }
+
+        .text-block.block2 {
+            top: 20px;
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 4s;
+            font-size: 22px;
+        }
+
+        .text-block.block3 {
+            top: 20px;
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 8s;
+            font-size: 21px;
+        }
+
+        .text-block.block4 {
+            top: 20px;
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 12s;
+            font-size: 19px;
+        }
+
+        .text-bottom {
+            position: absolute;
+            bottom: 30px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1A1D21;
+            opacity: 0;
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+        }
+
+        .text-bottom.bottom1 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 0.5s;
+            font-size: 16px;
+            color: #999;
+        }
+
+        .text-bottom.bottom2 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 4.5s;
+        }
+
+        .text-bottom.bottom3 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 8.5s;
+        }
+
+        .text-bottom.bottom4 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 12.5s;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInOutBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        .accent-color {
+            color: #14B8A6;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #14B8A6;
+            width: 0%;
+            animation: fillProgress 15s linear forwards;
+            z-index: 10;
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .emoji-marker {
+            color: #14B8A6;
+            font-size: 20px;
+            margin-left: 4px;
+        }
+
+        .info-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn-control" onclick="playAnimation()">▶ Relancer l'animation</button>
+        <button class="btn-control" onclick="resetAnimation()">⟲ Réinitialiser</button>
+    </div>
+
+    <div class="phone-frame">
+        <div class="screen">
+            <div class="zoom-container" id="zoomContainer">
+                <div class="content">
+                    <!-- Téléphone Line Art -->
+                    <div class="phone-device">
+                        <div class="phone-outer"></div>
+                        <div class="phone-notch"></div>
+                        <div class="phone-screen grayscale" id="phoneScreen"></div>
+                        <div class="phone-home"></div>
+                    </div>
+
+                    <!-- Texte du haut -->
+                    <div class="text-block block1">
+                        Fais ce <span class="accent-color">réglage</span> avant ce soir pour détruire ton envie de scroller.
+                    </div>
+
+                    <div class="text-block block2">
+                        En 90 secondes, tu coupes <span class="accent-color">80% de la dopamine</span> visuelle.
+                    </div>
+
+                    <div class="text-block block3">
+                        TikTok et Instagram vont <span class="accent-color">instantanément</span> devenir fades et ennuyeux.
+                    </div>
+
+                    <div class="text-block block4">
+                        Reprends le <span class="accent-color">contrôle</span> de ton cerveau. Test gratuit en bio. <span class="emoji-marker">🧠</span>
+                    </div>
+
+                    <!-- Texte du bas -->
+                    <div class="text-bottom bottom1">Avant</div>
+                    <div class="text-bottom bottom2">Le hack en action</div>
+                    <div class="text-bottom bottom3">Après 90 secondes</div>
+                    <div class="text-bottom bottom4">L'effet dopamine</div>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="info-text">Format 9:16 • Durée 15s • Enregistrez cet écran ↑</div>
+
+    <script>
+        let isAnimating = false;
+
+        function playAnimation() {
+            if (isAnimating) return;
+
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+            const phoneScreen = document.getElementById('phoneScreen');
+            
+            isAnimating = true;
+
+            // Reset animations
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+            phoneScreen.style.animation = 'none';
+
+            // Trigger reflow to restart animations
+            void zoomContainer.offsetWidth;
+
+            setTimeout(() => {
+                zoomContainer.style.animation = 'slowZoom 15s ease-in-out forwards';
+                progressBar.style.animation = 'fillProgress 15s linear forwards';
+                phoneScreen.style.animation = 'colorfulFlash 2s ease-in-out infinite, grayscaleMode 4s ease-in-out forwards 4s';
+            }, 10);
+
+            // Reset text animations
+            const textBlocks = document.querySelectorAll('.text-block');
+            const textBottoms = document.querySelectorAll('.text-bottom');
+            
+            textBlocks.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+            
+            textBottoms.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            // Restart text animations after reflow
+            setTimeout(() => {
+                document.querySelector('.block1').style.animation = 'fadeInOut 4s ease-in-out forwards';
+                document.querySelector('.block2').style.animation = 'fadeInOut 4s ease-in-out forwards 4s';
+                document.querySelector('.block3').style.animation = 'fadeInOut 4s ease-in-out forwards 8s';
+                document.querySelector('.block4').style.animation = 'fadeInOut 4s ease-in-out forwards 12s';
+                
+                document.querySelector('.bottom1').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 0.5s';
+                document.querySelector('.bottom2').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 4.5s';
+                document.querySelector('.bottom3').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 8.5s';
+                document.querySelector('.bottom4').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 12.5s';
+            }, 20);
+
+            setTimeout(() => {
+                isAnimating = false;
+            }, 15000);
+        }
+
+        function resetAnimation() {
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+            const phoneScreen = document.getElementById('phoneScreen');
+
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+            phoneScreen.style.animation = 'none';
+
+            const textBlocks = document.querySelectorAll('.text-block');
+            const textBottoms = document.querySelectorAll('.text-bottom');
+            
+            textBlocks.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+            
+            textBottoms.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            isAnimating = false;
+        }
+
+        window.addEventListener('load', () => {
+            playAnimation();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Attention Fragmentée - 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* CANVAS NATIF 2160x3840 — Pour OBS : source Navigateur 2160x3840 */
+html, body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.07); }
+}
+
+/* ============ LIVRE OUVERT ============ */
+.book-outer {
+    position: relative;
+    z-index: 5;
+    margin-top: 140px;
+}
+
+.book {
+    width: 1720px;
+    height: 960px;
+    background: #fff;
+    border-radius: 24px 80px 80px 24px;
+    box-shadow:
+        -14px 0 40px rgba(0,0,0,0.18),
+        0 50px 120px rgba(0,0,0,0.22);
+    position: relative;
+    overflow: hidden;
+    transition: filter 0.6s ease;
+}
+
+.book.blurred {
+    filter: blur(14px) brightness(0.6);
+}
+
+/* Reliure */
+.book-spine {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 72px;
+    background: linear-gradient(90deg, #cdc9c3, #e6e3de);
+    border-radius: 24px 0 0 24px;
+    z-index: 2;
+}
+
+/* Contenu lisible */
+.book-content {
+    padding: 100px 130px 100px 164px;
+    position: relative;
+    z-index: 3;
+}
+
+.book-chapter {
+    font-size: 44px;
+    font-weight: 800;
+    color: #1A1D21;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    margin-bottom: 68px;
+    opacity: 0.35;
+}
+
+/* Lignes de texte simulées */
+.text-line {
+    height: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+    background: #1A1D21;
+    opacity: 0.12;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Curseur de lecture teal */
+.reading-cursor {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 0%;
+    background: rgba(20,184,166,0.55);
+    border-radius: 8px;
+}
+
+/* Largeurs de lignes */
+.line-1 { width: 96%; }
+.line-2 { width: 89%; }
+.line-3 { width: 93%; }
+.line-4 { width: 78%; }
+.line-5 { width: 85%; opacity: 0.07 !important; }
+.line-6 { width: 91%; opacity: 0.06 !important; }
+.line-7 { width: 62%; opacity: 0.04 !important; }
+
+/* Animations des curseurs — ligne 4 s'arrête à mi-chemin (interruption) */
+.line-1 .reading-cursor { animation: readLine 2.2s linear forwards 0.8s; }
+.line-2 .reading-cursor { animation: readLine 2.4s linear forwards 3.3s; }
+.line-3 .reading-cursor { animation: readLine 2.3s linear forwards 6.0s; }
+.line-4 .reading-cursor { animation: readLineCut 1.2s linear forwards 8.9s; }
+
+@keyframes readLine    { from { width: 0%; } to { width: 100%; } }
+@keyframes readLineCut { from { width: 0%; } to { width: 38%; } }
+
+/* ============ NOTIFICATION SURGISSANTE ============ */
+.notif-pop {
+    position: absolute;
+    top: 1680px;
+    right: 110px;
+    width: 790px;
+    background: rgba(26,29,33,0.95);
+    border-radius: 44px;
+    padding: 54px 66px;
+    z-index: 20;
+    opacity: 0;
+    transform: translateX(960px);
+}
+
+.notif-pop.show {
+    animation: notifIn 0.65s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+@keyframes notifIn {
+    0%   { opacity: 0; transform: translateX(960px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+.notif-inner {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.notif-icon  { font-size: 100px; flex-shrink: 0; }
+.notif-text  { flex: 1; }
+.notif-app   { font-size: 56px; font-weight: 700; color: #FDFBF7; }
+.notif-msg   { font-size: 44px; color: rgba(253,251,247,0.5); margin-top: 10px; }
+.notif-badge {
+    background: #E24B4A;
+    color: #fff;
+    font-size: 44px;
+    font-weight: 800;
+    min-width: 72px; height: 72px;
+    border-radius: 36px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 14px;
+    flex-shrink: 0;
+}
+
+/* ============ ECLAIR DE RUPTURE ============ */
+.crack-flash {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 680px;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.crack-flash.go {
+    animation: crackAnim 0.85s ease-out forwards;
+}
+
+@keyframes crackAnim {
+    0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.2) rotate(-30deg); }
+    28%  { opacity: 1; transform: translate(-50%,-50%) scale(1.5) rotate(8deg); }
+    100% { opacity: 0; transform: translate(-50%,-50%) scale(1.1) rotate(2deg); }
+}
+
+/* ============ COMPTEUR CHOC "47s" ============ */
+.focus-counter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    width: 1700px;
+}
+
+.focus-num {
+    font-size: 700px;
+    font-weight: 800;
+    color: #E24B4A;
+    line-height: 0.9;
+    letter-spacing: -28px;
+}
+
+.focus-unit {
+    font-size: 110px;
+    font-weight: 800;
+    color: #1A1D21;
+    margin-top: 20px;
+    letter-spacing: -3px;
+}
+
+.focus-sub {
+    font-size: 76px;
+    font-weight: 600;
+    color: #888;
+    margin-top: 26px;
+}
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 1900px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -2.5px;
+    opacity: 0;
+    z-index: 40;
+}
+
+.t-top { top: 220px; font-size: 108px; }
+
+.t1 { animation: fadeTxt 4.5s ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4.5s ease-in-out forwards 4.5s; }
+.t3 { animation: fadeTxt 4.5s ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 13.5s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 18s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 22.5s; }
+.t7 { animation: fadeTxt 5.5s ease-in-out forwards 27.5s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">▶ Relancer</button>
+
+<div class="stage">
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">Teste-toi.<br>Lis une page<br>sans toucher ton <span class="rd">téléphone</span>.</div>
+
+    <div class="txt t-top t2">La plupart craquent<br>en moins de<br><span class="rd">47 secondes</span>.</div>
+
+    <div class="txt t-top t3">Une notif, un réflexe,<br>et ta <span class="rd">concentration</span><br>disparaît.</div>
+
+    <div class="txt t-top t4">Ton cerveau ne sait<br>plus rester sur<br><span class="rd">une seule chose</span>.</div>
+
+    <div class="txt t-top t5">Ce n'est pas ta faute.<br>C'est du <span class="rd">recâblage</span><br>intentionnel.</div>
+
+    <div class="txt t-top t6">Le protocole reconstruit<br>ton attention<br>en <span class="tq">7 jours</span>.</div>
+
+    <div class="txt t-top t7">Retrouve ta<br>concentration perdue.<br><span class="tq">Test gratuit en bio 🧠</span></div>
+
+    <!-- VISUEL PRINCIPAL : livre ouvert -->
+    <div class="book-outer" id="bookOuter">
+        <div class="book" id="book">
+            <div class="book-spine"></div>
+            <div class="book-content">
+                <div class="book-chapter">Chapitre 1</div>
+                <div class="text-line line-1"><div class="reading-cursor"></div></div>
+                <div class="text-line line-2"><div class="reading-cursor"></div></div>
+                <div class="text-line line-3"><div class="reading-cursor"></div></div>
+                <div class="text-line line-4"><div class="reading-cursor"></div></div>
+                <div class="text-line line-5"></div>
+                <div class="text-line line-6"></div>
+                <div class="text-line line-7"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification surgissante depuis la droite -->
+    <div class="notif-pop" id="notifPop">
+        <div class="notif-inner">
+            <span class="notif-icon">📸</span>
+            <div class="notif-text">
+                <div class="notif-app">Instagram</div>
+                <div class="notif-msg">Sophie a aimé ta photo</div>
+            </div>
+            <div class="notif-badge">1</div>
+        </div>
+    </div>
+
+    <!-- Eclair de rupture de concentration -->
+    <div class="crack-flash" id="crackFlash">💥</div>
+
+    <!-- Compteur choc : 47 secondes -->
+    <div class="focus-counter" id="focusCounter">
+        <div class="focus-num">47</div>
+        <div class="focus-unit">secondes</div>
+        <div class="focus-sub">avant de checker ton téléphone</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    var scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    if (scale < 1) {
+        document.body.style.transformOrigin = 'top left';
+        document.body.style.transform = 'scale(' + scale + ')';
+    }
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+var book         = document.getElementById('book');
+var bookOuter    = document.getElementById('bookOuter');
+var notifPop     = document.getElementById('notifPop');
+var crackFlash   = document.getElementById('crackFlash');
+var focusCounter = document.getElementById('focusCounter');
+
+// 9s : notification surgit de la droite (interruption de lecture)
+setTimeout(function() {
+    notifPop.classList.add('show');
+}, 9000);
+
+// 10s : le livre se floute (la distraction prend le dessus)
+setTimeout(function() {
+    book.classList.add('blurred');
+}, 10000);
+
+// 10.6s : eclair de rupture de la concentration
+setTimeout(function() {
+    crackFlash.classList.add('go');
+}, 10600);
+
+// 13s : livre et notif disparaissent, compteur "47s" surgit
+setTimeout(function() {
+    bookOuter.style.transition = 'opacity 1.4s ease';
+    bookOuter.style.opacity = '0';
+    notifPop.style.transition = 'opacity 1.4s ease';
+    notifPop.style.opacity = '0';
+    focusCounter.style.transition = 'opacity 1.4s ease';
+    focusCounter.style.opacity = '1';
+}, 13000);
+
+// 18s : compteur disparaît, texte seul pour la fin
+setTimeout(function() {
+    focusCounter.style.transition = 'opacity 1s ease';
+    focusCounter.style.opacity = '0';
+}, 18000);
+</script>
+</body>
+</html>

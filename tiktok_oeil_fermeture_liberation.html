@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Œil Qui Se Ferme - TikTok</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn-control {
+            padding: 12px 24px;
+            background: #14B8A6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .btn-control:active {
+            transform: translateY(0);
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 360px;
+            aspect-ratio: 9 / 16;
+            background: #FDFBF7;
+            border-radius: 40px;
+            border: 12px solid #1A1D21;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slowZoom 20s ease-in-out forwards;
+        }
+
+        @keyframes slowZoom {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.08);
+            }
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* Œil Container */
+        .eye-container {
+            position: relative;
+            width: 200px;
+            height: 150px;
+            margin: 0 auto 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .eye-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: eyeRotate 10s ease-in-out forwards;
+            animation-delay: 10s;
+            transform-origin: center;
+        }
+
+        @keyframes eyeRotate {
+            0% {
+                transform: rotateZ(0deg) rotateY(0deg);
+            }
+            100% {
+                transform: rotateZ(0deg) rotateY(25deg);
+            }
+        }
+
+        .eye-svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+        }
+
+        /* App Logos orbiting */
+        .app-orbit {
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: appsAppear 1s ease-in forwards;
+            animation-delay: 3s;
+        }
+
+        @keyframes appsAppear {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .app-logo {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: white;
+            animation: logoSpin 8s linear infinite;
+            opacity: 0;
+        }
+
+        .app-logo.tiktok {
+            background: #000;
+            animation-delay: 3s;
+        }
+
+        .app-logo.insta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            animation-delay: 3.2s;
+        }
+
+        .app-logo.yt {
+            background: #FF0000;
+            animation-delay: 3.4s;
+        }
+
+        @keyframes logoSpin {
+            from {
+                opacity: 0.3;
+                transform: translate(-120px, 0) rotate(0deg);
+            }
+            50% {
+                opacity: 0.5;
+            }
+            to {
+                opacity: 0.2;
+                transform: translate(-120px, 0) rotate(360deg);
+            }
+        }
+
+        .app-logo.tiktok { animation: logoSpinTT 10s linear infinite 3s; }
+        .app-logo.insta { animation: logoSpinIG 10s linear infinite 3.2s; }
+        .app-logo.yt { animation: logoSpinYT 10s linear infinite 3.4s; }
+
+        @keyframes logoSpinTT {
+            from { transform: rotate(0deg) translateX(100px) rotate(0deg); opacity: 0.4; }
+            to { transform: rotate(360deg) translateX(100px) rotate(-360deg); opacity: 0.1; }
+        }
+
+        @keyframes logoSpinIG {
+            from { transform: rotate(120deg) translateX(100px) rotate(0deg); opacity: 0.4; }
+            to { transform: rotate(480deg) translateX(100px) rotate(-360deg); opacity: 0.1; }
+        }
+
+        @keyframes logoSpinYT {
+            from { transform: rotate(240deg) translateX(100px) rotate(0deg); opacity: 0.4; }
+            to { transform: rotate(600deg) translateX(100px) rotate(-360deg); opacity: 0.1; }
+        }
+
+        /* Texte animé */
+        .text-block {
+            position: absolute;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1A1D21;
+            letter-spacing: -0.4px;
+            opacity: 0;
+            max-width: 300px;
+            animation: fadeInOut 3s ease-in-out forwards;
+        }
+
+        .text-block.block1 {
+            top: 20px;
+            animation: fadeInOut 3s ease-in-out forwards;
+            animation-delay: 0s;
+            font-size: 20px;
+        }
+
+        .text-block.block2 {
+            top: 20px;
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 3s;
+            font-size: 18px;
+        }
+
+        .text-block.block3 {
+            top: 20px;
+            animation: fadeInOut 3s ease-in-out forwards;
+            animation-delay: 7s;
+            font-size: 19px;
+        }
+
+        .text-block.block4 {
+            top: 20px;
+            animation: fadeInOut 5s ease-in-out forwards;
+            animation-delay: 10s;
+            font-size: 18px;
+        }
+
+        .text-block.block5 {
+            top: 20px;
+            animation: fadeInOut 5s ease-in-out forwards;
+            animation-delay: 15s;
+            font-size: 18px;
+        }
+
+        .text-bottom {
+            position: absolute;
+            bottom: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #999;
+            opacity: 0;
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .text-bottom.bottom1 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .text-bottom.bottom2 {
+            animation: fadeInOutBottom 4s ease-in-out forwards;
+            animation-delay: 3.5s;
+        }
+
+        .text-bottom.bottom3 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 7.5s;
+        }
+
+        .text-bottom.bottom4 {
+            animation: fadeInOutBottom 5s ease-in-out forwards;
+            animation-delay: 10.5s;
+        }
+
+        .text-bottom.bottom5 {
+            animation: fadeInOutBottom 5s ease-in-out forwards;
+            animation-delay: 15.5s;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInOutBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        .accent-color {
+            color: #14B8A6;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #14B8A6;
+            width: 0%;
+            animation: fillProgress 20s linear forwards;
+            z-index: 10;
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .emoji-marker {
+            color: #14B8A6;
+            font-size: 20px;
+            margin-left: 4px;
+        }
+
+        .info-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn-control" onclick="playAnimation()">▶ Relancer l'animation</button>
+        <button class="btn-control" onclick="resetAnimation()">⟲ Réinitialiser</button>
+    </div>
+
+    <div class="phone-frame">
+        <div class="screen">
+            <div class="zoom-container" id="zoomContainer">
+                <div class="content">
+                    <!-- Œil -->
+                    <div class="eye-container">
+                        <div class="eye-wrapper" id="eyeWrapper">
+                            <svg class="eye-svg" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+                                <!-- Cil supérieur -->
+                                <path d="M 40 40 Q 60 20 100 20 Q 140 20 160 40" stroke="#1A1D21" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                
+                                <!-- Sclère (blanc) -->
+                                <ellipse cx="100" cy="75" rx="55" ry="45" fill="white" stroke="#1A1D21" stroke-width="2"/>
+                                
+                                <!-- Iris -->
+                                <circle cx="100" cy="75" r="28" fill="#5B6E8C" opacity="0.9"/>
+                                
+                                <!-- Pupille -->
+                                <circle cx="100" cy="75" r="18" fill="#000" id="pupil"/>
+                                
+                                <!-- Éclat de lumière initial -->
+                                <circle cx="92" cy="65" r="6" fill="white" opacity="0.6" id="glare1"/>
+                                
+                                <!-- Éclat turquoise (apparaît à la libération) -->
+                                <circle cx="108" cy="80" r="8" fill="#14B8A6" opacity="0" id="glare2"/>
+                                
+                                <!-- Cil inférieur -->
+                                <path d="M 40 110 Q 60 130 100 130 Q 140 130 160 110" stroke="#1A1D21" stroke-width="2" fill="none" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+
+                        <!-- App logos orbiting -->
+                        <div class="app-orbit" id="appOrbit">
+                            <div class="app-logo tiktok">TT</div>
+                            <div class="app-logo insta">IG</div>
+                            <div class="app-logo yt">YT</div>
+                        </div>
+                    </div>
+
+                    <!-- Texte -->
+                    <div class="text-block block1">
+                        Regarde. T'es <span class="accent-color">hypnotisé</span> sans le savoir.
+                    </div>
+
+                    <div class="text-block block2">
+                        Les apps utilisent la <span class="accent-color">psychologie</span> pour contrôler ton œil.
+                    </div>
+
+                    <div class="text-block block3">
+                        Mais tu peux reprendre le <span class="accent-color">contrôle</span>. Tout de suite.
+                    </div>
+
+                    <div class="text-block block4">
+                        Active le hack. Regarde comment l'<span class="accent-color">œil se détourne</span>.
+                    </div>
+
+                    <div class="text-block block5">
+                        Tu reprends ton regard. Test gratuit en bio. <span class="emoji-marker">🧠</span>
+                    </div>
+
+                    <!-- Texte du bas -->
+                    <div class="text-bottom bottom1">👁️ L'hypnose</div>
+                    <div class="text-bottom bottom2">⚠️ Le contrôle</div>
+                    <div class="text-bottom bottom3">✨ L'espoir</div>
+                    <div class="text-bottom bottom4">🔄 La libération</div>
+                    <div class="text-bottom bottom5">🎯 La conscience</div>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="info-text">Format 9:16 • Durée 20s • Enregistrez cet écran ↑</div>
+
+    <script>
+        let isAnimating = false;
+        let animationFrame;
+
+        function updateEye(progress) {
+            const pupil = document.getElementById('pupil');
+            const glare2 = document.getElementById('glare2');
+            const eyeWrapper = document.getElementById('eyeWrapper');
+
+            // 0-7s: Pupille dilatée (hypnose)
+            if (progress < 7) {
+                const dilation = 18 + (progress / 7) * 8; // 18 → 26
+                pupil.setAttribute('r', dilation);
+                glare2.style.opacity = '0';
+                eyeWrapper.style.animation = 'none';
+            }
+            // 7-10s: Clignotement dramatique (pupille normalise)
+            else if (progress < 10) {
+                const normalizing = (progress - 7) / 3;
+                const pupilSize = 26 - (normalizing * 8); // 26 → 18
+                pupil.setAttribute('r', pupilSize);
+                
+                // Éclat turquoise apparaît progressivement
+                glare2.style.opacity = Math.min(normalizing, 0.6);
+            }
+            // 10-20s: Œil qui se détourne, plus lumineux
+            else {
+                pupil.setAttribute('r', 18);
+                glare2.style.opacity = '0.6';
+                eyeWrapper.style.animation = 'eyeRotate 10s ease-in-out forwards';
+            }
+
+            // Clignotements erratiques (3-10s)
+            if (progress >= 3 && progress < 10) {
+                const blinkPhase = (progress - 3) % 0.4;
+                if (blinkPhase < 0.1) {
+                    // Clignotement rapide
+                    const blinkAmount = (blinkPhase / 0.1) * 45;
+                    eyeWrapper.style.transform = `scaleY(${1 - blinkAmount / 100})`;
+                } else if (blinkPhase > 0.25 && blinkPhase < 0.35) {
+                    // Réouverture
+                    const reopenAmount = ((blinkPhase - 0.25) / 0.1) * 45;
+                    eyeWrapper.style.transform = `scaleY(${0.55 + (reopenAmount / 100)})`;
+                } else {
+                    eyeWrapper.style.transform = 'scaleY(1)';
+                }
+            }
+        }
+
+        function animate(currentTime) {
+            if (!isAnimating) return;
+
+            const progress = (currentTime % 20000) / 1000;
+            updateEye(progress);
+
+            animationFrame = requestAnimationFrame(animate);
+        }
+
+        function playAnimation() {
+            if (isAnimating) return;
+
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+            const eyeWrapper = document.getElementById('eyeWrapper');
+
+            isAnimating = true;
+
+            // Reset
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+            eyeWrapper.style.animation = 'none';
+            eyeWrapper.style.transform = 'scaleY(1)';
+
+            void zoomContainer.offsetWidth;
+
+            setTimeout(() => {
+                zoomContainer.style.animation = 'slowZoom 20s ease-in-out forwards';
+                progressBar.style.animation = 'fillProgress 20s linear forwards';
+            }, 10);
+
+            // Reset text
+            const textBlocks = document.querySelectorAll('.text-block');
+            const textBottoms = document.querySelectorAll('.text-bottom');
+
+            textBlocks.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            textBottoms.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            // Reset glare and orbit
+            document.getElementById('glare2').style.opacity = '0';
+            document.getElementById('appOrbit').style.opacity = '0';
+
+            setTimeout(() => {
+                document.querySelector('.block1').style.animation = 'fadeInOut 3s ease-in-out forwards';
+                document.querySelector('.block2').style.animation = 'fadeInOut 4s ease-in-out forwards 3s';
+                document.querySelector('.block3').style.animation = 'fadeInOut 3s ease-in-out forwards 7s';
+                document.querySelector('.block4').style.animation = 'fadeInOut 5s ease-in-out forwards 10s';
+                document.querySelector('.block5').style.animation = 'fadeInOut 5s ease-in-out forwards 15s';
+
+                document.querySelector('.bottom1').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 0.5s';
+                document.querySelector('.bottom2').style.animation = 'fadeInOutBottom 4s ease-in-out forwards 3.5s';
+                document.querySelector('.bottom3').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 7.5s';
+                document.querySelector('.bottom4').style.animation = 'fadeInOutBottom 5s ease-in-out forwards 10.5s';
+                document.querySelector('.bottom5').style.animation = 'fadeInOutBottom 5s ease-in-out forwards 15.5s';
+
+                // App orbit
+                document.getElementById('appOrbit').style.animation = 'appsAppear 1s ease-in forwards 3s';
+            }, 20);
+
+            // Start eye animation
+            animationFrame = requestAnimationFrame(animate);
+
+            setTimeout(() => {
+                isAnimating = false;
+                cancelAnimationFrame(animationFrame);
+            }, 20000);
+        }
+
+        function resetAnimation() {
+            isAnimating = false;
+            if (animationFrame) cancelAnimationFrame(animationFrame);
+
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+            const eyeWrapper = document.getElementById('eyeWrapper');
+
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+            eyeWrapper.style.animation = 'none';
+            eyeWrapper.style.transform = 'scaleY(1)';
+
+            document.querySelectorAll('.text-block').forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            document.querySelectorAll('.text-bottom').forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            document.getElementById('pupil').setAttribute('r', '18');
+            document.getElementById('glare2').style.opacity = '0';
+            document.getElementById('appOrbit').style.opacity = '0';
+            document.getElementById('appOrbit').style.animation = 'none';
+        }
+
+        window.addEventListener('load', () => {
+            playAnimation();
+        });
+    </script>
+</body>
+</html>

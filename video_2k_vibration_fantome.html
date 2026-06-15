@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Vibration Fantôme - 2K TikTok</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* ============================================
+   CANVAS NATIF 2160x3840 (2K vertical)
+   Pour OBS : source Navigateur 2160x3840
+   Pour préview : la page scale automatiquement
+============================================ */
+html, body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #FDFBF7;
+    animation: slowZoom 18s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.06); }
+}
+
+/* ============ TÉLÉPHONE QUI VIBRE ============ */
+.phone {
+    position: relative;
+    width: 700px;
+    height: 1400px;
+    border: 14px solid #1A1D21;
+    border-radius: 110px;
+    background: #fff;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.18);
+    margin-bottom: 120px;
+    animation: vibrate 0.12s linear infinite;
+}
+
+@keyframes vibrate {
+    0% { transform: translate(0,0) rotate(0deg); }
+    25% { transform: translate(-14px, 8px) rotate(-0.8deg); }
+    50% { transform: translate(10px, -10px) rotate(0.6deg); }
+    75% { transform: translate(-8px, -6px) rotate(-0.4deg); }
+    100% { transform: translate(12px, 8px) rotate(0.8deg); }
+}
+
+.phone.still {
+    animation: none;
+}
+
+.notch {
+    position: absolute;
+    top: 30px; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 70px;
+    background: #1A1D21;
+    border-radius: 0 0 50px 50px;
+}
+
+/* Bulles de notifications */
+.notif {
+    position: absolute;
+    left: 60px; right: 60px;
+    height: 150px;
+    background: #fff;
+    border: 4px solid #ECEAE5;
+    border-radius: 36px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    display: flex;
+    align-items: center;
+    padding: 0 50px;
+    gap: 40px;
+    opacity: 0;
+}
+
+.notif .dot {
+    width: 80px; height: 80px;
+    border-radius: 24px;
+    flex-shrink: 0;
+}
+
+.notif .lines { flex: 1; }
+.notif .l1 { height: 26px; width: 70%; background: #D8D5CE; border-radius: 13px; margin-bottom: 18px; }
+.notif .l2 { height: 26px; width: 45%; background: #ECEAE5; border-radius: 13px; }
+
+.n1 { top: 200px; animation: popNotif 0.4s ease-out forwards 0.2s; }
+.n1 .dot { background: #FE2C55; }
+.n2 { top: 390px; animation: popNotif 0.4s ease-out forwards 0.9s; }
+.n2 .dot { background: linear-gradient(135deg,#833AB4,#FD1D1D,#FCB045); }
+.n3 { top: 580px; animation: popNotif 0.4s ease-out forwards 1.6s; }
+.n3 .dot { background: #FF0000; }
+.n4 { top: 770px; animation: popNotif 0.4s ease-out forwards 2.3s; }
+.n4 .dot { background: #25D366; }
+.n5 { top: 960px; animation: popNotif 0.4s ease-out forwards 3.0s; }
+.n5 .dot { background: #0866FF; }
+
+@keyframes popNotif {
+    0% { opacity: 0; transform: translateY(-60px) scale(0.85); }
+    60% { opacity: 1; transform: translateY(10px) scale(1.03); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Onde de vibration */
+.wave {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 900px; height: 1600px;
+    border: 8px solid rgba(226, 75, 74, 0.5);
+    border-radius: 140px;
+    transform: translate(-50%, -50%);
+    animation: waveOut 0.8s ease-out infinite;
+    pointer-events: none;
+}
+
+@keyframes waveOut {
+    from { transform: translate(-50%,-50%) scale(0.85); opacity: 0.9; }
+    to { transform: translate(-50%,-50%) scale(1.15); opacity: 0; }
+}
+
+/* ============ TEXTES ============ */
+.txt {
+    position: absolute;
+    width: 1800px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.25;
+    letter-spacing: -2px;
+    opacity: 0;
+}
+
+.t-top { top: 280px; font-size: 110px; }
+.t-bottom { bottom: 380px; font-size: 96px; font-weight: 700; }
+
+.t1 { animation: fadeTxt 4s ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 5s ease-in-out forwards 4s; }
+.t3 { animation: fadeTxt 5s ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4s ease-in-out forwards 14s; }
+
+@keyframes fadeTxt {
+    0% { opacity: 0; transform: translateX(-50%) translateY(30px); }
+    8% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    88% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* Barre de progression */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 18s linear forwards;
+    z-index: 50;
+}
+
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+/* Bouton replay hors cadre (masqué à l'enregistrement car hors 2160x3840 si crop) */
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.25;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">▶ Relancer</button>
+
+<div class="stage" id="stage">
+
+    <div class="txt t-top t1">Ton téléphone n'a <span class="rd">PAS</span> vibré.<br>Mais tu l'as senti.</div>
+    <div class="txt t-top t2">Ça s'appelle la <span class="rd">vibration fantôme</span>.<br>Ton cerveau hallucine des notifications.</div>
+    <div class="txt t-top t3">C'est le stade 3 de l'addiction.<br>Et 80% des gens l'ont.</div>
+    <div class="txt t-top t4">Calcule ton stade.<br><span class="tq">Test gratuit en bio</span> 🧠</div>
+
+    <div class="phone" id="phone">
+        <div class="notch"></div>
+        <div class="notif n1"><div class="dot"></div><div class="lines"><div class="l1"></div><div class="l2"></div></div></div>
+        <div class="notif n2"><div class="dot"></div><div class="lines"><div class="l1"></div><div class="l2"></div></div></div>
+        <div class="notif n3"><div class="dot"></div><div class="lines"><div class="l1"></div><div class="l2"></div></div></div>
+        <div class="notif n4"><div class="dot"></div><div class="lines"><div class="l1"></div><div class="l2"></div></div></div>
+        <div class="notif n5"><div class="dot"></div><div class="lines"><div class="l1"></div><div class="l2"></div></div></div>
+    </div>
+    <div class="wave" id="wave"></div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+// Préview : scale la page pour qu'elle tienne dans la fenêtre
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    if (scale < 1) {
+        document.body.style.transformOrigin = 'top left';
+        document.body.style.transform = `scale(${scale})`;
+    }
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+// Timeline : à 9s le téléphone S'ARRÊTE de vibrer (le calme = le hack)
+setTimeout(() => {
+    document.getElementById('phone').classList.add('still');
+    document.getElementById('wave').style.display = 'none';
+    // Les notifications disparaissent en fondu
+    document.querySelectorAll('.notif').forEach((n, i) => {
+        n.style.transition = 'opacity 0.6s ease ' + (i * 0.15) + 's';
+        n.style.opacity = '0';
+    });
+}, 9000);
+</script>
+</body>
+</html>

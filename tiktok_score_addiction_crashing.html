@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Score d'Addiction - TikTok</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn-control {
+            padding: 12px 24px;
+            background: #14B8A6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .btn-control:active {
+            transform: translateY(0);
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 360px;
+            aspect-ratio: 9 / 16;
+            background: #FDFBF7;
+            border-radius: 40px;
+            border: 12px solid #1A1D21;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slowZoom 20s ease-in-out forwards;
+        }
+
+        @keyframes slowZoom {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.08);
+            }
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        /* Score Principal */
+        .score-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .score-circle {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 8px solid transparent;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(255, 183, 3, 0.1)) border-box;
+            border-image: linear-gradient(135deg, #E24B4A, #FFB703) 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(226, 75, 74, 0.15);
+        }
+
+        .score-circle.green {
+            border-image: linear-gradient(135deg, #14B8A6, #0d9488) 1;
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(13, 148, 136, 0.1)) border-box;
+            box-shadow: 0 0 40px rgba(20, 184, 166, 0.2);
+        }
+
+        .score-value {
+            font-size: 72px;
+            font-weight: 700;
+            color: #E24B4A;
+            line-height: 1;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .score-value.green {
+            color: #14B8A6;
+        }
+
+        .score-max {
+            font-size: 28px;
+            color: #999;
+            font-weight: 500;
+        }
+
+        .dopamine-bar-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            padding: 12px;
+            opacity: 0;
+            animation: fadeInDopamine 3s ease-in forwards;
+            animation-delay: 10s;
+        }
+
+        @keyframes fadeInDopamine {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dopamine-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #14B8A6;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .dopamine-chart {
+            width: 100%;
+            height: 60px;
+            position: relative;
+            background: linear-gradient(to bottom, rgba(20, 184, 166, 0.05), transparent);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .dopamine-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            animation: drawDopamineLine 5s ease-in-out forwards;
+            animation-delay: 10.5s;
+        }
+
+        @keyframes drawDopamineLine {
+            from {
+                clip-path: inset(100% 0 0 0);
+            }
+            to {
+                clip-path: inset(0% 0 0 0);
+            }
+        }
+
+        /* Texte animé */
+        .text-block {
+            position: absolute;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #1A1D21;
+            letter-spacing: -0.4px;
+            opacity: 0;
+            max-width: 300px;
+            animation: fadeInOut 2s ease-in-out forwards;
+        }
+
+        .text-block.block1 {
+            top: 20px;
+            animation: fadeInOut 2s ease-in-out forwards;
+            animation-delay: 0s;
+            font-size: 20px;
+        }
+
+        .text-block.block2 {
+            top: 20px;
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 2s;
+            font-size: 18px;
+        }
+
+        .text-block.block3 {
+            top: 20px;
+            animation: fadeInOut 2s ease-in-out forwards;
+            animation-delay: 6s;
+            font-size: 19px;
+            color: #E24B4A;
+            font-weight: 700;
+        }
+
+        .text-block.block4 {
+            top: 20px;
+            animation: fadeInOut 2s ease-in-out forwards;
+            animation-delay: 8s;
+            font-size: 18px;
+        }
+
+        .text-block.block5 {
+            top: 20px;
+            animation: fadeInOut 5s ease-in-out forwards;
+            animation-delay: 10s;
+            font-size: 18px;
+        }
+
+        .text-block.block6 {
+            top: 20px;
+            animation: fadeInOut 5s ease-in-out forwards;
+            animation-delay: 15s;
+            font-size: 18px;
+        }
+
+        .text-bottom {
+            position: absolute;
+            bottom: 40px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #999;
+            opacity: 0;
+            animation: fadeInOutBottom 2s ease-in-out forwards;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .text-bottom.bottom1 {
+            animation: fadeInOutBottom 2s ease-in-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .text-bottom.bottom2 {
+            animation: fadeInOutBottom 3s ease-in-out forwards;
+            animation-delay: 2.5s;
+        }
+
+        .text-bottom.bottom3 {
+            animation: fadeInOutBottom 2s ease-in-out forwards;
+            animation-delay: 6.5s;
+        }
+
+        .text-bottom.bottom4 {
+            animation: fadeInOutBottom 2s ease-in-out forwards;
+            animation-delay: 8.5s;
+        }
+
+        .text-bottom.bottom5 {
+            animation: fadeInOutBottom 4s ease-in-out forwards;
+            animation-delay: 10.5s;
+        }
+
+        .text-bottom.bottom6 {
+            animation: fadeInOutBottom 5s ease-in-out forwards;
+            animation-delay: 15.5s;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeInOutBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+        }
+
+        .accent-color {
+            color: #14B8A6;
+            font-weight: 700;
+        }
+
+        .accent-red {
+            color: #E24B4A;
+            font-weight: 700;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #14B8A6;
+            width: 0%;
+            animation: fillProgress 20s linear forwards;
+            z-index: 10;
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .emoji-marker {
+            color: #14B8A6;
+            font-size: 20px;
+            margin-left: 4px;
+        }
+
+        .info-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+
+        .flash-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            animation: flashScreen 0.3s ease-out forwards;
+            animation-delay: 8s;
+        }
+
+        @keyframes flashScreen {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn-control" onclick="playAnimation()">▶ Relancer l'animation</button>
+        <button class="btn-control" onclick="resetAnimation()">⟲ Réinitialiser</button>
+    </div>
+
+    <div class="phone-frame">
+        <div class="screen">
+            <div class="zoom-container" id="zoomContainer">
+                <div class="content">
+                    <!-- Flash Effect -->
+                    <div class="flash-effect"></div>
+
+                    <!-- Score Container -->
+                    <div class="score-container">
+                        <div class="score-circle" id="scoreCircle">
+                            <div class="score-value" id="scoreValue">
+                                <span id="scoreNumber">0</span>
+                                <span class="score-max">/100</span>
+                            </div>
+                        </div>
+
+                        <!-- Dopamine Chart -->
+                        <div class="dopamine-bar-container" id="dopamineBar">
+                            <div class="dopamine-label">✨ Dopamine retrouvée</div>
+                            <div class="dopamine-chart">
+                                <svg class="dopamine-line" viewBox="0 0 300 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M 0 80 L 20 75 L 40 70 L 60 65 L 80 55 L 100 40 L 120 30 L 140 25 L 160 22 L 180 20 L 200 18 L 220 18 L 240 20 L 260 25 L 280 30 L 300 35" 
+                                          stroke="#14B8A6" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <path d="M 0 80 L 20 75 L 40 70 L 60 65 L 80 55 L 100 40 L 120 30 L 140 25 L 160 22 L 180 20 L 200 18 L 220 18 L 240 20 L 260 25 L 280 30 L 300 35 L 300 100 L 0 100" 
+                                          fill="url(#grad)" opacity="0.3"/>
+                                    <defs>
+                                        <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#14B8A6;stop-opacity:0.4" />
+                                            <stop offset="100%" style="stop-color:#14B8A6;stop-opacity:0.05" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Texte -->
+                    <div class="text-block block1">
+                        Calcule ton score <span class="accent-color">MAINTENANT</span>.
+                    </div>
+
+                    <div class="text-block block2">
+                        Tu as combien de dopamine en ce moment ?
+                    </div>
+
+                    <div class="text-block block3">
+                        92/100 : T'es un <span class="accent-red">junkie de scroll</span>.
+                    </div>
+
+                    <div class="text-block block4">
+                        Mais tu peux fixer ça. En 90 secondes.
+                    </div>
+
+                    <div class="text-block block5">
+                        Le hack : <span class="accent-color">Réduction de Mouvement</span> active.
+                    </div>
+
+                    <div class="text-block block6">
+                        Tu reprends le contrôle. Test gratuit en bio. <span class="emoji-marker">🧠</span>
+                    </div>
+
+                    <!-- Texte du bas -->
+                    <div class="text-bottom bottom1">🎯 Le calcul</div>
+                    <div class="text-bottom bottom2">⚠️ Le choc</div>
+                    <div class="text-bottom bottom3">💊 La réalité</div>
+                    <div class="text-bottom bottom4">✨ L'espoir</div>
+                    <div class="text-bottom bottom5">🔄 La transformation</div>
+                    <div class="text-bottom bottom6">🎁 L'appel à l'action</div>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="info-text">Format 9:16 • Durée 20s • Enregistrez cet écran ↑</div>
+
+    <script>
+        let isAnimating = false;
+        let animationFrame;
+
+        function updateScore(progress) {
+            const scoreNumber = document.getElementById('scoreNumber');
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreValue = document.getElementById('scoreValue');
+
+            let currentScore;
+
+            // 0-6s: Montée rapide 0 → 92
+            if (progress < 6) {
+                currentScore = Math.round((progress / 6) * 92);
+            }
+            // 6-8s: Figé à 92
+            else if (progress < 8) {
+                currentScore = 92;
+            }
+            // 8-10s: Dégringole 92 → 18 (avec flip de couleur)
+            else if (progress < 10) {
+                const crashPhase = (progress - 8) / 2;
+                currentScore = Math.round(92 - (crashPhase * 74));
+                
+                // Flip à partir de 8.5s
+                if (progress >= 8.5) {
+                    scoreCircle.classList.add('green');
+                    scoreValue.classList.add('green');
+                }
+            }
+            // 10-20s: Stable à 18
+            else {
+                currentScore = 18;
+                scoreCircle.classList.add('green');
+                scoreValue.classList.add('green');
+            }
+
+            scoreNumber.textContent = currentScore;
+        }
+
+        function animate(currentTime) {
+            if (!isAnimating) return;
+
+            const progress = (currentTime % 20000) / 1000;
+            updateScore(progress);
+
+            animationFrame = requestAnimationFrame(animate);
+        }
+
+        function playAnimation() {
+            if (isAnimating) return;
+
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+
+            isAnimating = true;
+
+            // Reset
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+
+            void zoomContainer.offsetWidth;
+
+            setTimeout(() => {
+                zoomContainer.style.animation = 'slowZoom 20s ease-in-out forwards';
+                progressBar.style.animation = 'fillProgress 20s linear forwards';
+            }, 10);
+
+            // Reset text
+            const textBlocks = document.querySelectorAll('.text-block');
+            const textBottoms = document.querySelectorAll('.text-bottom');
+
+            textBlocks.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            textBottoms.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            // Reset score circle
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreValue = document.getElementById('scoreValue');
+            scoreCircle.classList.remove('green');
+            scoreValue.classList.remove('green');
+
+            // Reset dopamine bar
+            const dopamineBar = document.getElementById('dopamineBar');
+            dopamineBar.style.animation = 'none';
+            dopamineBar.style.opacity = '0';
+
+            // Reset flash
+            document.querySelector('.flash-effect').style.animation = 'none';
+            document.querySelector('.flash-effect').style.opacity = '0';
+
+            setTimeout(() => {
+                document.querySelector('.block1').style.animation = 'fadeInOut 2s ease-in-out forwards';
+                document.querySelector('.block2').style.animation = 'fadeInOut 4s ease-in-out forwards 2s';
+                document.querySelector('.block3').style.animation = 'fadeInOut 2s ease-in-out forwards 6s';
+                document.querySelector('.block4').style.animation = 'fadeInOut 2s ease-in-out forwards 8s';
+                document.querySelector('.block5').style.animation = 'fadeInOut 5s ease-in-out forwards 10s';
+                document.querySelector('.block6').style.animation = 'fadeInOut 5s ease-in-out forwards 15s';
+
+                document.querySelector('.bottom1').style.animation = 'fadeInOutBottom 2s ease-in-out forwards 0.5s';
+                document.querySelector('.bottom2').style.animation = 'fadeInOutBottom 3s ease-in-out forwards 2.5s';
+                document.querySelector('.bottom3').style.animation = 'fadeInOutBottom 2s ease-in-out forwards 6.5s';
+                document.querySelector('.bottom4').style.animation = 'fadeInOutBottom 2s ease-in-out forwards 8.5s';
+                document.querySelector('.bottom5').style.animation = 'fadeInOutBottom 4s ease-in-out forwards 10.5s';
+                document.querySelector('.bottom6').style.animation = 'fadeInOutBottom 5s ease-in-out forwards 15.5s';
+
+                // Flash effect
+                document.querySelector('.flash-effect').style.animation = 'flashScreen 0.3s ease-out forwards 8s';
+
+                // Dopamine bar
+                dopamineBar.style.animation = 'fadeInDopamine 3s ease-in forwards 10s';
+            }, 20);
+
+            // Start score animation
+            animationFrame = requestAnimationFrame(animate);
+
+            setTimeout(() => {
+                isAnimating = false;
+                cancelAnimationFrame(animationFrame);
+            }, 20000);
+        }
+
+        function resetAnimation() {
+            isAnimating = false;
+            if (animationFrame) cancelAnimationFrame(animationFrame);
+
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+
+            document.querySelectorAll('.text-block').forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            document.querySelectorAll('.text-bottom').forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            document.querySelector('.flash-effect').style.animation = 'none';
+            document.querySelector('.flash-effect').style.opacity = '0';
+
+            const scoreCircle = document.getElementById('scoreCircle');
+            const scoreValue = document.getElementById('scoreValue');
+            scoreCircle.classList.remove('green');
+            scoreValue.classList.remove('green');
+            document.getElementById('scoreNumber').textContent = '0';
+
+            const dopamineBar = document.getElementById('dopamineBar');
+            dopamineBar.style.animation = 'none';
+            dopamineBar.style.opacity = '0';
+        }
+
+        window.addEventListener('load', () => {
+            playAnimation();
+        });
+    </script>
+</body>
+</html>

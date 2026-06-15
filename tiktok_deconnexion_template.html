@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DÉCONNEXION - Animation TikTok</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .btn-control {
+            padding: 12px 24px;
+            background: #14B8A6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-control:hover {
+            background: #0d9488;
+            transform: translateY(-2px);
+        }
+
+        .btn-control:active {
+            transform: translateY(0);
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 360px;
+            aspect-ratio: 9 / 16;
+            background: #FDFBF7;
+            border-radius: 40px;
+            border: 12px solid #1A1D21;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .zoom-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slowZoom 15s ease-in-out forwards;
+        }
+
+        @keyframes slowZoom {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.08);
+            }
+        }
+
+        .content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 30px;
+            text-align: center;
+        }
+
+        .text-block {
+            position: absolute;
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #1A1D21;
+            letter-spacing: -0.5px;
+            opacity: 0;
+            animation: fadeInOut 4s ease-in-out forwards;
+            max-width: 280px;
+        }
+
+        .text-block.block1 {
+            animation: fadeInOut 3s ease-in-out forwards;
+            animation-delay: 0s;
+        }
+
+        .text-block.block2 {
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 3s;
+            font-size: 24px;
+        }
+
+        .text-block.block3 {
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 7s;
+            font-size: 26px;
+        }
+
+        .text-block.block4 {
+            animation: fadeInOut 4s ease-in-out forwards;
+            animation-delay: 11s;
+            font-size: 20px;
+        }
+
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .accent-color {
+            color: #14B8A6;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: #14B8A6;
+            width: 0%;
+            animation: fillProgress 15s linear forwards;
+            z-index: 10;
+        }
+
+        @keyframes fillProgress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+
+        .emoji-marker {
+            color: #14B8A6;
+            font-size: 24px;
+            margin-left: 4px;
+        }
+
+        .info-text {
+            position: absolute;
+            bottom: 40px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button class="btn-control" onclick="playAnimation()">▶ Lancer la vidéo</button>
+        <button class="btn-control" onclick="resetAnimation()">⟲ Réinitialiser</button>
+    </div>
+
+    <div class="phone-frame">
+        <div class="screen">
+            <div class="zoom-container" id="zoomContainer">
+                <div class="content">
+                    <div class="text-block block1">
+                        Arrête de <span class="accent-color">scroller</span> 5 secondes.
+                    </div>
+
+                    <div class="text-block block2">
+                        Ta main a ouvert cette application avant même que tu ne l'aies consciemment décidé.
+                    </div>
+
+                    <div class="text-block block3">
+                        Ton attention est <span class="accent-color">piratée</span> par un algorithme. Reprends le contrôle.
+                    </div>
+
+                    <div class="text-block block4">
+                        Calcule ton score d'addiction. Test gratuit dans ma bio. <span class="emoji-marker">🧠</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="info-text">Format 9:16 • Durée 15s • Enregistrez cet écran ↑</div>
+
+    <script>
+        let isAnimating = false;
+
+        function playAnimation() {
+            if (isAnimating) return;
+
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+            
+            isAnimating = true;
+
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+
+            setTimeout(() => {
+                zoomContainer.style.animation = 'slowZoom 15s ease-in-out forwards';
+                progressBar.style.animation = 'fillProgress 15s linear forwards';
+            }, 10);
+
+            const textBlocks = document.querySelectorAll('.text-block');
+            textBlocks.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            setTimeout(() => {
+                document.querySelector('.block1').style.animation = 'fadeInOut 3s ease-in-out forwards';
+                document.querySelector('.block2').style.animation = 'fadeInOut 4s ease-in-out forwards';
+                document.querySelector('.block2').style.animationDelay = '3s';
+                document.querySelector('.block3').style.animation = 'fadeInOut 4s ease-in-out forwards';
+                document.querySelector('.block3').style.animationDelay = '7s';
+                document.querySelector('.block4').style.animation = 'fadeInOut 4s ease-in-out forwards';
+                document.querySelector('.block4').style.animationDelay = '11s';
+            }, 10);
+
+            setTimeout(() => {
+                isAnimating = false;
+            }, 15000);
+        }
+
+        function resetAnimation() {
+            const zoomContainer = document.getElementById('zoomContainer');
+            const progressBar = document.getElementById('progressBar');
+
+            zoomContainer.style.animation = 'none';
+            progressBar.style.animation = 'none';
+
+            const textBlocks = document.querySelectorAll('.text-block');
+            textBlocks.forEach(block => {
+                block.style.animation = 'none';
+                block.style.opacity = '0';
+            });
+
+            isAnimating = false;
+        }
+
+        window.addEventListener('load', () => {
+            playAnimation();
+        });
+    </script>
+</body>
+</html>

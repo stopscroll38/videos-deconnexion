@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Le Réflexe du Matin - 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* CANVAS NATIF 2160x3840 — Pour OBS : source Navigateur 2160x3840 */
+html, body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.07); }
+}
+
+/* Fond : chambre noire > lueur violette (écran) > crème */
+.bg {
+    position: absolute;
+    inset: 0;
+    background: #08090f;
+    animation: bgShift 33s ease-in-out forwards;
+    z-index: 0;
+}
+@keyframes bgShift {
+    0%   { background: #08090f; }
+    38%  { background: #08090f; }
+    58%  { background: #0e1530; }
+    72%  { background: #1c0d30; }
+    84%  { background: #FDFBF7; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ TÉLÉPHONE ============ */
+.phone-wrap {
+    position: relative;
+    z-index: 5;
+    margin-bottom: 380px; /* espace pour la main en dessous */
+}
+
+.phone {
+    width: 720px;
+    height: 1420px;
+    border: 14px solid #22252d;
+    border-radius: 110px;
+    background: #0d1117;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 40px 140px rgba(0,0,0,0.7);
+    transition: box-shadow 2s ease;
+}
+
+.phone.lit {
+    box-shadow: 0 40px 200px rgba(20,184,166,0.45),
+                0 0 300px rgba(20,184,166,0.12);
+}
+
+.notch {
+    position: absolute;
+    top: 30px; left: 50%;
+    transform: translateX(-50%);
+    width: 320px; height: 70px;
+    background: #050709;
+    border-radius: 0 0 50px 50px;
+    z-index: 30;
+}
+
+/* Écran verrouillé */
+.lock-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 150px;
+}
+
+.time-big {
+    font-size: 300px;
+    font-weight: 800;
+    color: #FDFBF7;
+    letter-spacing: -10px;
+    line-height: 1;
+}
+
+.day-label {
+    font-size: 68px;
+    font-weight: 600;
+    color: rgba(253,251,247,0.45);
+    letter-spacing: 10px;
+    margin-top: 24px;
+}
+
+.alarm-emoji {
+    font-size: 130px;
+    margin-top: 55px;
+    display: inline-block;
+}
+.alarm-emoji.ring {
+    animation: ringShake 0.35s ease-in-out infinite;
+}
+@keyframes ringShake {
+    0%, 100% { transform: rotate(0); }
+    25%       { transform: rotate(-18deg); }
+    75%       { transform: rotate(18deg); }
+}
+
+/* Notifications */
+.notif-list {
+    margin-top: 65px;
+    width: 646px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.notif {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 28px;
+    padding: 24px 36px;
+    opacity: 0;
+    transform: translateX(80px);
+}
+
+.notif-app { font-size: 56px; flex-shrink: 0; }
+.notif-content { flex: 1; }
+.notif-name { font-size: 50px; font-weight: 700; color: #FDFBF7; }
+.notif-msg  { font-size: 40px; color: rgba(255,255,255,0.45); margin-top: 6px; }
+.notif-badge {
+    background: #E24B4A;
+    color: #fff;
+    font-size: 38px;
+    font-weight: 800;
+    min-width: 64px;
+    height: 64px;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    flex-shrink: 0;
+}
+
+.n1 { animation: notifSlide 0.9s ease forwards 8.5s; }
+.n2 { animation: notifSlide 0.9s ease forwards 9.8s; }
+.n3 { animation: notifSlide 0.9s ease forwards 11.1s; }
+.n4 { animation: notifSlide 0.9s ease forwards 12.4s; }
+
+@keyframes notifSlide {
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Lueur d'écran progressive */
+.screen-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%,
+        rgba(20,184,166,0.14) 0%, transparent 70%);
+    opacity: 0;
+    animation: glowAppear 3s ease forwards 15s;
+    z-index: 8;
+    pointer-events: none;
+}
+@keyframes glowAppear {
+    to { opacity: 1; }
+}
+
+/* ============ MAIN QUI ATTRAPE ============ */
+.hand-reach {
+    position: absolute;
+    bottom: -320px;
+    left: 50%;
+    font-size: 330px;
+    z-index: 20;
+    animation: reachUp 2.2s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+@keyframes reachUp {
+    0%   { transform: translateX(-50%) translateY(60px) rotate(-12deg); }
+    38%  { transform: translateX(-50%) translateY(-300px) rotate(4deg); }
+    65%  { transform: translateX(-50%) translateY(-260px) rotate(0deg); }
+    100% { transform: translateX(-50%) translateY(60px) rotate(-12deg); }
+}
+
+/* ============ COMPTEUR CHOC "0 SEC" ============ */
+.counter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    width: 1900px;
+}
+.counter-num {
+    font-size: 820px;
+    font-weight: 800;
+    color: #14B8A6;
+    line-height: 0.88;
+    letter-spacing: -30px;
+}
+.counter-unit {
+    font-size: 120px;
+    font-weight: 700;
+    color: #1A1D21;
+    letter-spacing: -2px;
+    margin-top: 30px;
+}
+.counter-sub {
+    font-size: 88px;
+    font-weight: 600;
+    color: #888;
+    margin-top: 26px;
+}
+
+/* ============ TEXTES ============ */
+.txt {
+    position: absolute;
+    width: 1900px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -2.5px;
+    opacity: 0;
+    z-index: 40;
+}
+.t-top { top: 230px; font-size: 110px; }
+
+/* phases sur fond sombre = texte blanc */
+.t1, .t2, .t3, .t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 4.5s ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s  ease-in-out forwards 4.5s; }
+.t3 { animation: fadeTxt 4s  ease-in-out forwards 8.5s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 12.5s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 17s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 21.5s; }
+.t7 { animation: fadeTxt 5s  ease-in-out forwards 26s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq  { color: #14B8A6; }
+.rd  { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">▶ Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">6h30.<br>L'alarme sonne.</div>
+
+    <div class="txt t-top t2">Avant même d'ouvrir<br>les yeux, ta main<br><span class="rd">attrape le téléphone</span>.</div>
+
+    <div class="txt t-top t3">17 notifications<br>t'attendent.<br>Tu les parcours <span class="rd">toutes</span>.</div>
+
+    <div class="txt t-top t4">Ton cerveau sort<br>du sommeil et entre<br>dans le <span class="rd">chaos numérique</span>.</div>
+
+    <div class="txt t-top t5">Tu n'as pas encore<br>choisi ta journée.<br>L'algo <span class="rd">l'a fait pour toi</span>.</div>
+
+    <div class="txt t-top t6">Ce réflexe programme<br>ton <span class="rd">stress</span>, ton humeur,<br>ton niveau d'énergie.</div>
+
+    <div class="txt t-top t7">Reprends le contrôle<br>de ton matin.<br>Le protocole libère en <span class="tq">7 jours</span>.<br><span class="tq">Test gratuit en bio 🧠</span></div>
+
+    <!-- Visuel central : téléphone + main -->
+    <div class="phone-wrap" id="phoneWrap">
+        <div class="phone" id="phone">
+            <div class="notch"></div>
+
+            <div class="lock-screen">
+                <div class="time-big">06:30</div>
+                <div class="day-label">LUNDI</div>
+                <div class="alarm-emoji ring" id="alarmEmoji">⏰</div>
+
+                <div class="notif-list">
+                    <div class="notif n1">
+                        <span class="notif-app">📸</span>
+                        <div class="notif-content">
+                            <div class="notif-name">Instagram</div>
+                            <div class="notif-msg">7 nouvelles interactions</div>
+                        </div>
+                        <span class="notif-badge">7</span>
+                    </div>
+                    <div class="notif n2">
+                        <span class="notif-app">💬</span>
+                        <div class="notif-content">
+                            <div class="notif-name">WhatsApp</div>
+                            <div class="notif-msg">3 messages non lus</div>
+                        </div>
+                        <span class="notif-badge">3</span>
+                    </div>
+                    <div class="notif n3">
+                        <span class="notif-app">📰</span>
+                        <div class="notif-content">
+                            <div class="notif-name">Actualités</div>
+                            <div class="notif-msg">5 titres ce matin</div>
+                        </div>
+                        <span class="notif-badge">5</span>
+                    </div>
+                    <div class="notif n4">
+                        <span class="notif-app">🎵</span>
+                        <div class="notif-content">
+                            <div class="notif-name">TikTok</div>
+                            <div class="notif-msg">2 nouvelles vidéos pour toi</div>
+                        </div>
+                        <span class="notif-badge">2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="screen-glow"></div>
+        </div>
+
+        <!-- Main qui remonte vers le téléphone -->
+        <div class="hand-reach">🤚</div>
+    </div>
+
+    <!-- Choc visuel : 0 secondes de calme -->
+    <div class="counter" id="ctr">
+        <div class="counter-num">0</div>
+        <div class="counter-unit">secondes de calme</div>
+        <div class="counter-sub">avant de saisir l'écran</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    if (scale < 1) {
+        document.body.style.transformOrigin = 'top left';
+        document.body.style.transform = 'scale(' + scale + ')';
+    }
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const alarmEmoji = document.getElementById('alarmEmoji');
+const phone      = document.getElementById('phone');
+const phoneWrap  = document.getElementById('phoneWrap');
+const ctr        = document.getElementById('ctr');
+
+// 4.5s : l'alarme est coupée (la main a saisi le téléphone)
+setTimeout(function() {
+    alarmEmoji.classList.remove('ring');
+    alarmEmoji.textContent = '🔕';
+}, 4500);
+
+// 5.2s : l'écran s'allume, lueur teal
+setTimeout(function() {
+    phone.classList.add('lit');
+}, 5200);
+
+// 17s : le téléphone disparaît, le compteur "0 sec" surgit
+setTimeout(function() {
+    phoneWrap.style.transition = 'opacity 1.4s ease';
+    phoneWrap.style.opacity = '0';
+    ctr.style.transition = 'opacity 1.4s ease';
+    ctr.style.opacity = '1';
+}, 17000);
+
+// 21.5s : le compteur disparaît, place à la narration finale
+setTimeout(function() {
+    ctr.style.transition = 'opacity 1s ease';
+    ctr.style.opacity = '0';
+}, 21500);
+</script>
+</body>
+</html>

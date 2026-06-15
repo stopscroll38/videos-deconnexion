@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Batterie Mentale - 2K TikTok</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+/* CANVAS NATIF 2160x3840 — Pour OBS : source Navigateur 2160x3840 */
+html, body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: slowZoom 18s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.06); }
+}
+
+/* ============ BATTERIE GÉANTE ============ */
+.battery-wrap {
+    position: relative;
+    margin-bottom: 100px;
+}
+
+.battery {
+    position: relative;
+    width: 600px;
+    height: 1100px;
+    border: 16px solid #1A1D21;
+    border-radius: 80px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.15);
+}
+
+.battery-cap {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 50px;
+    background: #1A1D21;
+    border-radius: 24px 24px 0 0;
+}
+
+.battery-fill {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #2BD9A8, #14B8A6);
+    transition: height 0.3s ease, background 0.5s ease;
+}
+
+.battery-pct {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 200px;
+    font-weight: 800;
+    color: #1A1D21;
+    z-index: 5;
+    letter-spacing: -6px;
+    text-shadow: 0 4px 30px rgba(255,255,255,0.8);
+}
+
+/* Icônes d'apps qui frappent la batterie */
+.app-hit {
+    position: absolute;
+    width: 160px; height: 160px;
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 70px;
+    font-weight: 800;
+    color: #fff;
+    opacity: 0;
+    z-index: 10;
+    box-shadow: 0 16px 50px rgba(0,0,0,0.25);
+}
+
+.hit1 { background: #FE2C55; top: 15%; left: -240px; animation: smashLeft 0.7s ease-in forwards 1.2s; }
+.hit2 { background: linear-gradient(135deg,#833AB4,#FD1D1D,#FCB045); top: 35%; right: -240px; animation: smashRight 0.7s ease-in forwards 2.6s; }
+.hit3 { background: #FF0000; top: 55%; left: -240px; animation: smashLeft 0.7s ease-in forwards 4.0s; }
+.hit4 { background: #000; top: 72%; right: -240px; animation: smashRight 0.7s ease-in forwards 5.4s; }
+
+@keyframes smashLeft {
+    0% { opacity: 0; transform: translateX(0) rotate(-20deg); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(320px) rotate(10deg) scale(0.6); }
+}
+@keyframes smashRight {
+    0% { opacity: 0; transform: translateX(0) rotate(20deg); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-320px) rotate(-10deg) scale(0.6); }
+}
+
+/* Secousse de la batterie à chaque coup */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-22px) rotate(-1deg); }
+    75% { transform: translateX(22px) rotate(1deg); }
+}
+.battery.shaking { animation: shake 0.3s ease; }
+
+/* Éclair de recharge */
+.bolt {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 360px;
+    z-index: 8;
+    opacity: 0;
+    filter: drop-shadow(0 0 60px rgba(20,184,166,0.8));
+}
+.bolt.show { animation: boltPulse 1s ease-out forwards; }
+@keyframes boltPulse {
+    0% { opacity: 0; transform: translate(-50%,-50%) scale(0.4); }
+    40% { opacity: 1; transform: translate(-50%,-50%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%,-50%) scale(1); }
+}
+
+/* ============ TEXTES ============ */
+.txt {
+    position: absolute;
+    width: 1850px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.25;
+    letter-spacing: -2px;
+    opacity: 0;
+}
+
+.t-top { top: 260px; font-size: 108px; }
+
+.t1 { animation: fadeTxt 4s ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s ease-in-out forwards 4s; }
+.t3 { animation: fadeTxt 5s ease-in-out forwards 8s; }
+.t4 { animation: fadeTxt 5s ease-in-out forwards 13s; }
+
+@keyframes fadeTxt {
+    0% { opacity: 0; transform: translateX(-50%) translateY(30px); }
+    8% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    88% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 18s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.25;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">▶ Relancer</button>
+
+<div class="stage">
+
+    <div class="txt t-top t1">Ton énergie mentale,<br>c'est une <span class="rd">batterie</span>.</div>
+    <div class="txt t-top t2">Chaque app ouverte<br>= <span class="rd">-20%</span> de cerveau.</div>
+    <div class="txt t-top t3">Le hack inverse tout.<br>Recharge en <span class="tq">90 secondes</span>.</div>
+    <div class="txt t-top t4">Récupère ton énergie.<br><span class="tq">Test gratuit en bio</span> 🧠</div>
+
+    <div class="battery-wrap">
+        <div class="battery" id="battery">
+            <div class="battery-fill" id="fill"></div>
+            <div class="battery-pct" id="pct">100%</div>
+        </div>
+        <div class="battery-cap"></div>
+        <div class="app-hit hit1">TT</div>
+        <div class="app-hit hit2">IG</div>
+        <div class="app-hit hit3">YT</div>
+        <div class="app-hit hit4">X</div>
+        <div class="bolt" id="bolt">⚡</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    if (scale < 1) {
+        document.body.style.transformOrigin = 'top left';
+        document.body.style.transform = `scale(${scale})`;
+    }
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const fill = document.getElementById('fill');
+const pct = document.getElementById('pct');
+const battery = document.getElementById('battery');
+const bolt = document.getElementById('bolt');
+
+let level = 100;
+
+function setLevel(v, color) {
+    level = v;
+    fill.style.height = v + '%';
+    pct.textContent = v + '%';
+    if (color === 'red') {
+        fill.style.background = 'linear-gradient(180deg, #FF6B6B, #E24B4A)';
+    } else if (color === 'orange') {
+        fill.style.background = 'linear-gradient(180deg, #FFB75E, #ED8F03)';
+    } else {
+        fill.style.background = 'linear-gradient(180deg, #2BD9A8, #14B8A6)';
+    }
+}
+
+function smash(newLevel, color) {
+    battery.classList.add('shaking');
+    setTimeout(() => battery.classList.remove('shaking'), 350);
+    setLevel(newLevel, color);
+}
+
+// Timeline des coups (synchro avec les icônes d'apps)
+setTimeout(() => smash(80, 'green'), 1800);   // TikTok
+setTimeout(() => smash(60, 'orange'), 3200);  // Instagram
+setTimeout(() => smash(40, 'orange'), 4600);  // YouTube
+setTimeout(() => smash(20, 'red'), 6000);     // X
+setTimeout(() => smash(8, 'red'), 7400);      // dernier drain
+
+// À 9s : recharge éclair (le hack)
+setTimeout(() => {
+    bolt.classList.add('show');
+    let v = 8;
+    const recharge = setInterval(() => {
+        v += 3;
+        if (v >= 100) { v = 100; clearInterval(recharge); }
+        setLevel(v, v < 40 ? 'orange' : 'green');
+    }, 90);
+}, 9000);
+</script>
+</body>
+</html>
