@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Le Cortisol — 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.07); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    animation: bgStress 33s ease-in-out forwards;
+}
+@keyframes bgStress {
+    0%   { background: #FDFBF7; }
+    18%  { background: #FFF0EB; }
+    42%  { background: #280808; }
+    70%  { background: #280808; }
+    82%  { background: #071A18; }
+    92%  { background: #FDFBF7; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ VISUEL CENTRAL : JAUGE CORTISOL ============ */
+.gauge-wrap {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 70px;
+}
+
+.gauge-title {
+    font-size: 90px;
+    font-weight: 800;
+    letter-spacing: 20px;
+    color: #14B8A6;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Jauge + étiquettes zones */
+.gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    position: relative;
+}
+
+.gauge-zones {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 1100px;
+    align-items: flex-end;
+    padding: 8px 0;
+}
+.zone-label {
+    font-size: 60px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+.zone-danger { color: #E24B4A; }
+.zone-eleve  { color: #ff8c00; }
+.zone-normal { color: #14B8A6; }
+
+/* Tube de la jauge */
+.gauge-tube {
+    width: 260px;
+    height: 1100px;
+    background: rgba(26,29,33,0.1);
+    border-radius: 130px;
+    position: relative;
+    overflow: hidden;
+    border: 10px solid rgba(26,29,33,0.15);
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.08);
+}
+
+.gauge-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0 0 130px 130px;
+    background: linear-gradient(to top, #E24B4A 0%, #ff8c00 50%, #ffd700 100%);
+    height: 14%;
+    transition: height 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gauge-glow {
+    position: absolute;
+    bottom: 0;
+    left: -10px;
+    right: -10px;
+    border-radius: 0 0 130px 130px;
+    background: rgba(226,75,74,0);
+    height: 14%;
+    filter: blur(30px);
+    transition: height 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease;
+    z-index: -1;
+}
+
+/* Ligne de base qui monte */
+.gauge-baseline {
+    position: absolute;
+    left: -18px;
+    right: -18px;
+    height: 6px;
+    background: rgba(226,75,74,0.6);
+    border-radius: 3px;
+    bottom: 14%;
+    transition: bottom 1.8s ease;
+    box-shadow: 0 0 20px rgba(226,75,74,0.4);
+}
+.gauge-baseline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #E24B4A;
+}
+
+/* Marquages de zones sur le tube */
+.gauge-mark {
+    position: absolute;
+    left: -30px;
+    right: -30px;
+    height: 4px;
+    background: rgba(26,29,33,0.12);
+}
+.mark-33 { bottom: 33%; }
+.mark-66 { bottom: 66%; }
+
+/* Notification emoji */
+.notif-bubble {
+    position: absolute;
+    right: -380px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 200px;
+    opacity: 0;
+    pointer-events: none;
+}
+.notif-bubble.pop { animation: notifBounce 0.85s ease forwards; }
+@keyframes notifBounce {
+    0%   { opacity: 0; transform: translateY(-50%) scale(0.2); }
+    35%  { opacity: 1; transform: translateY(-50%) scale(1.35); }
+    65%  { opacity: 1; transform: translateY(-50%) scale(0.95); }
+    85%  { opacity: 1; transform: translateY(-50%) scale(1.05); }
+    100% { opacity: 0; transform: translateY(-50%) scale(0.7); }
+}
+
+/* Lectures numériques */
+.gauge-readings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+.gauge-value {
+    font-size: 320px;
+    font-weight: 800;
+    color: #1A1D21;
+    letter-spacing: -14px;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+.gauge-value.alerte { color: #E24B4A; }
+.gauge-unit {
+    font-size: 72px;
+    font-weight: 600;
+    color: rgba(26,29,33,0.35);
+    letter-spacing: 10px;
+    text-transform: uppercase;
+}
+.gauge-status {
+    font-size: 80px;
+    font-weight: 800;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+    color: #14B8A6;
+    transition: color 0.3s ease;
+}
+.gauge-status.alerte { color: #E24B4A; }
+
+/* ============ STAT CHOC ============ */
+.stat-choc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1900px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+}
+.stat-num  { font-size: 580px; font-weight: 800; color: #E24B4A; line-height: 0.88; letter-spacing: -25px; }
+.stat-unit { font-size: 100px; font-weight: 700; color: #FDFBF7; margin-top: 36px; letter-spacing: -1px; }
+.stat-sub  { font-size: 70px; font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 30px; line-height: 1.5; }
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 1900px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -2.5px;
+    opacity: 0;
+    z-index: 40;
+}
+.t-top { top: 230px; font-size: 110px; }
+
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 5s  ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s  ease-in-out forwards 5s; }
+.t3 { animation: fadeTxt 4s  ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 13s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 17.5s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 22s; }
+.t7 { animation: fadeTxt 5s  ease-in-out forwards 26.5s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">&#9654; Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">Chaque <span class="rd">notification</span><br>que tu reçois<br>déclenche une réaction.</div>
+    <div class="txt t-top t2">Une décharge<br>de <span class="rd">cortisol.</span><br>L'hormone du stress.</div>
+    <div class="txt t-top t3">Il faut <span class="rd">20 minutes</span><br>pour redescendre.<br>Mais la prochaine arrive avant.</div>
+    <div class="txt t-top t4">Ton niveau de base<br>monte. <span class="rd">Chaque jour.</span><br>Sans que tu t'en rendes compte.</div>
+    <div class="txt t-top t5">Tu ne te souviens<br>plus de la dernière fois<br>que tu t'es senti <span class="tq">vraiment calme.</span></div>
+    <div class="txt t-top t6">Ce n'est pas<br>du stress. C'est<br><span class="rd">l'addiction.</span></div>
+    <div class="txt t-top t7">Le protocole<br>remet ton système<br>à zéro. En <span class="tq">7 jours.</span><br><span class="tq">Test gratuit en bio 🧠</span></div>
+
+    <!-- Visuel central : jauge cortisol -->
+    <div class="gauge-wrap" id="gaugeWrap">
+        <div class="gauge-title">CORTISOL</div>
+
+        <div class="gauge-row">
+            <div class="gauge-zones">
+                <span class="zone-label zone-danger">DANGER</span>
+                <span class="zone-label zone-eleve">ÉLEVÉ</span>
+                <span class="zone-label zone-normal">NORMAL</span>
+            </div>
+
+            <div class="gauge-tube">
+                <div class="gauge-fill"     id="gaugeFill"></div>
+                <div class="gauge-glow"     id="gaugeGlow"></div>
+                <div class="gauge-baseline" id="gaugeBaseline"></div>
+                <div class="gauge-mark mark-33"></div>
+                <div class="gauge-mark mark-66"></div>
+            </div>
+
+            <div class="notif-bubble" id="notifBubble">&#128276;</div>
+        </div>
+
+        <div class="gauge-readings">
+            <div class="gauge-value"  id="gaugeValue">14</div>
+            <div class="gauge-unit">nmol / L</div>
+            <div class="gauge-status" id="gaugeStatus">NORMAL</div>
+        </div>
+    </div>
+
+    <!-- Stat choc -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">75</div>
+        <div class="stat-unit">fois par jour</div>
+        <div class="stat-sub">tu vérifies ton téléphone.<br>75 décharges de cortisol.</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const gaugeFill     = document.getElementById('gaugeFill');
+const gaugeGlow     = document.getElementById('gaugeGlow');
+const gaugeBaseline = document.getElementById('gaugeBaseline');
+const gaugeValue    = document.getElementById('gaugeValue');
+const gaugeStatus   = document.getElementById('gaugeStatus');
+const notifBubble   = document.getElementById('notifBubble');
+const gaugeWrap     = document.getElementById('gaugeWrap');
+const statChoc      = document.getElementById('statChoc');
+
+/* Niveau initial */
+let baselinePct = 14;
+
+function setLevel(fillPct, val, status, alert) {
+    gaugeFill.style.height = fillPct + '%';
+    gaugeGlow.style.height = fillPct + '%';
+    gaugeGlow.style.background = alert ? 'rgba(226,75,74,0.25)' : 'rgba(20,184,166,0.15)';
+    gaugeValue.textContent = val;
+    gaugeStatus.textContent = status;
+    gaugeValue.classList.toggle('alerte', alert);
+    gaugeStatus.classList.toggle('alerte', alert);
+}
+
+function spike(peakPct, newBasePct, peakVal, baseVal) {
+    notifBubble.classList.remove('pop');
+    void notifBubble.offsetWidth;
+    notifBubble.classList.add('pop');
+
+    setLevel(peakPct, peakVal, 'ALERTE', true);
+
+    setTimeout(function () {
+        baselinePct = newBasePct;
+        gaugeBaseline.style.bottom = newBasePct + '%';
+        setLevel(newBasePct + 4, baseVal, newBasePct >= 35 ? 'ÉLEVÉ' : 'NORMAL', newBasePct >= 35);
+    }, 1300);
+}
+
+/* État initial */
+setLevel(14, 14, 'NORMAL', false);
+
+/* 4 pics de cortisol progressivement plus élevés */
+setTimeout(function () { spike(58, 22, 41, 20); }, 2800);
+setTimeout(function () { spike(70, 32, 55, 30); }, 6500);
+setTimeout(function () { spike(80, 46, 66, 44); }, 10200);
+setTimeout(function () { spike(90, 58, 78, 56); }, 13800);
+
+/* À 17.5s : swap vers stat choc */
+setTimeout(function () {
+    gaugeWrap.style.transition = 'opacity 1.2s ease';
+    gaugeWrap.style.opacity = '0';
+    statChoc.style.transition = 'opacity 1.2s ease';
+    statChoc.style.opacity = '1';
+}, 17500);
+
+/* À 22.5s : stat choc disparaît */
+setTimeout(function () {
+    statChoc.style.transition = 'opacity 1s ease';
+    statChoc.style.opacity = '0';
+}, 22500);
+</script>
+</body>
+</html>
