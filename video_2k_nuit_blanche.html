@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -249,7 +249,7 @@ canvas#sleepWave {
 
 .replay {
     position: fixed;
-    top: 20px; left: 20px;
+    top: -80px; left: 20px;
     z-index: 100;
     padding: 24px 48px;
     font-size: 40px;
@@ -318,12 +318,12 @@ canvas#sleepWave {
 
 <script>
 function fitPreview() {
-    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    const scale = window.innerWidth / 2160;
     document.body.style.transformOrigin = 'top left';
     document.body.style.transform = `scale(${scale})`;
     document.body.style.position = 'absolute';
-    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
-    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+    document.body.style.left = '0px';
+    document.body.style.top = ((window.innerHeight - 3840 * scale) / 2) + 'px';
 }
 fitPreview();
 window.addEventListener('resize', fitPreview);
@@ -476,3 +476,4 @@ setTimeout(function() {
 </script>
 </body>
 </html>
+
