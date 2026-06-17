@@ -1,16 +1,16 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>La Comparaison Sociale — 2K TikTok 33s</title>
+<title>La Comparaison Sociale — TikTok 33s</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 
 html { background: #000; width: 100%; height: 100%; }
 body {
-    width: 2160px;
-    height: 3840px;
+    width: 1080px;
+    height: 1920px;
     overflow: hidden;
     background: #FDFBF7;
     font-family: 'Inter', sans-serif;
@@ -19,15 +19,16 @@ body {
 }
 
 .stage {
-    width: 2160px;
-    height: 3840px;
+    width: 1080px;
+    height: 1920px;
     position: relative;
+    will-change: transform;
     animation: slowZoom 33s ease-in-out forwards;
 }
 
 @keyframes slowZoom {
-    from { transform: scale(1); }
-    to   { transform: scale(1.07); }
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
 }
 
 .bg {
@@ -52,25 +53,27 @@ body {
     inset: 0;
     z-index: 10;
     transition: opacity 1.2s ease;
+    will-change: opacity;
 }
 
 .beam {
     position: absolute;
-    left: 380px;
-    top: 1700px;
-    width: 1400px;
-    height: 28px;
+    left: 190px;
+    top: 850px;
+    width: 700px;
+    height: 14px;
     background: #1A1D21;
-    border-radius: 14px;
-    transform-origin: 700px 14px;
+    border-radius: 7px;
+    transform-origin: 350px 7px;
     transition: transform 2s cubic-bezier(0.34, 1.1, 0.64, 1),
                 background 1.2s ease;
+    will-change: transform;
 }
 
 .fulcrum-wrap {
     position: absolute;
-    left: 1080px;
-    top: 1728px;
+    left: 540px;
+    top: 864px;
     transform: translateX(-50%);
     display: flex;
     flex-direction: column;
@@ -78,16 +81,16 @@ body {
 }
 .fulcrum-tri {
     width: 0; height: 0;
-    border-left: 65px solid transparent;
-    border-right: 65px solid transparent;
-    border-bottom: 150px solid #1A1D21;
+    border-left: 32px solid transparent;
+    border-right: 32px solid transparent;
+    border-bottom: 75px solid #1A1D21;
     transition: border-bottom-color 1.2s ease;
 }
 .fulcrum-base {
-    width: 260px;
-    height: 36px;
+    width: 130px;
+    height: 18px;
     background: #1A1D21;
-    border-radius: 18px;
+    border-radius: 9px;
     transition: background 1.2s ease;
 }
 
@@ -97,26 +100,27 @@ body {
     flex-direction: column;
     align-items: center;
     transition: top 2s cubic-bezier(0.34, 1.1, 0.64, 1);
+    will-change: top;
 }
 
-#plateLeft  { left: 180px;  top: 1728px; }
-#plateRight { right: 180px; top: 1728px; }
+#plateLeft  { left: 90px;  top: 864px; }
+#plateRight { right: 90px; top: 864px; }
 
 .rope {
-    width: 8px;
-    height: 260px;
+    width: 4px;
+    height: 130px;
     background: #1A1D21;
-    border-radius: 4px;
+    border-radius: 2px;
     transition: height 2s cubic-bezier(0.34, 1.1, 0.64, 1),
                 background 1.2s ease;
 }
 
 .plate-dish {
-    width: 500px;
-    height: 90px;
+    width: 250px;
+    height: 45px;
     background: #1A1D21;
-    border-radius: 45px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    border-radius: 22px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     transition: background 1.2s ease, box-shadow 1s ease;
     position: relative;
     display: flex;
@@ -126,12 +130,12 @@ body {
 
 .plate-name {
     position: absolute;
-    top: -160px;
-    width: 500px;
+    top: -80px;
+    width: 250px;
     text-align: center;
-    font-size: 110px;
+    font-size: 55px;
     font-weight: 800;
-    letter-spacing: 14px;
+    letter-spacing: 7px;
     text-transform: uppercase;
     transition: color 1.2s ease;
     color: #1A1D21;
@@ -139,48 +143,50 @@ body {
 
 .icons-pile {
     position: absolute;
-    bottom: 100px;
+    bottom: 50px;
     left: 0;
-    width: 500px;
+    width: 250px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 22px;
-    padding: 10px 20px;
+    gap: 11px;
+    padding: 5px 10px;
 }
 
 /* ======== STAT CHOC ======== */
 .stat-choc {
     position: absolute;
-    top: 1500px;
+    top: 750px;
     left: 50%;
     transform: translateX(-50%);
-    width: 1900px;
+    width: 950px;
     text-align: center;
     z-index: 40;
     opacity: 0;
     pointer-events: none;
     transition: opacity 1.2s ease;
+    will-change: opacity;
 }
-.stat-num  { font-size: 540px; font-weight: 800; color: #E24B4A; line-height: 0.88; letter-spacing: -28px; }
-.stat-unit { font-size: 96px;  font-weight: 700; color: #FDFBF7; margin-top: 42px; letter-spacing: -1px; }
-.stat-sub  { font-size: 68px;  font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 30px; line-height: 1.5; }
+.stat-num  { font-size: 270px; font-weight: 800; color: #E24B4A; line-height: 0.88; letter-spacing: -14px; }
+.stat-unit { font-size: 48px;  font-weight: 700; color: #FDFBF7; margin-top: 21px; letter-spacing: -0.5px; }
+.stat-sub  { font-size: 34px;  font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 15px; line-height: 1.5; }
 
 /* ======== TEXTES NARRATIFS ======== */
 .txt {
     position: absolute;
-    width: 1900px;
+    width: 950px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
     font-weight: 800;
     color: #1A1D21;
     line-height: 1.22;
-    letter-spacing: -2.5px;
+    letter-spacing: -1.25px;
     opacity: 0;
     z-index: 40;
+    will-change: opacity, transform;
 }
-.t-top { top: 230px; font-size: 110px; }
+.t-top { top: 115px; font-size: 55px; }
 
 .t4, .t5, .t6 { color: #FDFBF7; }
 
@@ -193,10 +199,10 @@ body {
 .t7 { animation: fadeTxt 5s  ease-in-out forwards 26.5s; }
 
 @keyframes fadeTxt {
-    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
     10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
     85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
-    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
 }
 
 .tq { color: #14B8A6; }
@@ -206,31 +212,29 @@ body {
 .progress {
     position: absolute;
     bottom: 0; left: 0;
-    height: 14px;
+    height: 7px;
     background: #14B8A6;
     width: 0%;
     animation: fillBar 33s linear forwards;
     z-index: 50;
+    will-change: width;
 }
 @keyframes fillBar { from { width: 0%; } to { width: 100%; } }
 
 .replay {
     position: fixed;
-    top: -80px; left: 20px;
+    top: -80px; left: 10px;
     z-index: 100;
-    padding: 24px 48px;
-    font-size: 40px;
+    padding: 12px 24px;
+    font-size: 20px;
     background: #14B8A6;
     color: #fff;
     border: none;
-    border-radius: 20px;
+    border-radius: 10px;
     cursor: pointer;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
-    opacity: 0.2;
-    transition: opacity 0.2s;
 }
-.replay:hover { opacity: 1; }
 </style>
 </head>
 <body>
@@ -240,7 +244,6 @@ body {
 <div class="stage">
     <div class="bg"></div>
 
-    <!-- 7 phases narratives -->
     <div class="txt t-top t1"><span class="rd">200 fois par jour</span><br>tu te compares.<br>Sans t'en rendre compte.</div>
     <div class="txt t-top t2">À des gens<br>que tu ne connais pas.<br>Sur un écran.</div>
     <div class="txt t-top t3">Des moments choisis.<br><span class="rd">Filtrés. Triés.</span><br>Mis en scène.</div>
@@ -251,22 +254,16 @@ body {
 
     <!-- Balance -->
     <div class="scale-container" id="scaleContainer">
-
         <div class="beam" id="beam"></div>
-
         <div class="fulcrum-wrap">
             <div class="fulcrum-tri" id="fulcrumTri"></div>
             <div class="fulcrum-base" id="fulcrumBase"></div>
         </div>
-
-        <!-- Plateau gauche : TOI -->
         <div class="plate-group" id="plateLeft">
             <div class="plate-name" id="nameToi">TOI</div>
             <div class="rope" id="ropeLeft"></div>
             <div class="plate-dish" id="dishLeft"></div>
         </div>
-
-        <!-- Plateau droit : EUX -->
         <div class="plate-group" id="plateRight">
             <div class="plate-name" id="nameEux">EUX</div>
             <div class="rope" id="ropeRight"></div>
@@ -274,7 +271,6 @@ body {
                 <div class="icons-pile" id="iconsPile"></div>
             </div>
         </div>
-
     </div>
 
     <!-- Stat choc -->
@@ -291,48 +287,44 @@ body {
 function fitPreview() {
     const mobile = window.innerWidth <= 768;
     const scale = mobile
-        ? window.innerWidth / 2160
-        : Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
     document.body.style.transformOrigin = 'top left';
-    document.body.style.transform = `scale(${scale})`;
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
     document.body.style.position = 'absolute';
-    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
-    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
 }
 fitPreview();
 window.addEventListener('resize', fitPreview);
 
-const beam          = document.getElementById('beam');
-const plateLeft     = document.getElementById('plateLeft');
-const plateRight    = document.getElementById('plateRight');
-const dishLeft      = document.getElementById('dishLeft');
-const dishRight     = document.getElementById('dishRight');
-const nameToi       = document.getElementById('nameToi');
-const nameEux       = document.getElementById('nameEux');
-const ropeLeft      = document.getElementById('ropeLeft');
-const ropeRight     = document.getElementById('ropeRight');
-const iconsPile     = document.getElementById('iconsPile');
-const statChoc      = document.getElementById('statChoc');
+const beam           = document.getElementById('beam');
+const plateLeft      = document.getElementById('plateLeft');
+const plateRight     = document.getElementById('plateRight');
+const dishLeft       = document.getElementById('dishLeft');
+const dishRight      = document.getElementById('dishRight');
+const nameToi        = document.getElementById('nameToi');
+const nameEux        = document.getElementById('nameEux');
+const ropeLeft       = document.getElementById('ropeLeft');
+const ropeRight      = document.getElementById('ropeRight');
+const iconsPile      = document.getElementById('iconsPile');
+const statChoc       = document.getElementById('statChoc');
 const scaleContainer = document.getElementById('scaleContainer');
-const fulcrumTri    = document.getElementById('fulcrumTri');
-const fulcrumBase   = document.getElementById('fulcrumBase');
+const fulcrumTri     = document.getElementById('fulcrumTri');
+const fulcrumBase    = document.getElementById('fulcrumBase');
 
-/* Bras = distance du centre du beam (x=1080) au centre du plateau
-   plateLeft  : left=180px, width=500px => centre x=430px => bras = 1080-430 = 650px
-   plateRight : right=180px, width=500px => centre x=1730px => bras = 1730-1080 = 650px  */
-const ARM      = 650;
-const BASE_TOP = 1728; /* top initial des plate-group (au niveau du bas du beam) */
-const ROPE_BASE = 260; /* hauteur initiale des cordes */
+const ARM       = 325;
+const BASE_TOP  = 864;
+const ROPE_BASE = 130;
 
 function tilt(deg) {
     const rad = deg * Math.PI / 180;
     const dy  = Math.round(ARM * Math.sin(rad));
-    beam.style.transform = 'rotate(' + deg + 'deg)';
-    plateLeft.style.top  = (BASE_TOP - dy) + 'px';
-    plateRight.style.top = (BASE_TOP + dy) + 'px';
-    /* Ajuste visuellement les longueurs de corde */
-    ropeLeft.style.height  = Math.max(60, ROPE_BASE - dy) + 'px';
-    ropeRight.style.height = Math.max(60, ROPE_BASE + dy) + 'px';
+    beam.style.transform      = 'rotate(' + deg + 'deg)';
+    plateLeft.style.top       = (BASE_TOP - dy) + 'px';
+    plateRight.style.top      = (BASE_TOP + dy) + 'px';
+    ropeLeft.style.height     = Math.max(30, ROPE_BASE - dy) + 'px';
+    ropeRight.style.height    = Math.max(30, ROPE_BASE + dy) + 'px';
 }
 
 const ICONS = ['💎', '✈️', '🏆', '💪', '🎉', '🌟', '💰', '🔥'];
@@ -343,82 +335,58 @@ function addIcon() {
     const span = document.createElement('span');
     span.textContent = ICONS[iconCount++];
     span.style.cssText = [
-        'font-size: 120px',
-        'line-height: 1',
-        'display: inline-block',
-        'opacity: 0',
-        'transform: scale(0.2) translateY(30px)',
-        'transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34,1.56,0.64,1)'
+        'font-size:60px',
+        'line-height:1',
+        'display:inline-block',
+        'opacity:0',
+        'transform:scale(0.2) translateY(15px)',
+        'transition:opacity 0.5s ease,transform 0.55s cubic-bezier(0.34,1.56,0.64,1)'
     ].join(';');
     iconsPile.appendChild(span);
-    /* Double rAF pour déclencher la transition */
     requestAnimationFrame(function() {
         requestAnimationFrame(function() {
-            span.style.opacity = '1';
+            span.style.opacity   = '1';
             span.style.transform = 'scale(1) translateY(0)';
         });
     });
 }
 
-/* ======== TIMELINE ======== */
-
-/* 0s : état initial équilibré */
 tilt(0);
 
-/* 3s : 1re icône, légère inclinaison */
 setTimeout(function() { addIcon(); tilt(5);  }, 3000);
-
-/* 6s : 2e icône, déséquilibre augmente */
 setTimeout(function() { addIcon(); tilt(9);  }, 6000);
-
-/* 9s : 3e icône */
 setTimeout(function() { addIcon(); tilt(13); }, 9000);
-
-/* 11s : 4e icône */
 setTimeout(function() { addIcon(); tilt(16); }, 11000);
 
-/* 13s : passage en mode sombre, changement des couleurs */
 setTimeout(function() {
-    nameToi.style.color       = '#FDFBF7';
-    nameEux.style.color       = '#14B8A6';
-    dishLeft.style.background = 'rgba(253,251,247,0.12)';
-    dishRight.style.background = '#14B8A6';
-    ropeLeft.style.background  = 'rgba(253,251,247,0.35)';
-    ropeRight.style.background = '#14B8A6';
-    beam.style.background      = 'rgba(253,251,247,0.3)';
-    fulcrumTri.style.borderBottomColor = 'rgba(253,251,247,0.3)';
-    fulcrumBase.style.background       = 'rgba(253,251,247,0.3)';
+    nameToi.style.color                     = '#FDFBF7';
+    nameEux.style.color                     = '#14B8A6';
+    dishLeft.style.background               = 'rgba(253,251,247,0.12)';
+    dishRight.style.background              = '#14B8A6';
+    ropeLeft.style.background               = 'rgba(253,251,247,0.35)';
+    ropeRight.style.background              = '#14B8A6';
+    beam.style.background                   = 'rgba(253,251,247,0.3)';
+    fulcrumTri.style.borderBottomColor      = 'rgba(253,251,247,0.3)';
+    fulcrumBase.style.background            = 'rgba(253,251,247,0.3)';
 }, 13000);
 
-/* 14s : 5e icône, inclinaison maximale */
 setTimeout(function() { addIcon(); tilt(19); }, 14000);
-
-/* 16s : 6e icône, maintien */
 setTimeout(function() { addIcon(); }, 16000);
 
-/* 17.5s : swap balance -> stat choc */
 setTimeout(function() {
     scaleContainer.style.opacity = '0';
-    statChoc.style.opacity = '1';
+    statChoc.style.opacity       = '1';
 }, 17500);
 
-/* 22.5s : stat choc disparaît */
-setTimeout(function() {
-    statChoc.style.opacity = '0';
-}, 22500);
+setTimeout(function() { statChoc.style.opacity = '0'; }, 22500);
 
-/* 24s : balance réapparaît, rééquilibrée = révélation que le jeu était biaisé */
 setTimeout(function() {
-    scaleContainer.style.opacity = '1';
-    /* Couleurs révélation : EUX passe au rouge (faux/piège) */
-    nameEux.style.color          = '#E24B4A';
-    dishRight.style.background   = '#E24B4A';
-    ropeRight.style.background   = 'rgba(226,75,74,0.5)';
-    /* Retour à l'équilibre */
+    scaleContainer.style.opacity        = '1';
+    nameEux.style.color                 = '#E24B4A';
+    dishRight.style.background          = '#E24B4A';
+    ropeRight.style.background          = 'rgba(226,75,74,0.5)';
     tilt(0);
 }, 24000);
 </script>
 </body>
 </html>
-
-
