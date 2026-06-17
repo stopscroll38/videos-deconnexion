@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>La Comparaison Sociale — 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 2160px;
+    height: 3840px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 2160px;
+    height: 3840px;
+    position: relative;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1); }
+    to   { transform: scale(1.07); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    animation: bgShift 33s ease-in-out forwards;
+}
+
+@keyframes bgShift {
+    0%   { background: #FDFBF7; }
+    20%  { background: #FDFBF7; }
+    38%  { background: #180808; }
+    65%  { background: #080818; }
+    82%  { background: #071A18; }
+    100% { background: #FDFBF7; }
+}
+
+/* ======== BALANCE ======== */
+.scale-container {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    transition: opacity 1.2s ease;
+}
+
+.beam {
+    position: absolute;
+    left: 380px;
+    top: 1700px;
+    width: 1400px;
+    height: 28px;
+    background: #1A1D21;
+    border-radius: 14px;
+    transform-origin: 700px 14px;
+    transition: transform 2s cubic-bezier(0.34, 1.1, 0.64, 1),
+                background 1.2s ease;
+}
+
+.fulcrum-wrap {
+    position: absolute;
+    left: 1080px;
+    top: 1728px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.fulcrum-tri {
+    width: 0; height: 0;
+    border-left: 65px solid transparent;
+    border-right: 65px solid transparent;
+    border-bottom: 150px solid #1A1D21;
+    transition: border-bottom-color 1.2s ease;
+}
+.fulcrum-base {
+    width: 260px;
+    height: 36px;
+    background: #1A1D21;
+    border-radius: 18px;
+    transition: background 1.2s ease;
+}
+
+.plate-group {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: top 2s cubic-bezier(0.34, 1.1, 0.64, 1);
+}
+
+#plateLeft  { left: 180px;  top: 1728px; }
+#plateRight { right: 180px; top: 1728px; }
+
+.rope {
+    width: 8px;
+    height: 260px;
+    background: #1A1D21;
+    border-radius: 4px;
+    transition: height 2s cubic-bezier(0.34, 1.1, 0.64, 1),
+                background 1.2s ease;
+}
+
+.plate-dish {
+    width: 500px;
+    height: 90px;
+    background: #1A1D21;
+    border-radius: 45px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    transition: background 1.2s ease, box-shadow 1s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.plate-name {
+    position: absolute;
+    top: -160px;
+    width: 500px;
+    text-align: center;
+    font-size: 110px;
+    font-weight: 800;
+    letter-spacing: 14px;
+    text-transform: uppercase;
+    transition: color 1.2s ease;
+    color: #1A1D21;
+}
+
+.icons-pile {
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    width: 500px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 22px;
+    padding: 10px 20px;
+}
+
+/* ======== STAT CHOC ======== */
+.stat-choc {
+    position: absolute;
+    top: 1500px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 1900px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.2s ease;
+}
+.stat-num  { font-size: 540px; font-weight: 800; color: #E24B4A; line-height: 0.88; letter-spacing: -28px; }
+.stat-unit { font-size: 96px;  font-weight: 700; color: #FDFBF7; margin-top: 42px; letter-spacing: -1px; }
+.stat-sub  { font-size: 68px;  font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 30px; line-height: 1.5; }
+
+/* ======== TEXTES NARRATIFS ======== */
+.txt {
+    position: absolute;
+    width: 1900px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -2.5px;
+    opacity: 0;
+    z-index: 40;
+}
+.t-top { top: 230px; font-size: 110px; }
+
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 5s  ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s  ease-in-out forwards 5s; }
+.t3 { animation: fadeTxt 4s  ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 13s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 17.5s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 22s; }
+.t7 { animation: fadeTxt 5s  ease-in-out forwards 26.5s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(40px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ======== BARRE DE PROGRESSION ======== */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 14px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: 20px; left: 20px;
+    z-index: 100;
+    padding: 24px 48px;
+    font-size: 40px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    opacity: 0.2;
+    transition: opacity 0.2s;
+}
+.replay:hover { opacity: 1; }
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">&#9654; Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1"><span class="rd">200 fois par jour</span><br>tu te compares.<br>Sans t'en rendre compte.</div>
+    <div class="txt t-top t2">À des gens<br>que tu ne connais pas.<br>Sur un écran.</div>
+    <div class="txt t-top t3">Des moments choisis.<br><span class="rd">Filtrés. Triés.</span><br>Mis en scène.</div>
+    <div class="txt t-top t4">Tu les vois heureux.<br>Riches. Accomplis.<br>Et toi, tu te <span class="rd">rétrécis.</span></div>
+    <div class="txt t-top t5">Ce n'est pas la réalité.<br>C'est ce que<br>l'<span class="tq">algorithme</span> veut que tu croies.</div>
+    <div class="txt t-top t6">Il te montre<br>le meilleur de tous.<br>Pour que tu <span class="rd">restes accroché.</span></div>
+    <div class="txt t-top t7">Reprends<br>ton regard sur toi.<br><span class="tq">Test gratuit en bio 🧠</span></div>
+
+    <!-- Balance -->
+    <div class="scale-container" id="scaleContainer">
+
+        <div class="beam" id="beam"></div>
+
+        <div class="fulcrum-wrap">
+            <div class="fulcrum-tri" id="fulcrumTri"></div>
+            <div class="fulcrum-base" id="fulcrumBase"></div>
+        </div>
+
+        <!-- Plateau gauche : TOI -->
+        <div class="plate-group" id="plateLeft">
+            <div class="plate-name" id="nameToi">TOI</div>
+            <div class="rope" id="ropeLeft"></div>
+            <div class="plate-dish" id="dishLeft"></div>
+        </div>
+
+        <!-- Plateau droit : EUX -->
+        <div class="plate-group" id="plateRight">
+            <div class="plate-name" id="nameEux">EUX</div>
+            <div class="rope" id="ropeRight"></div>
+            <div class="plate-dish" id="dishRight">
+                <div class="icons-pile" id="iconsPile"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Stat choc -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">200</div>
+        <div class="stat-unit">comparaisons par jour</div>
+        <div class="stat-sub">chacune érode<br>un peu ta confiance en toi</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const beam          = document.getElementById('beam');
+const plateLeft     = document.getElementById('plateLeft');
+const plateRight    = document.getElementById('plateRight');
+const dishLeft      = document.getElementById('dishLeft');
+const dishRight     = document.getElementById('dishRight');
+const nameToi       = document.getElementById('nameToi');
+const nameEux       = document.getElementById('nameEux');
+const ropeLeft      = document.getElementById('ropeLeft');
+const ropeRight     = document.getElementById('ropeRight');
+const iconsPile     = document.getElementById('iconsPile');
+const statChoc      = document.getElementById('statChoc');
+const scaleContainer = document.getElementById('scaleContainer');
+const fulcrumTri    = document.getElementById('fulcrumTri');
+const fulcrumBase   = document.getElementById('fulcrumBase');
+
+/* Bras = distance du centre du beam (x=1080) au centre du plateau
+   plateLeft  : left=180px, width=500px => centre x=430px => bras = 1080-430 = 650px
+   plateRight : right=180px, width=500px => centre x=1730px => bras = 1730-1080 = 650px  */
+const ARM      = 650;
+const BASE_TOP = 1728; /* top initial des plate-group (au niveau du bas du beam) */
+const ROPE_BASE = 260; /* hauteur initiale des cordes */
+
+function tilt(deg) {
+    const rad = deg * Math.PI / 180;
+    const dy  = Math.round(ARM * Math.sin(rad));
+    beam.style.transform = 'rotate(' + deg + 'deg)';
+    plateLeft.style.top  = (BASE_TOP - dy) + 'px';
+    plateRight.style.top = (BASE_TOP + dy) + 'px';
+    /* Ajuste visuellement les longueurs de corde */
+    ropeLeft.style.height  = Math.max(60, ROPE_BASE - dy) + 'px';
+    ropeRight.style.height = Math.max(60, ROPE_BASE + dy) + 'px';
+}
+
+const ICONS = ['💎', '✈️', '🏆', '💪', '🎉', '🌟', '💰', '🔥'];
+let iconCount = 0;
+
+function addIcon() {
+    if (iconCount >= ICONS.length) return;
+    const span = document.createElement('span');
+    span.textContent = ICONS[iconCount++];
+    span.style.cssText = [
+        'font-size: 120px',
+        'line-height: 1',
+        'display: inline-block',
+        'opacity: 0',
+        'transform: scale(0.2) translateY(30px)',
+        'transition: opacity 0.5s ease, transform 0.55s cubic-bezier(0.34,1.56,0.64,1)'
+    ].join(';');
+    iconsPile.appendChild(span);
+    /* Double rAF pour déclencher la transition */
+    requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+            span.style.opacity = '1';
+            span.style.transform = 'scale(1) translateY(0)';
+        });
+    });
+}
+
+/* ======== TIMELINE ======== */
+
+/* 0s : état initial équilibré */
+tilt(0);
+
+/* 3s : 1re icône, légère inclinaison */
+setTimeout(function() { addIcon(); tilt(5);  }, 3000);
+
+/* 6s : 2e icône, déséquilibre augmente */
+setTimeout(function() { addIcon(); tilt(9);  }, 6000);
+
+/* 9s : 3e icône */
+setTimeout(function() { addIcon(); tilt(13); }, 9000);
+
+/* 11s : 4e icône */
+setTimeout(function() { addIcon(); tilt(16); }, 11000);
+
+/* 13s : passage en mode sombre, changement des couleurs */
+setTimeout(function() {
+    nameToi.style.color       = '#FDFBF7';
+    nameEux.style.color       = '#14B8A6';
+    dishLeft.style.background = 'rgba(253,251,247,0.12)';
+    dishRight.style.background = '#14B8A6';
+    ropeLeft.style.background  = 'rgba(253,251,247,0.35)';
+    ropeRight.style.background = '#14B8A6';
+    beam.style.background      = 'rgba(253,251,247,0.3)';
+    fulcrumTri.style.borderBottomColor = 'rgba(253,251,247,0.3)';
+    fulcrumBase.style.background       = 'rgba(253,251,247,0.3)';
+}, 13000);
+
+/* 14s : 5e icône, inclinaison maximale */
+setTimeout(function() { addIcon(); tilt(19); }, 14000);
+
+/* 16s : 6e icône, maintien */
+setTimeout(function() { addIcon(); }, 16000);
+
+/* 17.5s : swap balance -> stat choc */
+setTimeout(function() {
+    scaleContainer.style.opacity = '0';
+    statChoc.style.opacity = '1';
+}, 17500);
+
+/* 22.5s : stat choc disparaît */
+setTimeout(function() {
+    statChoc.style.opacity = '0';
+}, 22500);
+
+/* 24s : balance réapparaît, rééquilibrée = révélation que le jeu était biaisé */
+setTimeout(function() {
+    scaleContainer.style.opacity = '1';
+    /* Couleurs révélation : EUX passe au rouge (faux/piège) */
+    nameEux.style.color          = '#E24B4A';
+    dishRight.style.background   = '#E24B4A';
+    ropeRight.style.background   = 'rgba(226,75,74,0.5)';
+    /* Retour à l'équilibre */
+    tilt(0);
+}, 24000);
+</script>
+</body>
+</html>
