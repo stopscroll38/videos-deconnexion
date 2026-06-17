@@ -221,12 +221,15 @@ canvas#neuralNet {
 
 <script>
 function fitPreview() {
-    const scale = window.innerWidth / 2160;
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 2160
+        : Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
     document.body.style.transformOrigin = 'top left';
     document.body.style.transform = `scale(${scale})`;
     document.body.style.position = 'absolute';
-    document.body.style.left = '0px';
-    document.body.style.top = ((window.innerHeight - 3840 * scale) / 2) + 'px';
+    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
 }
 fitPreview();
 window.addEventListener('resize', fitPreview);
@@ -421,4 +424,5 @@ setTimeout(function() {
 </script>
 </body>
 </html>
+
 

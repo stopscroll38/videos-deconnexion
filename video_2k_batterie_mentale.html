@@ -230,13 +230,18 @@ html, body {
 
 <script>
 function fitPreview() {
-    const scale = Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
-    if (scale < 1) {
-        document.body.style.transformOrigin = 'top left';
-        document.body.style.transform = `scale(${scale})`;
-    }
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 2160
+        : Math.min(window.innerWidth / 2160, window.innerHeight / 3840);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = `scale(${scale})`;
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 2160 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 3840 * scale) / 2) + 'px';
 }
 fitPreview();
+window.addEventListener('resize', fitPreview);
 window.addEventListener('resize', fitPreview);
 
 const fill = document.getElementById('fill');
@@ -285,3 +290,5 @@ setTimeout(() => {
 </script>
 </body>
 </html>
+
+
