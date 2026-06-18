@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mélatonine — TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #070B16;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    animation: bgShift 33s ease-in-out forwards;
+}
+@keyframes bgShift {
+    0%   { background: #070B16; }
+    2%   { background: #070B16; }
+    5%   { background: #0E1B32; }
+    9%   { background: #142744; }
+    13%  { background: #0E1B32; }
+    17%  { background: #070B16; }
+    22%  { background: #070B16; }
+    26%  { background: #071A18; }
+    100% { background: #071A18; }
+}
+
+/* ============ ÉTOILES ============ */
+.stars {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    animation: starsFade 33s ease-in-out forwards;
+}
+@keyframes starsFade {
+    0%   { opacity: 1; }
+    5%   { opacity: 1; }
+    9%   { opacity: 0.15; }
+    13%  { opacity: 0.15; }
+    17%  { opacity: 1; }
+    100% { opacity: 1; }
+}
+.star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle 2.5s ease-in-out infinite;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.25; }
+    50% { opacity: 0.9; }
+}
+
+/* ============ FLASH ÉCRAN ============ */
+.screen-flash {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 40%, rgba(120,190,255,0.45), rgba(70,130,220,0.2) 50%, transparent 75%);
+    opacity: 0;
+    z-index: 9;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    will-change: opacity;
+}
+
+/* ============ LUNE + JAUGE ============ */
+.moon-container {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    will-change: opacity;
+    transition: opacity 1.2s ease;
+}
+
+.moon-label {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: 10px;
+    color: #14B8A6;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+/* Anneau circulaire */
+.moon-ring {
+    position: relative;
+    width: 420px;
+    height: 420px;
+}
+.moon-ring svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    will-change: transform;
+}
+.ring-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.07);
+    stroke-width: 20;
+}
+.ring-fill {
+    fill: none;
+    stroke: #F5E642;
+    stroke-width: 20;
+    stroke-linecap: round;
+    stroke-dasharray: 1194;
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 1.8s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.6s ease;
+    filter: drop-shadow(0 0 10px rgba(245,230,66,0.55));
+    will-change: stroke-dashoffset;
+}
+
+/* Face de la lune */
+.moon-face {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 38%, #FFFAE0, #F5E642 55%, #C8A000);
+    box-shadow: 0 0 60px rgba(245,230,66,0.45), 0 0 120px rgba(245,230,66,0.15);
+    transition: box-shadow 1.2s ease, filter 1.2s ease;
+    overflow: hidden;
+    will-change: transform;
+}
+/* Ombre qui avance sur la lune (effet éclipse) */
+.moon-shadow {
+    position: absolute;
+    top: -10px; left: -10px;
+    width: 120%;
+    height: 120%;
+    border-radius: 50%;
+    background: #070B16;
+    opacity: 0;
+    transform: translateX(60%);
+    transition: opacity 1.6s ease, transform 1.6s ease;
+    will-change: opacity, transform;
+}
+/* Cratères décoratifs */
+.crater {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.07);
+    border: 2px solid rgba(0,0,0,0.05);
+}
+
+/* Valeur centrale */
+.moon-value {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 20;
+    will-change: opacity;
+}
+.moon-pct {
+    display: block;
+    font-size: 110px;
+    font-weight: 800;
+    color: #FDFBF7;
+    letter-spacing: -4px;
+    line-height: 1;
+    transition: color 0.5s ease;
+}
+.moon-pct.alerte { color: #E24B4A; }
+.moon-unit-label {
+    display: block;
+    font-size: 30px;
+    font-weight: 700;
+    color: rgba(253,251,247,0.45);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    margin-top: 6px;
+}
+
+/* Lectures secondaires */
+.moon-status {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: #F5E642;
+    transition: color 0.5s ease;
+    text-align: center;
+}
+.moon-status.alerte { color: #E24B4A; }
+
+/* ============ STAT CHOC ============ */
+.stat-choc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 960px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.2s ease;
+}
+.stat-num  { font-size: 280px; font-weight: 800; color: #E24B4A; line-height: 0.9; letter-spacing: -12px; }
+.stat-unit { font-size: 48px; font-weight: 700; color: #FDFBF7; margin-top: 18px; }
+.stat-sub  { font-size: 34px; font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 14px; line-height: 1.5; }
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 960px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #FDFBF7;
+    line-height: 1.22;
+    letter-spacing: -1px;
+    opacity: 0;
+    z-index: 40;
+    will-change: opacity, transform;
+}
+.t-top { top: 115px; font-size: 54px; }
+
+.t1 { animation: fadeTxt 5s  ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s  ease-in-out forwards 5s; }
+.t3 { animation: fadeTxt 4s  ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4s  ease-in-out forwards 13s; }
+.t5 { animation: fadeTxt 5s  ease-in-out forwards 17s; }
+.t6 { animation: fadeTxt 4s  ease-in-out forwards 22s; }
+.t7 { animation: fadeTxt 7s  ease-in-out forwards 26s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+.yw { color: #F5E642; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">&#9654; Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+    <div class="stars" id="stars"></div>
+    <div class="screen-flash" id="screenFlash"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">Ton téléphone bloque<br><span class="rd">50%</span> de ta<br><span class="yw">mélatonine</span> chaque soir.</div>
+    <div class="txt t-top t2">C'est l'hormone<br>qui dit à ton cerveau<br>de <span class="yw">s'endormir.</span></div>
+    <div class="txt t-top t3">Et toi, tu regardes<br>ton téléphone avant<br>de dormir ? <span class="tq">Commente 👇</span></div>
+    <div class="txt t-top t4">Il faut <span class="rd">3 heures</span><br>pour récupérer.<br>Tu t'endors 90 min plus tard.</div>
+    <div class="txt t-top t5">Ce n'est pas<br>de l'insomnie.<br>C'est ton <span class="rd">téléphone.</span></div>
+    <div class="txt t-top t6">Le protocole remet<br>ton horloge à zéro.<br>En <span class="tq">7 jours.</span></div>
+    <div class="txt t-top t7">Ton sommeil change<br>dès la première nuit.<br><span class="tq">Test gratuit en bio 🧠</span></div>
+
+    <!-- Visuel central : lune + jauge circulaire mélatonine -->
+    <div class="moon-container" id="moonContainer">
+        <div class="moon-label">MÉLATONINE</div>
+
+        <div class="moon-ring" id="moonRing">
+            <svg viewBox="0 0 420 420" xmlns="http://www.w3.org/2000/svg">
+                <circle class="ring-bg" cx="210" cy="210" r="197"/>
+                <circle class="ring-fill" id="ringFill" cx="210" cy="210" r="197"/>
+            </svg>
+            <div class="moon-face" id="moonFace">
+                <div class="moon-shadow" id="moonShadow"></div>
+                <div class="crater" style="width:40px;height:40px;top:25%;left:55%;"></div>
+                <div class="crater" style="width:24px;height:24px;top:55%;left:28%;"></div>
+                <div class="crater" style="width:16px;height:16px;top:38%;left:70%;"></div>
+                <div class="crater" style="width:30px;height:30px;top:65%;left:58%;"></div>
+            </div>
+            <div class="moon-value">
+                <span class="moon-pct" id="moonPct">100%</span>
+                <span class="moon-unit-label">mélatonine</span>
+            </div>
+        </div>
+
+        <div class="moon-status" id="moonStatus">NORMAL</div>
+    </div>
+
+    <!-- Stat choc : 38% des Français -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">38%</div>
+        <div class="stat-unit">des Français dorment moins de 6h</div>
+        <div class="stat-sub">Le téléphone au lit est<br>la première cause.</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+/* ---- Étoiles ---- */
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 48; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 3.5 + 1.5;
+    s.style.cssText = [
+        'width:' + size + 'px',
+        'height:' + size + 'px',
+        'top:' + Math.random() * 100 + '%',
+        'left:' + Math.random() * 100 + '%',
+        'animation-delay:' + (Math.random() * 2.5) + 's',
+        'animation-duration:' + (1.5 + Math.random() * 2) + 's'
+    ].join(';');
+    starsEl.appendChild(s);
+}
+
+/* ---- Jauge circulaire ---- */
+const CIRC = 2 * Math.PI * 197; // ≈ 1238
+const ringFill   = document.getElementById('ringFill');
+const moonPct    = document.getElementById('moonPct');
+const moonFace   = document.getElementById('moonFace');
+const moonShadow = document.getElementById('moonShadow');
+const moonStatus = document.getElementById('moonStatus');
+const moonContainer = document.getElementById('moonContainer');
+const screenFlash   = document.getElementById('screenFlash');
+const statChoc      = document.getElementById('statChoc');
+
+ringFill.style.strokeDasharray = CIRC;
+ringFill.style.strokeDashoffset = '0';
+
+function setMelatonin(pct) {
+    const offset = CIRC * (1 - pct / 100);
+    ringFill.style.strokeDashoffset = offset;
+    moonPct.textContent = Math.round(pct) + '%';
+
+    if (pct >= 70) {
+        ringFill.style.stroke = '#F5E642';
+        moonPct.classList.remove('alerte');
+        moonStatus.textContent = 'NORMAL';
+        moonStatus.style.color = '#F5E642';
+        moonStatus.classList.remove('alerte');
+    } else if (pct >= 40) {
+        ringFill.style.stroke = '#FF8C00';
+        moonPct.classList.remove('alerte');
+        moonStatus.textContent = 'FAIBLE';
+        moonStatus.style.color = '#FF8C00';
+        moonStatus.classList.remove('alerte');
+    } else {
+        ringFill.style.stroke = '#E24B4A';
+        moonPct.classList.add('alerte');
+        moonStatus.textContent = 'BLOQUÉE';
+        moonStatus.classList.add('alerte');
+        moonStatus.style.color = '#E24B4A';
+    }
+
+    const glowR = Math.round(245 + (10 - 245) * (1 - pct / 100));
+    const glowG = Math.round(230 + (75 - 230) * (1 - pct / 100));
+    const glowB = Math.round(66 + (74 - 66) * (1 - pct / 100));
+    const glowA = 0.15 + pct / 100 * 0.35;
+    moonFace.style.boxShadow = '0 0 ' + Math.round(30 + pct * 0.5) + 'px rgba(' + glowR + ',' + glowG + ',' + glowB + ',' + glowA + '), 0 0 ' + Math.round(60 + pct) + 'px rgba(245,230,66,' + (pct / 100 * 0.12) + ')';
+
+    const shadowDepth = (1 - pct / 100) * 0.92;
+    moonShadow.style.opacity = shadowDepth;
+    moonShadow.style.transform = 'translateX(' + (60 - shadowDepth * 75) + '%)';
+}
+
+/* État initial */
+ringFill.style.transition = 'none';
+setMelatonin(100);
+setTimeout(function() {
+    ringFill.style.transition = 'stroke-dashoffset 1.8s cubic-bezier(0.34, 1.56, 0.64, 1), stroke 0.6s ease';
+}, 100);
+
+/* 2s : PREMIER FLASH (synchro hook "50%") */
+setTimeout(function() {
+    screenFlash.style.opacity = '1';
+    setMelatonin(50);
+    setTimeout(function() { screenFlash.style.opacity = '0'; }, 1400);
+}, 2000);
+
+/* 6s : deuxième exposition — descend encore */
+setTimeout(function() {
+    screenFlash.style.opacity = '0.7';
+    setMelatonin(38);
+    setTimeout(function() { screenFlash.style.opacity = '0'; }, 1200);
+}, 6000);
+
+/* 10s : niveau critique */
+setTimeout(function() {
+    setMelatonin(22);
+}, 10000);
+
+/* 17s : stat choc apparaît */
+setTimeout(function() {
+    moonContainer.style.opacity = '0';
+    statChoc.style.opacity = '1';
+}, 17000);
+
+/* 22s : lune revient — protocole = récupération */
+setTimeout(function() {
+    statChoc.style.opacity = '0';
+    moonContainer.style.opacity = '1';
+    setTimeout(function() {
+        ringFill.style.stroke = '#14B8A6';
+        moonStatus.style.color = '#14B8A6';
+        moonPct.classList.remove('alerte');
+        moonStatus.classList.remove('alerte');
+        moonStatus.textContent = 'RÉCUPÉRÉE';
+        setMelatonin(88);
+        moonFace.style.boxShadow = '0 0 80px rgba(20,184,166,0.45), 0 0 160px rgba(20,184,166,0.15)';
+    }, 1300);
+}, 22000);
+</script>
+</body>
+</html>
