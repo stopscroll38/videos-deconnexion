@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Dopamine Épuisée — TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background:#000; width:100%; height:100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+/* Progress bar */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    animation: progress 33s linear forwards;
+    z-index: 50;
+    will-change: width;
+}
+@keyframes progress { from { width: 0; } to { width: 100%; } }
+
+/* Background */
+.bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px;
+    height: 1920px;
+    background: radial-gradient(ellipse 80% 60% at 50% 62%, #DDF4F1 0%, #FDFBF7 55%);
+}
+
+/* Top accent bar */
+.accent-bar {
+    position: absolute;
+    top: 54px;
+    left: 90px;
+    width: 80px;
+    height: 8px;
+    background: #14B8A6;
+    border-radius: 4px;
+}
+
+/* Central visual: two gauge bars */
+.gauges {
+    position: absolute;
+    top: 490px;
+    left: 0;
+    width: 1080px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 80px;
+    will-change: opacity;
+    animation: gaugeIn 1.2s ease-out 0.3s both;
+}
+
+@keyframes gaugeIn {
+    from { opacity: 0; transform: translateY(30px) translateZ(0); }
+    to   { opacity: 1; transform: translateY(0) translateZ(0); }
+}
+
+.gauge-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 300px;
+}
+
+.gauge-top-label {
+    font-size: 30px;
+    font-weight: 800;
+    color: #1A1D21;
+    text-align: center;
+    line-height: 1.25;
+}
+
+.gauge-track {
+    width: 90px;
+    height: 400px;
+    background: #EAEAE2;
+    border-radius: 45px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+}
+
+.fill-scroll {
+    width: 100%;
+    background: linear-gradient(to top, #C0392B, #E24B4A, #FF7F7F);
+    border-radius: 45px;
+    height: 0;
+    will-change: height;
+    animation: growScroll 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.6s forwards;
+}
+@keyframes growScroll {
+    to { height: 93%; }
+}
+
+.fill-real {
+    width: 100%;
+    background: linear-gradient(to top, #0E8C80, #14B8A6, #6EE7E1);
+    border-radius: 45px;
+    height: 0;
+    will-change: height;
+    animation: growReal 2.5s cubic-bezier(0.22, 0.61, 0.36, 1) 0.6s forwards;
+}
+@keyframes growReal {
+    to { height: 8%; }
+}
+
+.gauge-pct {
+    font-size: 60px;
+    font-weight: 900;
+    line-height: 1;
+}
+.gauge-pct.red  { color: #E24B4A; }
+.gauge-pct.teal { color: #14B8A6; }
+
+.gauge-sub {
+    font-size: 26px;
+    font-weight: 600;
+    color: #888;
+    text-align: center;
+    line-height: 1.3;
+}
+
+.gauge-vs {
+    font-size: 44px;
+    font-weight: 900;
+    color: #1A1D21;
+    opacity: 0.12;
+    align-self: center;
+    padding-bottom: 60px;
+}
+
+/* Baseline caption below gauges */
+.gauge-caption {
+    position: absolute;
+    top: 1070px;
+    left: 90px;
+    right: 90px;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: #1A1D21;
+    opacity: 0;
+    will-change: opacity;
+    animation: fadeCaption 1.5s ease-out 3s forwards;
+    line-height: 1.4;
+}
+@keyframes fadeCaption {
+    from { opacity: 0; }
+    to   { opacity: 0.45; }
+}
+
+/* Text phases */
+.txt {
+    position: absolute;
+    opacity: 0;
+    will-change: opacity, transform;
+    left: 80px;
+    right: 80px;
+    top: 116px;
+    text-align: center;
+}
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateY(20px) translateZ(0); }
+    14%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    78%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    100% { opacity: 0; transform: translateY(-14px) translateZ(0); }
+}
+
+/* Phase 1 — Hook 0-3s */
+.p1 { animation: fadeTxt 3.2s ease-out 0s both; }
+.p1 .stat {
+    font-size: 116px;
+    font-weight: 900;
+    color: #E24B4A;
+    line-height: 1;
+    display: block;
+}
+.p1 .sub {
+    font-size: 46px;
+    font-weight: 700;
+    color: #1A1D21;
+    line-height: 1.28;
+    display: block;
+    margin-top: 16px;
+}
+
+/* Phase 2 — Problème 3-8s */
+.p2 { animation: fadeTxt 5.2s ease-out 3s both; }
+.p2 .main {
+    font-size: 50px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.32;
+}
+.p2 .red { color: #E24B4A; }
+
+/* Phase 3 — CTA commentaire 8-12s */
+.p3 { animation: fadeTxt 4.5s ease-out 8s both; }
+.p3 .cta-c {
+    font-size: 46px;
+    font-weight: 800;
+    color: #14B8A6;
+    line-height: 1.35;
+}
+
+/* Phase 4 — Mécanisme 12-18s */
+.p4 { animation: fadeTxt 6.5s ease-out 12s both; }
+.p4 .number {
+    font-size: 100px;
+    font-weight: 900;
+    color: #1A1D21;
+    line-height: 1;
+    display: block;
+}
+.p4 .main {
+    font-size: 48px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.3;
+    margin-top: 10px;
+}
+.p4 .teal { color: #14B8A6; }
+
+/* Phase 5 — Stat choc 18-24s */
+.p5 { animation: fadeTxt 6.5s ease-out 18s both; }
+.p5 .number {
+    font-size: 120px;
+    font-weight: 900;
+    color: #14B8A6;
+    line-height: 1;
+    display: block;
+}
+.p5 .main {
+    font-size: 46px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.32;
+    margin-top: 10px;
+}
+
+/* Phase 6 — Solution 24-28s */
+.p6 { animation: fadeTxt 4.5s ease-out 24s both; }
+.p6 .main {
+    font-size: 50px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.32;
+}
+.p6 .teal { color: #14B8A6; }
+
+/* Phase finale — CTA produit 28-33s */
+.p7 { animation: fadeTxt 5.5s ease-out 28s forwards; }
+.p7 .cta {
+    font-size: 80px;
+    font-weight: 900;
+    color: #14B8A6;
+    line-height: 1.18;
+}
+.p7 .sub {
+    font-size: 40px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.55;
+    display: block;
+    margin-top: 22px;
+    line-height: 1.35;
+}
+
+/* Replay button — hors champ à l'enregistrement */
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg"></div>
+  <div class="accent-bar"></div>
+
+  <!-- Jauges dopamine persistantes -->
+  <div class="gauges">
+    <div class="gauge-col">
+      <div class="gauge-top-label">Dopamine<br>du scroll</div>
+      <div class="gauge-track">
+        <div class="fill-scroll"></div>
+      </div>
+      <div class="gauge-pct red">93%</div>
+      <div class="gauge-sub">ta réserve<br>artificielle</div>
+    </div>
+
+    <div class="gauge-vs">VS</div>
+
+    <div class="gauge-col">
+      <div class="gauge-top-label">Plaisir<br>réel</div>
+      <div class="gauge-track">
+        <div class="fill-real"></div>
+      </div>
+      <div class="gauge-pct teal">8%</div>
+      <div class="gauge-sub">ce qu'il reste<br>pour la vie</div>
+    </div>
+  </div>
+
+  <!-- Légende sous les jauges -->
+  <div class="gauge-caption">
+    Tes récepteurs dopamine sont en surdose permanente.
+  </div>
+
+  <!-- Phases texte -->
+  <div class="txt p1">
+    <span class="stat">10 000</span>
+    <span class="sub">stimulations dopaminergiques<br>par jour. Ton cerveau est<br><strong>en surdose.</strong></span>
+  </div>
+
+  <div class="txt p2">
+    <div class="main">
+      Chaque scroll, chaque notif<br>déclenche un pic de<br><span class="red">dopamine artificielle.</span><br>
+      Ton cerveau s'y habitue.<br>Et en exige toujours <strong>plus.</strong>
+    </div>
+  </div>
+
+  <div class="txt p3">
+    <div class="cta-c">
+      Et toi, t'arrives encore<br>à lire un livre ou regarder<br>un film sans décrocher<br>ton téléphone ?<br>Dis-moi en commentaire 👇
+    </div>
+  </div>
+
+  <div class="txt p4">
+    <span class="number">21 jours</span>
+    <div class="main">
+      C'est ce qu'il faut<br>pour que tes récepteurs<br><span class="teal">se recalibrent</span><br>et retrouvent leur sensibilité.
+    </div>
+  </div>
+
+  <div class="txt p5">
+    <span class="number">+40%</span>
+    <div class="main">
+      de satisfaction dans la vie réelle<br>après 3 semaines de déconnexion,<br>selon les neuroscientifiques.
+    </div>
+  </div>
+
+  <div class="txt p6">
+    <div class="main">
+      Le protocole de déconnexion<br>recalibre tes récepteurs<br>en <span class="teal">21 jours.</span><br>Pas de privation.<br>Juste une méthode.
+    </div>
+  </div>
+
+  <div class="txt p7">
+    <div class="cta">Test gratuit<br>en bio 🧠</div>
+    <span class="sub">21 jours pour retrouver<br>le goût des vraies choses</span>
+  </div>
+
+  <div class="progress"></div>
+</div>
+
+<button class="replay" onclick="location.reload()">Relancer</button>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+</script>
+</body>
+</html>
