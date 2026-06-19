@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Ocytocine — 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    will-change: background;
+    animation: bgStress 33s ease-in-out forwards;
+}
+@keyframes bgStress {
+    0%   { background: #FDFBF7; }
+    27%  { background: #FFF0EB; }
+    52%  { background: #1A0B14; }
+    70%  { background: #1A0B14; }
+    82%  { background: #071A18; }
+    92%  { background: #FDFBF7; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ VISUEL CENTRAL : JAUGE OCYTOCINE ============ */
+.gauge-wrap {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    will-change: opacity;
+}
+
+.gauge-title {
+    font-size: 45px;
+    font-weight: 800;
+    letter-spacing: 10px;
+    color: #14B8A6;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+}
+
+.gauge-zones {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 550px;
+    align-items: flex-end;
+    padding: 4px 0;
+}
+.zone-label {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.zone-danger { color: #E24B4A; }
+.zone-eleve  { color: #ff8c00; }
+.zone-normal { color: #14B8A6; }
+
+.gauge-tube {
+    width: 130px;
+    height: 550px;
+    background: rgba(26,29,33,0.1);
+    border-radius: 65px;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid rgba(26,29,33,0.15);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.08);
+}
+
+.gauge-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0 0 65px 65px;
+    background: linear-gradient(to top, #14B8A6 0%, #2BD9A8 100%);
+    height: 8%;
+    will-change: height, background;
+    transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gauge-glow {
+    position: absolute;
+    bottom: 0;
+    left: -5px;
+    right: -5px;
+    border-radius: 0 0 65px 65px;
+    background: rgba(20,184,166,0);
+    height: 8%;
+    filter: blur(15px);
+    will-change: height, background;
+    transition: height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease;
+    z-index: -1;
+}
+
+/* ligne de "ressenti réel" qui s'effondre */
+.gauge-baseline {
+    position: absolute;
+    left: -9px;
+    right: -9px;
+    height: 3px;
+    background: rgba(226,75,74,0.6);
+    border-radius: 2px;
+    bottom: 8%;
+    will-change: bottom;
+    transition: bottom 1.6s ease;
+    box-shadow: 0 0 10px rgba(226,75,74,0.4);
+}
+.gauge-baseline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #E24B4A;
+}
+
+.gauge-mark {
+    position: absolute;
+    left: -15px;
+    right: -15px;
+    height: 2px;
+    background: rgba(26,29,33,0.12);
+}
+.mark-33 { bottom: 33%; }
+.mark-66 { bottom: 66%; }
+
+.notif-bubble {
+    position: absolute;
+    right: -190px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 100px;
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity, transform;
+}
+.notif-bubble.pop { animation: notifBounce 0.85s ease forwards; }
+@keyframes notifBounce {
+    0%   { opacity: 0; transform: translateY(-50%) scale(0.2); }
+    35%  { opacity: 1; transform: translateY(-50%) scale(1.35); }
+    65%  { opacity: 1; transform: translateY(-50%) scale(0.95); }
+    85%  { opacity: 1; transform: translateY(-50%) scale(1.05); }
+    100% { opacity: 0; transform: translateY(-50%) scale(0.7); }
+}
+
+.gauge-readings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.gauge-value {
+    font-size: 160px;
+    font-weight: 800;
+    color: #1A1D21;
+    letter-spacing: -7px;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+.gauge-value.creux { color: #E24B4A; }
+.gauge-unit {
+    font-size: 36px;
+    font-weight: 600;
+    color: rgba(26,29,33,0.35);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+.gauge-status {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #14B8A6;
+    transition: color 0.3s ease;
+}
+.gauge-status.creux { color: #E24B4A; }
+
+/* ============ STAT CHOC ============ */
+.stat-choc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 950px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    will-change: opacity;
+}
+.stat-num  { font-size: 230px; font-weight: 800; color: #E24B4A; line-height: 0.9; letter-spacing: -10px; }
+.stat-unit { font-size: 48px; font-weight: 700; color: #FDFBF7; margin-top: 18px; letter-spacing: -0.5px; }
+.stat-sub  { font-size: 36px; font-weight: 600; color: rgba(253,251,247,0.55); margin-top: 16px; line-height: 1.5; }
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 950px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -1.2px;
+    opacity: 0;
+    z-index: 40;
+    will-change: opacity, transform;
+}
+.t-top { top: 115px; font-size: 56px; }
+
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 5s    ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s    ease-in-out forwards 5s; }
+.t3 { animation: fadeTxt 4s    ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4.5s  ease-in-out forwards 13s; }
+.t5 { animation: fadeTxt 4.5s  ease-in-out forwards 17.5s; }
+.t6 { animation: fadeTxt 4.5s  ease-in-out forwards 22s; }
+.t7 { animation: fadeTxt 5s    ease-in-out forwards 26.5s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    width: 0%;
+    will-change: width;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">&#9654; Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">Un like.<br>Une décharge d'<span class="tq">ocytocine.</span><br>L'hormone du lien social.</div>
+    <div class="txt t-top t2">Le problème :<br>elle dure <span class="rd">trois secondes.</span><br>Puis elle s'effondre.</div>
+    <div class="txt t-top t3">Et toi, tu regardes combien<br>de fois ton nombre de likes<br>par jour ? <span class="tq">Commente 👇</span></div>
+    <div class="txt t-top t4">Ton cerveau confond<br><span class="rd">un like</span> et<br><span class="tq">une vraie connexion.</span></div>
+    <div class="txt t-top t5">Plus tu en reçois,<br>plus il en faut<br>pour ressentir <span class="tq">la même chose.</span></div>
+    <div class="txt t-top t6">Ce n'est pas<br>du lien social.<br>C'est de la <span class="rd">tolérance.</span></div>
+    <div class="txt t-top t7">Réapprends à créer<br>du <span class="tq">vrai lien.</span><br><span class="tq">Test gratuit en bio 🧠</span></div>
+
+    <!-- Visuel central : jauge ocytocine -->
+    <div class="gauge-wrap" id="gaugeWrap">
+        <div class="gauge-title">OCYTOCINE</div>
+
+        <div class="gauge-row">
+            <div class="gauge-zones">
+                <span class="zone-label zone-normal">PLEIN</span>
+                <span class="zone-label zone-eleve">FAIBLE</span>
+                <span class="zone-label zone-danger">VIDE</span>
+            </div>
+
+            <div class="gauge-tube">
+                <div class="gauge-fill"     id="gaugeFill"></div>
+                <div class="gauge-glow"     id="gaugeGlow"></div>
+                <div class="gauge-baseline" id="gaugeBaseline"></div>
+                <div class="gauge-mark mark-33"></div>
+                <div class="gauge-mark mark-66"></div>
+            </div>
+
+            <div class="notif-bubble" id="notifBubble">&#10084;&#65039;</div>
+        </div>
+
+        <div class="gauge-readings">
+            <div class="gauge-value"  id="gaugeValue">8</div>
+            <div class="gauge-unit">ressenti / 100</div>
+            <div class="gauge-status" id="gaugeStatus">VIDE</div>
+        </div>
+    </div>
+
+    <!-- Stat choc -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">200</div>
+        <div class="stat-unit">likes aujourd'hui</div>
+        <div class="stat-sub">0 conversation.<br><span style="color:#E24B4A">0 lien réel.</span></div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const gaugeFill     = document.getElementById('gaugeFill');
+const gaugeGlow     = document.getElementById('gaugeGlow');
+const gaugeBaseline = document.getElementById('gaugeBaseline');
+const gaugeValue    = document.getElementById('gaugeValue');
+const gaugeStatus   = document.getElementById('gaugeStatus');
+const notifBubble   = document.getElementById('notifBubble');
+const gaugeWrap     = document.getElementById('gaugeWrap');
+const statChoc      = document.getElementById('statChoc');
+
+/* État initial : creux */
+let baselinePct = 8;
+
+function setLevel(fillPct, val, status, creux) {
+    gaugeFill.style.height = fillPct + '%';
+    gaugeGlow.style.height = fillPct + '%';
+    gaugeGlow.style.background = creux ? 'rgba(226,75,74,0.2)' : 'rgba(20,184,166,0.25)';
+    gaugeValue.textContent = val;
+    gaugeStatus.textContent = status;
+    gaugeValue.classList.toggle('creux', creux);
+    gaugeStatus.classList.toggle('creux', creux);
+}
+
+/* Chaque like fait un pic court, puis l'effondrement laisse une base de plus en plus basse (tolérance) */
+function spike(peakPct, newBasePct, peakVal, baseVal) {
+    notifBubble.classList.remove('pop');
+    void notifBubble.offsetWidth;
+    notifBubble.classList.add('pop');
+
+    setLevel(peakPct, peakVal, 'PIC', false);
+
+    setTimeout(function () {
+        baselinePct = newBasePct;
+        gaugeBaseline.style.bottom = newBasePct + '%';
+        setLevel(newBasePct, baseVal, newBasePct <= 20 ? 'VIDE' : 'FAIBLE', true);
+    }, 1100);
+}
+
+/* État initial */
+setLevel(8, 8, 'VIDE', true);
+
+/* 4 pics d'ocytocine de plus en plus faibles, retombée de plus en plus basse */
+setTimeout(function () { spike(78, 24, 76, 22); }, 2800);
+setTimeout(function () { spike(62, 16, 58, 14); }, 6500);
+setTimeout(function () { spike(48, 9,  41, 8);  }, 10200);
+setTimeout(function () { spike(34, 4,  28, 3);  }, 13800);
+
+/* À 17.5s : swap vers stat choc */
+setTimeout(function () {
+    gaugeWrap.style.transition = 'opacity 1.2s ease';
+    gaugeWrap.style.opacity = '0';
+    statChoc.style.transition = 'opacity 1.2s ease';
+    statChoc.style.opacity = '1';
+}, 17500);
+
+/* À 22.5s : stat choc disparaît */
+setTimeout(function () {
+    statChoc.style.transition = 'opacity 1s ease';
+    statChoc.style.opacity = '0';
+}, 22500);
+</script>
+</body>
+</html>
