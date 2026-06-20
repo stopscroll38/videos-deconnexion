@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Nomophobie — 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    animation: bgShift 33s ease-in-out forwards;
+}
+@keyframes bgShift {
+    0%   { background: #FDFBF7; }
+    20%  { background: #FFF0EB; }
+    48%  { background: #1A1D21; }
+    63%  { background: #1A1D21; }
+    78%  { background: #07201D; }
+    90%  { background: #FDFBF7; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ VISUEL CENTRAL : SYMPTÔMES DE SEVRAGE ============ */
+.loop-wrap {
+    position: absolute;
+    top: 660px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    will-change: opacity;
+    transition: opacity 1s ease;
+}
+
+.loop-title {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 8px;
+    color: #14B8A6;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.loop-ring {
+    position: relative;
+    width: 600px;
+    height: 600px;
+}
+
+.loop-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 5;
+}
+.loop-count {
+    font-size: 150px;
+    font-weight: 800;
+    color: #1A1D21;
+    letter-spacing: -6px;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+.loop-count.alerte { color: #E24B4A; }
+.loop-count.ok { color: #14B8A6; }
+.loop-label {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(26,29,33,0.45);
+    text-align: center;
+    margin-top: 8px;
+}
+
+.badge {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(26,29,33,0.08);
+    border: 4px solid rgba(26,29,33,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    color: rgba(26,29,33,0.3);
+    will-change: transform, background, border-color;
+    transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+.badge.open {
+    background: #E24B4A;
+    border-color: #ff8c8c;
+    transform: scale(1.18) translateZ(0);
+}
+.badge.closed {
+    background: #14B8A6;
+    border-color: #6FE3D2;
+    transform: scale(1) translateZ(0);
+}
+
+.b1 { left: 515px; top: 255px; }
+.b2 { left: 439px; top: 439px; }
+.b3 { left: 255px; top: 515px; }
+.b4 { left: 71px;  top: 439px; }
+.b5 { left: -5px;  top: 255px; }
+.b6 { left: 71px;  top: 71px;  }
+.b7 { left: 255px; top: -5px;  }
+.b8 { left: 439px; top: 71px;  }
+
+/* ============ STAT CHOC ============ */
+.stat-choc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 950px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+}
+.stat-num  { font-size: 290px; font-weight: 800; color: #E24B4A; line-height: 0.88; letter-spacing: -12px; }
+.stat-unit { font-size: 50px;  font-weight: 700; color: #FDFBF7; margin-top: 18px; letter-spacing: -0.5px; }
+.stat-sub  { font-size: 36px;  font-weight: 600; color: rgba(253,251,247,0.55); margin-top: 16px; line-height: 1.5; }
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 950px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -1.2px;
+    opacity: 0;
+    z-index: 40;
+    will-change: opacity, transform;
+}
+.t-top { top: 115px; font-size: 56px; }
+
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 3s   ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 5s   ease-in-out forwards 3s; }
+.t3 { animation: fadeTxt 4s   ease-in-out forwards 8s; }
+.t4 { animation: fadeTxt 4s   ease-in-out forwards 12s; }
+.t5 { animation: fadeTxt 5s   ease-in-out forwards 16s; }
+.t6 { animation: fadeTxt 5s   ease-in-out forwards 21s; }
+.t7 { animation: fadeTxt 7s   ease-in-out forwards 26s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">&#9654; Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1"><span class="rd">68% des gens</span><br>ressentent une vraie<br>angoisse sans leur téléphone.</div>
+    <div class="txt t-top t2">Ça s'appelle <span class="tq">la nomophobie.</span><br>La peur de ne pas avoir<br>son téléphone. Et ton corps<br>réagit comme en <span class="rd">sevrage.</span></div>
+    <div class="txt t-top t3"><span class="tq">As-tu déjà fait<br>demi-tour pour récupérer<br>ton téléphone oublié ?<br>Commente OUI ou NON 👇</span></div>
+    <div class="txt t-top t4">Mains moites.<br>Cœur qui accélère.<br>Besoin irrépressible<br>de vérifier. De vrais symptômes.</div>
+    <div class="txt t-top t5">En moyenne, il te faut<br><span class="rd">9 minutes</span> après ton réveil<br>avant de toucher<br>ton téléphone.</div>
+    <div class="txt t-top t6">La solution n'est pas<br>de jeter ton téléphone.<br>C'est de réentraîner ton cerveau<br><span class="tq">à tolérer l'absence.</span></div>
+    <div class="txt t-top t7"><span class="tq">Guide gratuit en bio 📲</span><br>3 réglages pour calmer<br>l'angoisse de séparation.<br><span class="tq">Abonne-toi pour suivre<br>le protocole jour par jour.</span></div>
+
+    <!-- Visuel central : symptômes de sevrage -->
+    <div class="loop-wrap" id="loopWrap">
+        <div class="loop-title">Symptômes de sevrage</div>
+        <div class="loop-ring">
+            <div class="badge b1" id="b1">😰</div>
+            <div class="badge b2" id="b2">🫨</div>
+            <div class="badge b3" id="b3">😣</div>
+            <div class="badge b4" id="b4">🥵</div>
+            <div class="badge b5" id="b5">😖</div>
+            <div class="badge b6" id="b6">🫤</div>
+            <div class="badge b7" id="b7">😬</div>
+            <div class="badge b8" id="b8">😩</div>
+            <div class="loop-center">
+                <div class="loop-count" id="loopCount">0</div>
+                <div class="loop-label">actifs</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stat choc -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">9</div>
+        <div class="stat-unit">minutes</div>
+        <div class="stat-sub">après ton réveil, avant<br>que tu touches ton téléphone.</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const badges = [1,2,3,4,5,6,7,8].map(function (n) { return document.getElementById('b' + n); });
+const loopCount = document.getElementById('loopCount');
+const loopWrap  = document.getElementById('loopWrap');
+const statChoc  = document.getElementById('statChoc');
+
+let openCount = 0;
+function updateCount(alert) {
+    loopCount.textContent = openCount;
+    loopCount.classList.toggle('alerte', alert === true);
+    loopCount.classList.toggle('ok', alert === false);
+}
+
+/* Phase 2-4 (3s-16s) : les symptômes apparaissent un par un */
+badges.forEach(function (b, i) {
+    setTimeout(function () {
+        b.classList.add('open');
+        openCount++;
+        updateCount(true);
+    }, 3200 + i * 1450);
+});
+
+/* Phase 5 (16s-21s) : swap vers stat choc */
+setTimeout(function () {
+    loopWrap.style.opacity = '0';
+    statChoc.style.transition = 'opacity 1.2s ease';
+    statChoc.style.opacity = '1';
+}, 16000);
+
+setTimeout(function () {
+    statChoc.style.opacity = '0';
+    loopWrap.style.opacity = '1';
+}, 20800);
+
+/* Phase 6 (21s-26s) : les symptômes s'apaisent un par un */
+badges.forEach(function (b, i) {
+    setTimeout(function () {
+        b.classList.remove('open');
+        b.classList.add('closed');
+        openCount--;
+        updateCount(false);
+    }, 21300 + i * 580);
+});
+</script>
+</body>
+</html>
