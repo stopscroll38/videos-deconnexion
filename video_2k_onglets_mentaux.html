@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Onglets Mentaux — 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    will-change: background;
+    animation: bgStress 33s ease-in-out forwards;
+}
+@keyframes bgStress {
+    0%   { background: #FDFBF7; }
+    18%  { background: #FFF0EB; }
+    42%  { background: #280808; }
+    70%  { background: #280808; }
+    82%  { background: #071A18; }
+    92%  { background: #FDFBF7; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ VISUEL CENTRAL : RAM MENTALE ============ */
+.gauge-wrap {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    will-change: opacity;
+}
+
+.gauge-title {
+    font-size: 45px;
+    font-weight: 800;
+    letter-spacing: 10px;
+    color: #14B8A6;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    position: relative;
+}
+
+.gauge-zones {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 550px;
+    align-items: flex-end;
+    padding: 4px 0;
+}
+.zone-label {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+.zone-danger { color: #E24B4A; }
+.zone-eleve  { color: #ff8c00; }
+.zone-normal { color: #14B8A6; }
+
+.gauge-tube {
+    width: 130px;
+    height: 550px;
+    background: rgba(26,29,33,0.1);
+    border-radius: 65px;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid rgba(26,29,33,0.15);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.08);
+}
+
+.gauge-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-radius: 0 0 65px 65px;
+    background: linear-gradient(to top, #E24B4A 0%, #ff8c00 50%, #ffd700 100%);
+    height: 25%;
+    transition: height 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gauge-glow {
+    position: absolute;
+    bottom: 0;
+    left: -5px;
+    right: -5px;
+    border-radius: 0 0 65px 65px;
+    background: rgba(226,75,74,0);
+    height: 25%;
+    filter: blur(15px);
+    transition: height 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.5s ease;
+    z-index: -1;
+}
+
+.gauge-mark {
+    position: absolute;
+    left: -15px;
+    right: -15px;
+    height: 2px;
+    background: rgba(26,29,33,0.12);
+}
+.mark-33 { bottom: 33%; }
+.mark-66 { bottom: 66%; }
+
+/* Onglets qui surgissent */
+.tab-pop {
+    position: absolute;
+    right: -420px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border-radius: 20px;
+    padding: 16px 28px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+    font-size: 34px;
+    font-weight: 700;
+    color: #1A1D21;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+}
+.tab-pop.pop { animation: tabBounce 1.1s ease forwards; }
+@keyframes tabBounce {
+    0%   { opacity: 0; transform: translateY(-50%) translateX(60px) scale(0.5); }
+    30%  { opacity: 1; transform: translateY(-50%) translateX(0) scale(1.08); }
+    55%  { transform: translateY(-50%) translateX(0) scale(0.98); }
+    100% { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
+}
+
+.gauge-readings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+.gauge-value {
+    font-size: 160px;
+    font-weight: 800;
+    color: #1A1D21;
+    letter-spacing: -7px;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+.gauge-value.alerte { color: #E24B4A; }
+.gauge-unit {
+    font-size: 36px;
+    font-weight: 600;
+    color: rgba(26,29,33,0.35);
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}
+.gauge-status {
+    font-size: 40px;
+    font-weight: 800;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #14B8A6;
+    transition: color 0.3s ease;
+}
+.gauge-status.alerte { color: #E24B4A; }
+
+/* ============ STAT CHOC ============ */
+.stat-choc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 950px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+}
+.stat-num  { font-size: 290px; font-weight: 800; color: #E24B4A; line-height: 0.88; letter-spacing: -12px; }
+.stat-unit { font-size: 50px; font-weight: 700; color: #FDFBF7; margin-top: 18px; letter-spacing: -0.5px; }
+.stat-sub  { font-size: 35px; font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 15px; line-height: 1.5; }
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 950px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -1.2px;
+    opacity: 0;
+    z-index: 40;
+    will-change: opacity, transform;
+}
+.t-top { top: 115px; font-size: 55px; }
+
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 5s   ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 4s   ease-in-out forwards 5s; }
+.t3 { animation: fadeTxt 4s   ease-in-out forwards 9s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 13s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 17.5s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 22s; }
+.t7 { animation: fadeTxt 5s   ease-in-out forwards 26.5s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    width: 0%;
+    will-change: width;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">&#9654; Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">Ton cerveau a<br><span class="rd">12 onglets mentaux</span><br>ouverts en ce moment.</div>
+    <div class="txt t-top t2">Sa capacité réelle ?<br><span class="rd">4 onglets.</span><br>C'est ça, l'effet Zeigarnik.</div>
+    <div class="txt t-top t3">Et toi, combien d'onglets<br>mentaux as-tu ouverts<br>là, maintenant ?<br><span class="tq">Commente 👇</span></div>
+    <div class="txt t-top t4">Chaque tâche inachevée<br>reste <span class="rd">active en fond.</span><br>Même quand tu scrolles.</div>
+    <div class="txt t-top t5">Ton cerveau ne fait pas<br>de pause. Il <span class="rd">sature.</span><br>D'où la fatigue sans raison.</div>
+    <div class="txt t-top t6">Ce n'est pas<br>un manque de volonté.<br>C'est de la <span class="rd">surcharge cognitive.</span></div>
+    <div class="txt t-top t7">Le protocole t'apprend<br>à fermer les onglets.<br><span class="tq">Test gratuit en bio</span> 🧠</div>
+
+    <!-- Visuel central : jauge mémoire de travail -->
+    <div class="gauge-wrap" id="gaugeWrap">
+        <div class="gauge-title">MÉMOIRE VIVE</div>
+
+        <div class="gauge-row">
+            <div class="gauge-zones">
+                <span class="zone-label zone-danger">SURCHARGE</span>
+                <span class="zone-label zone-eleve">CHARGÉ</span>
+                <span class="zone-label zone-normal">LIBRE</span>
+            </div>
+
+            <div class="gauge-tube">
+                <div class="gauge-fill" id="gaugeFill"></div>
+                <div class="gauge-glow" id="gaugeGlow"></div>
+                <div class="gauge-mark mark-33"></div>
+                <div class="gauge-mark mark-66"></div>
+            </div>
+
+            <div class="tab-pop" id="tabPop">📩 Mail à répondre</div>
+        </div>
+
+        <div class="gauge-readings">
+            <div class="gauge-value" id="gaugeValue">1/4</div>
+            <div class="gauge-unit">onglets mentaux</div>
+            <div class="gauge-status" id="gaugeStatus">LIBRE</div>
+        </div>
+    </div>
+
+    <!-- Stat choc -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">23</div>
+        <div class="stat-unit">tâches inachevées en tête</div>
+        <div class="stat-sub">en moyenne, par jour.<br>Aucune n'est jamais vraiment fermée.</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const gaugeFill   = document.getElementById('gaugeFill');
+const gaugeGlow   = document.getElementById('gaugeGlow');
+const gaugeValue  = document.getElementById('gaugeValue');
+const gaugeStatus = document.getElementById('gaugeStatus');
+const tabPop      = document.getElementById('tabPop');
+const gaugeWrap   = document.getElementById('gaugeWrap');
+const statChoc    = document.getElementById('statChoc');
+
+function setLevel(fillPct, val, status, alert) {
+    gaugeFill.style.height = fillPct + '%';
+    gaugeGlow.style.height = fillPct + '%';
+    gaugeGlow.style.background = alert ? 'rgba(226,75,74,0.25)' : 'rgba(20,184,166,0.15)';
+    gaugeValue.textContent = val;
+    gaugeStatus.textContent = status;
+    gaugeValue.classList.toggle('alerte', alert);
+    gaugeStatus.classList.toggle('alerte', alert);
+}
+
+function openTab(label, fillPct, val, status, alert) {
+    tabPop.textContent = label;
+    tabPop.classList.remove('pop');
+    void tabPop.offsetWidth;
+    tabPop.classList.add('pop');
+    setLevel(fillPct, val, status, alert);
+}
+
+/* État initial */
+setLevel(25, '1/4', 'LIBRE', false);
+
+/* Ouverture progressive des onglets mentaux */
+setTimeout(function () { openTab('🛒 Achat en attente', 50, '2/4', 'CHARGÉ', false); }, 2800);
+setTimeout(function () { openTab('📅 RDV à confirmer', 75, '3/4', 'CHARGÉ', false); }, 6500);
+setTimeout(function () { openTab('🧺 Linge à plier', 92, '6/4', 'SURCHARGE', true); }, 10200);
+setTimeout(function () { openTab('💬 Message non lu', 100, '12/4', 'SURCHARGE', true); }, 13800);
+
+/* À 17.5s : swap vers stat choc */
+setTimeout(function () {
+    gaugeWrap.style.transition = 'opacity 1.2s ease';
+    gaugeWrap.style.opacity = '0';
+    statChoc.style.transition = 'opacity 1.2s ease';
+    statChoc.style.opacity = '1';
+}, 17500);
+
+/* À 22.5s : stat choc disparaît, retour calme sur jauge */
+setTimeout(function () {
+    statChoc.style.transition = 'opacity 1s ease';
+    statChoc.style.opacity = '0';
+    setLevel(25, '1/4', 'LIBRE', false);
+}, 22500);
+
+setTimeout(function () {
+    gaugeWrap.style.transition = 'opacity 1.2s ease';
+    gaugeWrap.style.opacity = '1';
+}, 23500);
+</script>
+</body>
+</html>
