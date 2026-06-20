@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Amnésie Numérique - 2K TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background: #000; width: 100%; height: 100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+.bg {
+    position: absolute;
+    inset: 0;
+    background: #FDFBF7;
+    animation: bgShift 33s ease-in-out forwards;
+    z-index: 0;
+}
+@keyframes bgShift {
+    0%   { background: #FDFBF7; }
+    37%  { background: #FDFBF7; }
+    52%  { background: #15101f; }
+    76%  { background: #15101f; }
+    90%  { background: #FDFBF7; }
+    100% { background: #FDFBF7; }
+}
+
+/* ============ VISUEL CENTRAL : JAUGE DE MEMOIRE ============ */
+.mem-wrap {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.mem-label {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: 11px;
+    color: #14B8A6;
+    text-transform: uppercase;
+    transition: color 0.25s ease, letter-spacing 0.25s ease;
+}
+.mem-label.low {
+    color: #E24B4A;
+    letter-spacing: 3px;
+}
+
+.ring-wrap {
+    position: relative;
+    width: 450px;
+    height: 450px;
+}
+
+.ring-svg {
+    width: 450px;
+    height: 450px;
+    transform: rotate(-90deg);
+    display: block;
+}
+.ring-bg {
+    fill: none;
+    stroke: #E8E5DF;
+    stroke-width: 15;
+}
+.ring-progress {
+    fill: none;
+    stroke: #14B8A6;
+    stroke-width: 15;
+    stroke-linecap: round;
+    stroke-dasharray: 1256;
+    stroke-dashoffset: 0;
+    transition: stroke 0.3s ease, stroke-dashoffset 0.6s ease;
+    will-change: stroke-dashoffset;
+}
+
+.ring-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+}
+.mem-main {
+    font-size: 145px;
+    font-weight: 800;
+    color: #1A1D21;
+    letter-spacing: -6px;
+    line-height: 1;
+    transition: color 0.25s ease;
+}
+.mem-main.red { color: #E24B4A; }
+.mem-sub {
+    font-size: 30px;
+    font-weight: 600;
+    color: rgba(26,29,33,0.4);
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* Icone telephone qui pop pour remplacer un slot de memoire */
+.phone-pop {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 130px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 15;
+}
+.phone-pop.pop { animation: popIt 0.9s ease forwards; }
+@keyframes popIt {
+    0%   { opacity: 0; transform: scale(0.3) translateZ(0); }
+    35%  { opacity: 1; transform: scale(1.3) translateZ(0); }
+    65%  { opacity: 1; transform: scale(1.0) translateZ(0); }
+    100% { opacity: 0; transform: scale(0.85) translateZ(0); }
+}
+
+.numbers-known {
+    font-size: 39px;
+    font-weight: 700;
+    color: rgba(26,29,33,0.35);
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+.numbers-known .num { color: #E24B4A; font-weight: 800; }
+
+/* ============ STAT CHOC ============ */
+.stat-choc {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 950px;
+    text-align: center;
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+}
+.stat-num  { font-size: 320px; font-weight: 800; color: #14B8A6; line-height: 0.88; letter-spacing: -14px; }
+.stat-unit { font-size: 55px; font-weight: 700; color: #FDFBF7; margin-top: 16px; letter-spacing: -1px; }
+.stat-sub  { font-size: 38px; font-weight: 600; color: rgba(253,251,247,0.5); margin-top: 12px; line-height: 1.45; }
+
+/* ============ TEXTES NARRATIFS ============ */
+.txt {
+    position: absolute;
+    width: 950px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.22;
+    letter-spacing: -1.2px;
+    opacity: 0;
+    z-index: 40;
+    will-change: opacity, transform;
+}
+.t-top { top: 115px; font-size: 55px; }
+
+.t4, .t5, .t6 { color: #FDFBF7; }
+
+.t1 { animation: fadeTxt 3s   ease-in-out forwards 0s; }
+.t2 { animation: fadeTxt 5s   ease-in-out forwards 3s; }
+.t3 { animation: fadeTxt 4s   ease-in-out forwards 8s; }
+.t4 { animation: fadeTxt 4.5s ease-in-out forwards 12s; }
+.t5 { animation: fadeTxt 4.5s ease-in-out forwards 16.5s; }
+.t6 { animation: fadeTxt 4.5s ease-in-out forwards 21s; }
+.t7 { animation: fadeTxt 7s   ease-in-out forwards 25.5s; }
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    10%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-15px); }
+}
+
+.tq { color: #14B8A6; }
+.rd { color: #E24B4A; }
+
+/* ============ BARRE DE PROGRESSION ============ */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    width: 0%;
+    animation: fillBar 33s linear forwards;
+    z-index: 50;
+    will-change: width;
+}
+@keyframes fillBar { from { width: 0%; } to { width: 100%; } }
+
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<button class="replay" onclick="location.reload()">Relancer</button>
+
+<div class="stage">
+    <div class="bg"></div>
+
+    <!-- 7 phases narratives -->
+    <div class="txt t-top t1">Le numéro de ta <span class="tq">meilleure amie</span>.<br>Par cœur. Là, maintenant.</div>
+    <div class="txt t-top t2">Tu l'as ?<br>Avant, on en connaissait <span class="tq">des dizaines</span>.<br>Aujourd'hui, presque <span class="rd">aucun</span>.</div>
+    <div class="txt t-top t3">Toi, le dernier numéro<br>que tu as appris par cœur,<br>c'était quand ? <span class="tq">Commente 👇</span></div>
+    <div class="txt t-top t4">Ce phénomène a un nom :<br><span class="tq">l'amnésie numérique</span>.</div>
+    <div class="txt t-top t5">N'ARRIVENT PLUS<br>À RETENIR UN SEUL NUMÉRO<br>SANS LEUR TÉLÉPHONE</div>
+    <div class="txt t-top t6">Ton cerveau n'a pas<br>perdu la mémoire.<br>Il a juste appris qu'il n'en a <span class="rd">plus besoin</span>.</div>
+    <div class="txt t-top t7">Le protocole réactive<br>ta mémoire en <span class="tq">7 jours</span>.<br><span class="tq">Guide gratuit en bio 📲</span><br>Abonne-toi pour suivre le protocole jour par jour</div>
+
+    <!-- Visuel central : jauge de memoire -->
+    <div class="mem-wrap" id="memWrap">
+        <div class="mem-label" id="memLabel">MÉMOIRE</div>
+
+        <div class="ring-wrap">
+            <svg class="ring-svg" viewBox="0 0 450 450">
+                <circle class="ring-bg"       cx="225" cy="225" r="200"/>
+                <circle class="ring-progress" id="ringProgress" cx="225" cy="225" r="200"/>
+            </svg>
+            <div class="ring-inner">
+                <div class="mem-main" id="memMain">20</div>
+                <div class="mem-sub">numéros retenus</div>
+            </div>
+            <div class="phone-pop" id="phonePop">📱</div>
+        </div>
+
+        <div class="numbers-known">numéros oubliés : <span class="num" id="lostNum">0</span></div>
+    </div>
+
+    <!-- Stat choc -->
+    <div class="stat-choc" id="statChoc">
+        <div class="stat-num">70%</div>
+        <div class="stat-unit">des gens</div>
+        <div class="stat-sub">ne se souviennent plus<br>du numéro de leurs propres parents</div>
+    </div>
+
+    <div class="progress"></div>
+</div>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+var memMain      = document.getElementById('memMain');
+var ringProgress = document.getElementById('ringProgress');
+var memLabel     = document.getElementById('memLabel');
+var phonePop     = document.getElementById('phonePop');
+var lostNum      = document.getElementById('lostNum');
+var memWrap      = document.getElementById('memWrap');
+var statChoc     = document.getElementById('statChoc');
+
+var CIRC = 1256; /* 2 * pi * 200 */
+var capacity = 20;
+var lost = 0;
+
+function updateDisplay() {
+    var pct = capacity / 20;
+    ringProgress.style.strokeDashoffset = CIRC * (1 - pct);
+    memMain.textContent = capacity;
+    if (capacity <= 4) {
+        memMain.classList.add('red');
+        memLabel.classList.add('low');
+        memLabel.textContent = 'MÉMOIRE FAIBLE';
+        ringProgress.style.stroke = '#E24B4A';
+    }
+}
+
+function dropOne() {
+    if (capacity <= 2) return;
+    capacity -= 3;
+    lost += 3;
+    lostNum.textContent = lost;
+    phonePop.classList.remove('pop');
+    void phonePop.offsetWidth;
+    phonePop.classList.add('pop');
+    updateDisplay();
+}
+
+updateDisplay();
+setTimeout(dropOne, 3300);
+setTimeout(dropOne, 6300);
+setTimeout(dropOne, 9300);
+setTimeout(dropOne, 12300);
+setTimeout(dropOne, 15300);
+setTimeout(dropOne, 18300);
+
+/* A 16.5s : jauge swap vers stat choc */
+setTimeout(function() {
+    memWrap.style.transition = 'opacity 1.3s ease';
+    memWrap.style.opacity    = '0';
+    statChoc.style.transition  = 'opacity 1.3s ease';
+    statChoc.style.opacity     = '1';
+}, 16500);
+
+/* A 21s : stat choc s'efface */
+setTimeout(function() {
+    statChoc.style.transition = 'opacity 1s ease';
+    statChoc.style.opacity    = '0';
+}, 21000);
+</script>
+</body>
+</html>
