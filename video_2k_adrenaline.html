@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Adrenaline en alerte permanente — TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background:#000; width:100%; height:100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    animation: progress 33s linear forwards;
+    z-index: 50;
+    will-change: width;
+}
+@keyframes progress { from { width: 0; } to { width: 100%; } }
+
+.bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px;
+    height: 1920px;
+    background: radial-gradient(ellipse 80% 52% at 50% 56%, #FFF0EB 0%, #FDFBF7 60%);
+    will-change: background;
+    animation: bgAlert 33s ease-in-out forwards;
+}
+@keyframes bgAlert {
+    0%   { background: radial-gradient(ellipse 80% 52% at 50% 56%, #FFF0EB 0%, #FDFBF7 60%); }
+    36%  { background: radial-gradient(ellipse 80% 52% at 50% 56%, #FCD9D6 0%, #FDFBF7 60%); }
+    55%  { background: radial-gradient(ellipse 80% 52% at 50% 56%, #FCD9D6 0%, #FDFBF7 60%); }
+    73%  { background: radial-gradient(ellipse 80% 52% at 50% 56%, #E8F8F5 0%, #FDFBF7 60%); }
+    100% { background: radial-gradient(ellipse 80% 52% at 50% 56%, #E8F8F5 0%, #FDFBF7 60%); }
+}
+
+.accent-bar {
+    position: absolute;
+    top: 54px;
+    left: 90px;
+    width: 80px;
+    height: 8px;
+    background: #14B8A6;
+    border-radius: 4px;
+}
+
+/* ===== VISUEL CENTRAL : gyrophare d'alerte qui s'intensifie ===== */
+.exp-wrap {
+    position: absolute;
+    top: 440px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    width: 760px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: opacity;
+    animation: expIn 1.4s ease-out 0.3s both;
+}
+@keyframes expIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(26px) translateZ(0); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) translateZ(0); }
+}
+
+.siren-wrap {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.siren-ring {
+    position: absolute;
+    top: 50%; left: 50%;
+    border-radius: 50%;
+    border: 4px solid #E24B4A;
+    transform: translate(-50%,-50%) translateZ(0);
+    opacity: 0;
+    will-change: transform, opacity;
+}
+.sr1 { width: 320px; height: 320px; animation: ringPulse 2.6s ease-out infinite; }
+.sr2 { width: 320px; height: 320px; animation: ringPulse 2.6s ease-out 1.3s infinite; }
+@keyframes ringPulse {
+    0%   { transform: translate(-50%,-50%) scale(0.6) translateZ(0); opacity: 0.6; }
+    100% { transform: translate(-50%,-50%) scale(1.9) translateZ(0); opacity: 0; }
+}
+
+.siren-core {
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, #ff6b5e, #E24B4A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 0 0 8px rgba(26,29,33,0.06);
+    will-change: transform, box-shadow, background;
+    animation: sirenFlash 1.1s ease-in-out infinite;
+}
+@keyframes sirenFlash {
+    0%, 100% { transform: scale(1) translateZ(0); box-shadow: 0 0 40px 0 rgba(226,75,74,0.0); }
+    50%      { transform: scale(1.06) translateZ(0); box-shadow: 0 0 60px 14px rgba(226,75,74,0.45); }
+}
+.siren-icon { width: 110px; height: 110px; }
+
+.exp-caption {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.45;
+    text-align: center;
+    margin-top: 44px;
+    line-height: 1.35;
+}
+
+.counter-box {
+    margin-top: 24px;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+}
+.counter-num { font-size: 64px; font-weight: 900; color: #E24B4A; will-change: color; transition: color 0.5s ease; }
+.counter-label { font-size: 26px; font-weight: 800; color: #1A1D21; opacity: 0.55; }
+
+/* Text phases */
+.txt {
+    position: absolute;
+    opacity: 0;
+    will-change: opacity, transform;
+    left: 80px;
+    right: 80px;
+    top: 110px;
+    text-align: center;
+}
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateY(20px) translateZ(0); }
+    14%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    78%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    100% { opacity: 0; transform: translateY(-14px) translateZ(0); }
+}
+
+/* Phase 1 - Hook 0-3s */
+.p1 { animation: fadeTxt 3.2s ease-out 0s both; }
+.p1 .stat { font-size: 108px; font-weight: 900; color: #E24B4A; line-height: 1; display: block; }
+.p1 .stat-unit { font-size: 40px; font-weight: 700; color: #1A1D21; opacity: 0.45; }
+.p1 .sub { font-size: 40px; font-weight: 700; color: #1A1D21; line-height: 1.32; display: block; margin-top: 14px; }
+
+/* Phase 2 - Probleme 3-8s */
+.p2 { animation: fadeTxt 5.2s ease-out 3s both; }
+.p2 .main { font-size: 44px; font-weight: 800; color: #1A1D21; line-height: 1.38; }
+.p2 .red { color: #E24B4A; }
+
+/* Phase 3 - CTA commentaire 8-12s */
+.p3 { animation: fadeTxt 4.5s ease-out 8s both; }
+.p3 .cta-c { font-size: 44px; font-weight: 800; color: #14B8A6; line-height: 1.4; }
+
+/* Phase 4 - Revelation mecanique 12-18s */
+.p4 { animation: fadeTxt 6.5s ease-out 12s both; }
+.p4 .label { font-size: 38px; font-weight: 900; color: #E24B4A; line-height: 1; display: block; letter-spacing: 1px; }
+.p4 .main { font-size: 42px; font-weight: 800; color: #1A1D21; line-height: 1.35; margin-top: 14px; }
+
+/* Phase 5 - Stat choc 18-24s */
+.p5 { animation: fadeTxt 6.5s ease-out 18s both; }
+.p5 .number { font-size: 100px; font-weight: 900; color: #E24B4A; line-height: 1; display: block; }
+.p5 .unit { font-size: 38px; font-weight: 700; color: #1A1D21; opacity: 0.45; }
+.p5 .main { font-size: 40px; font-weight: 800; color: #1A1D21; line-height: 1.38; margin-top: 10px; }
+
+/* Phase 6 - Solution 24-28s */
+.p6 { animation: fadeTxt 4.5s ease-out 24s both; }
+.p6 .main { font-size: 44px; font-weight: 800; color: #1A1D21; line-height: 1.38; }
+.p6 .teal { color: #14B8A6; }
+
+/* Phase finale - CTA produit 28-33s */
+.p7 { animation: fadeTxt 5.5s ease-out 28s forwards; }
+.p7 .cta { font-size: 76px; font-weight: 900; color: #14B8A6; line-height: 1.18; }
+.p7 .sub { font-size: 34px; font-weight: 700; color: #1A1D21; opacity: 0.55; display: block; margin-top: 20px; line-height: 1.4; }
+
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg"></div>
+  <div class="accent-bar"></div>
+
+  <!-- Visuel central : gyrophare d'alerte -->
+  <div class="exp-wrap">
+    <div class="siren-wrap">
+      <div class="siren-ring sr1"></div>
+      <div class="siren-ring sr2"></div>
+      <div class="siren-core">
+        <svg class="siren-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 14H20L12 2Z" fill="#FDFBF7"/>
+          <rect x="10.5" y="14" width="3" height="6" fill="#FDFBF7"/>
+          <rect x="10.5" y="21" width="3" height="1.5" fill="#FDFBF7"/>
+        </svg>
+      </div>
+    </div>
+    <div class="exp-caption">ton corps reagit a une notification<br>comme a un danger reel</div>
+    <div class="counter-box">
+      <span class="counter-num" id="alertCount">3</span>
+      <span class="counter-label">alertes detectees en ce moment</span>
+    </div>
+  </div>
+
+  <!-- Phases texte -->
+  <div class="txt p1">
+    <span class="stat">150 <span class="stat-unit">fois / jour</span></span>
+    <span class="sub">ton corps active son<br>systeme d'alarme. <strong>A cause</strong><br><strong>d'un simple ecran.</strong></span>
+  </div>
+
+  <div class="txt p2">
+    <div class="main">
+      Ton cerveau ne fait pas<br>la difference entre un <span class="red">vrai danger</span><br>et une notification. Il libere<br><span class="red">de l'adrenaline</span> dans les deux cas.
+    </div>
+  </div>
+
+  <div class="txt p3">
+    <div class="cta-c">
+      Et toi, combien de fois<br>ton telephone t'a fait sursauter<br>cette semaine ?<br>Dis-le en commentaire 👇
+    </div>
+  </div>
+
+  <div class="txt p4">
+    <span class="label">ALERTE PERMANENTE</span>
+    <div class="main">
+      Ce systeme a ete concu pour<br>sonner rarement, face a un vrai<br>danger. Pas des dizaines<br>de fois par heure, sans repit.
+    </div>
+  </div>
+
+  <div class="txt p5">
+    <span class="number">2 700 <span class="unit">fois / mois</span></span>
+    <div class="main">
+      ton corps declenche ce mode<br>combat-ou-fuite a cause<br>de ton telephone. Sans jamais<br>vraiment se reposer.
+    </div>
+  </div>
+
+  <div class="txt p6">
+    <div class="main">
+      Le protocole desamorce<br>cette alarme en <span class="teal">7 jours.</span><br>Pas en coupant le telephone.<br>En changeant le signal.
+    </div>
+  </div>
+
+  <div class="txt p7">
+    <div class="cta">Guide gratuit<br>en bio 📲</div>
+    <span class="sub">Abonne-toi pour suivre<br>le protocole jour par jour</span>
+  </div>
+
+  <div class="progress"></div>
+</div>
+
+<button class="replay" onclick="location.reload()">Relancer</button>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const alertCount = document.getElementById('alertCount');
+let count = 3;
+const ticks = [2800, 5200, 7600, 9000, 11400, 13800, 16200, 18600, 21000, 23400, 25800];
+ticks.forEach(function (t) {
+    setTimeout(function () {
+        count += 1;
+        alertCount.textContent = count;
+        alertCount.style.color = '#E24B4A';
+        setTimeout(function () { alertCount.style.color = '#E24B4A'; }, 300);
+    }, t);
+});
+</script>
+</body>
+</html>
