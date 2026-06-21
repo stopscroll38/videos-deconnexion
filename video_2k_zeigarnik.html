@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Adrenaline en alerte permanente — TikTok 33s</title>
+<title>La Boucle Inachevee (Zeigarnik) — TikTok 33s</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -46,16 +46,7 @@ body {
     top: 0; left: 0;
     width: 1080px;
     height: 1920px;
-    background: radial-gradient(ellipse 80% 52% at 50% 56%, #FFF0EB 0%, #FDFBF7 60%);
-    will-change: background;
-    animation: bgAlert 33s ease-in-out forwards;
-}
-@keyframes bgAlert {
-    0%   { background: radial-gradient(ellipse 80% 52% at 50% 56%, #FFF0EB 0%, #FDFBF7 60%); }
-    36%  { background: radial-gradient(ellipse 80% 52% at 50% 56%, #FCD9D6 0%, #FDFBF7 60%); }
-    55%  { background: radial-gradient(ellipse 80% 52% at 50% 56%, #FCD9D6 0%, #FDFBF7 60%); }
-    73%  { background: radial-gradient(ellipse 80% 52% at 50% 56%, #E8F8F5 0%, #FDFBF7 60%); }
-    100% { background: radial-gradient(ellipse 80% 52% at 50% 56%, #E8F8F5 0%, #FDFBF7 60%); }
+    background: radial-gradient(ellipse 80% 52% at 50% 56%, #E8F8F5 0%, #FDFBF7 60%);
 }
 
 .accent-bar {
@@ -68,7 +59,7 @@ body {
     border-radius: 4px;
 }
 
-/* ===== VISUEL CENTRAL : gyrophare d'alerte qui s'intensifie ===== */
+/* ===== VISUEL CENTRAL : anneau qui se remplit puis se rouvre, jamais complet ===== */
 .exp-wrap {
     position: absolute;
     top: 440px;
@@ -86,49 +77,36 @@ body {
     to   { opacity: 1; transform: translateX(-50%) translateY(0) translateZ(0); }
 }
 
-.siren-wrap {
+.ring-wrap {
     position: relative;
-    width: 320px;
-    height: 320px;
+    width: 360px;
+    height: 360px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.siren-ring {
+.ring-svg { width: 360px; height: 360px; transform: rotate(-90deg) translateZ(0); }
+.ring-bg { fill: none; stroke: rgba(26,29,33,0.08); stroke-width: 26; }
+.ring-fill {
+    fill: none;
+    stroke: #14B8A6;
+    stroke-width: 26;
+    stroke-linecap: round;
+    stroke-dasharray: 942;
+    stroke-dashoffset: 942;
+    will-change: stroke-dashoffset, stroke;
+    transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1), stroke 0.4s ease;
+}
+
+.ring-center {
     position: absolute;
-    top: 50%; left: 50%;
-    border-radius: 50%;
-    border: 4px solid #E24B4A;
-    transform: translate(-50%,-50%) translateZ(0);
-    opacity: 0;
-    will-change: transform, opacity;
-}
-.sr1 { width: 320px; height: 320px; animation: ringPulse 2.6s ease-out infinite; }
-.sr2 { width: 320px; height: 320px; animation: ringPulse 2.6s ease-out 1.3s infinite; }
-@keyframes ringPulse {
-    0%   { transform: translate(-50%,-50%) scale(0.6) translateZ(0); opacity: 0.6; }
-    100% { transform: translate(-50%,-50%) scale(1.9) translateZ(0); opacity: 0; }
-}
-
-.siren-core {
-    width: 230px;
-    height: 230px;
-    border-radius: 50%;
-    background: linear-gradient(140deg, #ff6b5e, #E24B4A);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    position: relative;
-    box-shadow: 0 0 0 8px rgba(26,29,33,0.06);
-    will-change: transform, box-shadow, background;
-    animation: sirenFlash 1.1s ease-in-out infinite;
 }
-@keyframes sirenFlash {
-    0%, 100% { transform: scale(1) translateZ(0); box-shadow: 0 0 40px 0 rgba(226,75,74,0.0); }
-    50%      { transform: scale(1.06) translateZ(0); box-shadow: 0 0 60px 14px rgba(226,75,74,0.45); }
-}
-.siren-icon { width: 110px; height: 110px; }
+.ring-pct { font-size: 80px; font-weight: 900; color: #1A1D21; line-height: 1; will-change: color; }
+.ring-label { font-size: 24px; font-weight: 700; color: #1A1D21; opacity: 0.45; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; }
 
 .exp-caption {
     font-size: 28px;
@@ -146,7 +124,7 @@ body {
     align-items: baseline;
     gap: 14px;
 }
-.counter-num { font-size: 64px; font-weight: 900; color: #E24B4A; will-change: color; transition: color 0.5s ease; }
+.counter-num { font-size: 64px; font-weight: 900; color: #14B8A6; will-change: color; }
 .counter-label { font-size: 26px; font-weight: 800; color: #1A1D21; opacity: 0.55; }
 
 /* Text phases */
@@ -169,14 +147,14 @@ body {
 
 /* Phase 1 - Hook 0-3s */
 .p1 { animation: fadeTxt 3.2s ease-out 0s both; }
-.p1 .stat { font-size: 108px; font-weight: 900; color: #E24B4A; line-height: 1; display: block; }
-.p1 .stat-unit { font-size: 40px; font-weight: 700; color: #1A1D21; opacity: 0.45; }
+.p1 .stat { font-size: 116px; font-weight: 900; color: #14B8A6; line-height: 1; display: block; }
+.p1 .stat-unit { font-size: 44px; font-weight: 700; color: #1A1D21; opacity: 0.45; }
 .p1 .sub { font-size: 40px; font-weight: 700; color: #1A1D21; line-height: 1.32; display: block; margin-top: 14px; }
 
 /* Phase 2 - Probleme 3-8s */
 .p2 { animation: fadeTxt 5.2s ease-out 3s both; }
 .p2 .main { font-size: 44px; font-weight: 800; color: #1A1D21; line-height: 1.38; }
-.p2 .red { color: #E24B4A; }
+.p2 .teal { color: #0D9488; }
 
 /* Phase 3 - CTA commentaire 8-12s */
 .p3 { animation: fadeTxt 4.5s ease-out 8s both; }
@@ -184,8 +162,9 @@ body {
 
 /* Phase 4 - Revelation mecanique 12-18s */
 .p4 { animation: fadeTxt 6.5s ease-out 12s both; }
-.p4 .label { font-size: 38px; font-weight: 900; color: #E24B4A; line-height: 1; display: block; letter-spacing: 1px; }
+.p4 .label { font-size: 38px; font-weight: 900; color: #1A1D21; line-height: 1; display: block; letter-spacing: 1px; }
 .p4 .main { font-size: 42px; font-weight: 800; color: #1A1D21; line-height: 1.35; margin-top: 14px; }
+.p4 .red { color: #E24B4A; }
 
 /* Phase 5 - Stat choc 18-24s */
 .p5 { animation: fadeTxt 6.5s ease-out 18s both; }
@@ -224,61 +203,60 @@ body {
   <div class="bg"></div>
   <div class="accent-bar"></div>
 
-  <!-- Visuel central : gyrophare d'alerte -->
+  <!-- Visuel central : anneau qui se remplit presque, puis se rouvre -->
   <div class="exp-wrap">
-    <div class="siren-wrap">
-      <div class="siren-ring sr1"></div>
-      <div class="siren-ring sr2"></div>
-      <div class="siren-core">
-        <svg class="siren-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2L4 14H20L12 2Z" fill="#FDFBF7"/>
-          <rect x="10.5" y="14" width="3" height="6" fill="#FDFBF7"/>
-          <rect x="10.5" y="21" width="3" height="1.5" fill="#FDFBF7"/>
-        </svg>
+    <div class="ring-wrap">
+      <svg class="ring-svg" viewBox="0 0 360 360">
+        <circle class="ring-bg" cx="180" cy="180" r="150"></circle>
+        <circle class="ring-fill" id="ringFill" cx="180" cy="180" r="150"></circle>
+      </svg>
+      <div class="ring-center">
+        <span class="ring-pct" id="ringPct">0%</span>
+        <span class="ring-label">jamais fini</span>
       </div>
     </div>
-    <div class="exp-caption">ton corps reagit a une notification<br>comme a un danger reel</div>
+    <div class="exp-caption">chaque boucle presque fermee<br>se rouvre juste avant la fin</div>
     <div class="counter-box">
-      <span class="counter-num" id="alertCount">3</span>
-      <span class="counter-label">alertes detectees en ce moment</span>
+      <span class="counter-num" id="loopCount">0</span>
+      <span class="counter-label">boucles ouvertes accumulees</span>
     </div>
   </div>
 
   <!-- Phases texte -->
   <div class="txt p1">
-    <span class="stat">150 <span class="stat-unit">fois / jour</span></span>
-    <span class="sub">ton corps active son<br>systeme d'alarme. <strong>A cause</strong><br><strong>d'un simple ecran.</strong></span>
+    <span class="stat">90 <span class="stat-unit">% en plus</span></span>
+    <span class="sub">ton cerveau retient une tache<br><strong>jamais terminee</strong> bien mieux<br>qu'une tache finie.</span>
   </div>
 
   <div class="txt p2">
     <div class="main">
-      Ton cerveau ne fait pas<br>la difference entre un <span class="red">vrai danger</span><br>et une notification. Il libere<br><span class="red">de l'adrenaline</span> dans les deux cas.
+      C'est l'effet Zeigarnik. Une <span class="teal">boucle ouverte</span><br>cree une tension mentale<br>que ton cerveau veut absolument<br>refermer. Coute que coute.
     </div>
   </div>
 
   <div class="txt p3">
     <div class="cta-c">
-      Et toi, combien de fois<br>ton telephone t'a fait sursauter<br>cette semaine ?<br>Dis-le en commentaire 👇
+      Combien de videos as-tu<br>commencees aujourd'hui<br>sans jamais les finir ?<br>Dis le chiffre en commentaire 👇
     </div>
   </div>
 
   <div class="txt p4">
-    <span class="label">ALERTE PERMANENTE</span>
+    <span class="label">BOUCLES OUVERTES</span>
     <div class="main">
-      Ce systeme a ete concu pour<br>sonner rarement, face a un vrai<br>danger. Pas des dizaines<br>de fois par heure, sans repit.
+      L'algorithme ne te garde pas<br>avec du contenu interessant.<br>Il te garde avec des fins<br><span class="red">coupees</span>, encore et encore.
     </div>
   </div>
 
   <div class="txt p5">
-    <span class="number">2 700 <span class="unit">fois / mois</span></span>
+    <span class="number">200 <span class="unit">boucles</span></span>
     <div class="main">
-      ton corps declenche ce mode<br>combat-ou-fuite a cause<br>de ton telephone. Sans jamais<br>vraiment se reposer.
+      c'est ce que ton cerveau<br>accumule chaque jour, sans<br>jamais les refermer. Une tension<br>permanente que tu ne vois pas.
     </div>
   </div>
 
   <div class="txt p6">
     <div class="main">
-      Le protocole desamorce<br>cette alarme en <span class="teal">7 jours.</span><br>Pas en coupant le telephone.<br>En changeant le signal.
+      Le protocole referme ces<br>boucles en <span class="teal">7 jours.</span><br>Pas en bloquant l'appli.<br>En reapprenant a finir ce que<br>tu commences.
     </div>
   </div>
 
@@ -307,17 +285,32 @@ function fitPreview() {
 fitPreview();
 window.addEventListener('resize', fitPreview);
 
-const alertCount = document.getElementById('alertCount');
-let count = 3;
-const ticks = [2800, 5200, 7600, 9000, 11400, 13800, 16200, 18600, 21000, 23400, 25800];
-ticks.forEach(function (t) {
+const ringFill = document.getElementById('ringFill');
+const ringPct  = document.getElementById('ringPct');
+const loopCount = document.getElementById('loopCount');
+const CIRC = 942;
+let loops = 0;
+
+function openLoop() {
+    const target = 0.78 + Math.random() * 0.14;
+    const offset = CIRC * (1 - target);
+    ringFill.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1)';
+    ringFill.style.stroke = '#14B8A6';
+    ringFill.style.strokeDashoffset = offset;
+    ringPct.textContent = Math.round(target * 100) + '%';
+
     setTimeout(function () {
-        count += 1;
-        alertCount.textContent = count;
-        alertCount.style.color = '#E24B4A';
-        setTimeout(function () { alertCount.style.color = '#E24B4A'; }, 300);
-    }, t);
-});
+        ringFill.style.transition = 'stroke-dashoffset 0.5s ease-in, stroke 0.3s ease';
+        ringFill.style.stroke = '#E24B4A';
+        ringFill.style.strokeDashoffset = CIRC;
+        ringPct.textContent = '0%';
+        loops += 1;
+        loopCount.textContent = loops;
+    }, 1900);
+}
+
+const ticks = [600, 3400, 6200, 9000, 11800, 14600, 17400, 20200, 23000, 25800];
+ticks.forEach(function (t) { setTimeout(openLoop, t); });
 </script>
 </body>
 </html>
