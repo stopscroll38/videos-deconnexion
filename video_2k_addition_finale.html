@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>L'Addition Finale — TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background:#000; width:100%; height:100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+/* Progress bar */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    animation: progress 33s linear forwards;
+    z-index: 50;
+    will-change: width;
+}
+@keyframes progress { from { width: 0; } to { width: 100%; } }
+
+/* Background */
+.bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px;
+    height: 1920px;
+    background: radial-gradient(ellipse 80% 52% at 50% 56%, #FDECEA 0%, #FDFBF7 60%);
+}
+
+/* Top accent bar */
+.accent-bar {
+    position: absolute;
+    top: 54px;
+    left: 90px;
+    width: 80px;
+    height: 8px;
+    background: #E24B4A;
+    border-radius: 4px;
+}
+
+/* ===== VISUEL CENTRAL : horloge qui devore le temps + compteur ===== */
+.clock-wrap {
+    position: absolute;
+    top: 440px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: opacity;
+    animation: wrapIn 1.4s ease-out 0.3s both;
+}
+
+@keyframes wrapIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(26px) translateZ(0); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) translateZ(0); }
+}
+
+.clock-circle {
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 8px rgba(26,29,33,0.07);
+    background: linear-gradient(150deg, #B23A30, #E24B4A);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    animation: clockPulse 2.2s ease-in-out infinite;
+}
+@keyframes clockPulse {
+    0%   { transform: scale(1) translateZ(0); }
+    50%  { transform: scale(1.07) translateZ(0); }
+    100% { transform: scale(1) translateZ(0); }
+}
+
+.clock-hand {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 8px;
+    height: 130px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 4px;
+    transform-origin: 50% 100%;
+    transform: translate(-50%, -100%) rotate(0deg);
+    will-change: transform;
+    animation: handSpin 4.4s linear infinite;
+}
+@keyframes handSpin {
+    from { transform: translate(-50%, -100%) rotate(0deg); }
+    to   { transform: translate(-50%, -100%) rotate(360deg); }
+}
+
+.clock-label {
+    position: absolute;
+    bottom: 60px;
+    font-size: 26px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.95);
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    z-index: 3;
+}
+
+/* Caption */
+.clock-caption {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.4;
+    text-align: center;
+    margin-top: 22px;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+}
+
+/* Compteur d'heures perdues qui monte */
+.counter-box {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.counter-value {
+    font-size: 96px;
+    font-weight: 900;
+    color: #E24B4A;
+    line-height: 1;
+    will-change: contents;
+}
+.counter-label {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #1A1D21;
+    opacity: 0.45;
+    margin-top: 10px;
+}
+
+/* Text phases */
+.txt {
+    position: absolute;
+    opacity: 0;
+    will-change: opacity, transform;
+    left: 80px;
+    right: 80px;
+    top: 116px;
+    text-align: center;
+}
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateY(20px) translateZ(0); }
+    14%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    78%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    100% { opacity: 0; transform: translateY(-14px) translateZ(0); }
+}
+
+/* Phase 1 - Hook 0-3s */
+.p1 { animation: fadeTxt 3.2s ease-out 0s both; }
+.p1 .stat {
+    font-size: 110px;
+    font-weight: 900;
+    color: #E24B4A;
+    line-height: 1;
+    display: block;
+}
+.p1 .stat-unit {
+    font-size: 44px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.45;
+}
+.p1 .sub {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1A1D21;
+    line-height: 1.32;
+    display: block;
+    margin-top: 14px;
+}
+
+/* Phase 2 - Probleme 3-8s */
+.p2 { animation: fadeTxt 5.2s ease-out 3s both; }
+.p2 .main {
+    font-size: 47px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.38;
+}
+.p2 .red { color: #E24B4A; }
+
+/* Phase 3 - CTA commentaire 8-12s */
+.p3 { animation: fadeTxt 4.5s ease-out 8s both; }
+.p3 .cta-c {
+    font-size: 46px;
+    font-weight: 800;
+    color: #14B8A6;
+    line-height: 1.4;
+}
+
+/* Phase 4 - Revelation mecanique 12-18s */
+.p4 { animation: fadeTxt 6.5s ease-out 12s both; }
+.p4 .number {
+    font-size: 110px;
+    font-weight: 900;
+    color: #1A1D21;
+    line-height: 1;
+    display: block;
+}
+.p4 .main {
+    font-size: 45px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.35;
+    margin-top: 10px;
+}
+.p4 .red { color: #E24B4A; }
+
+/* Phase 5 - Stat choc 18-24s */
+.p5 { animation: fadeTxt 6.5s ease-out 18s both; }
+.p5 .number {
+    font-size: 130px;
+    font-weight: 900;
+    color: #E24B4A;
+    line-height: 1;
+    display: block;
+}
+.p5 .unit {
+    font-size: 48px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.45;
+}
+.p5 .main {
+    font-size: 43px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.38;
+    margin-top: 10px;
+}
+
+/* Phase 6 - Solution 24-28s */
+.p6 { animation: fadeTxt 4.5s ease-out 24s both; }
+.p6 .main {
+    font-size: 47px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.38;
+}
+.p6 .teal { color: #14B8A6; }
+
+/* Phase finale - CTA produit 28-33s */
+.p7 { animation: fadeTxt 5.5s ease-out 28s forwards; }
+.p7 .cta {
+    font-size: 84px;
+    font-weight: 900;
+    color: #14B8A6;
+    line-height: 1.18;
+}
+
+/* Replay button - hors champ a l'enregistrement */
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg"></div>
+  <div class="accent-bar"></div>
+
+  <!-- Visuel central : horloge qui tourne + compteur d'heures perdues -->
+  <div class="clock-wrap">
+    <div class="clock-circle">
+      <div class="clock-hand"></div>
+      <div class="clock-label">TEMPS<br>ECOULE</div>
+    </div>
+    <div class="clock-caption">ce que ton telephone te prend, minute apres minute</div>
+    <div class="counter-box">
+      <div class="counter-value" id="counterValue">0</div>
+      <div class="counter-label">heures perdues cette annee</div>
+    </div>
+  </div>
+
+  <!-- Phases texte -->
+  <div class="txt p1">
+    <span class="stat">10 <span class="stat-unit">ans</span></span>
+    <span class="sub">c'est le temps moyen qu'un humain<br>passe sur son telephone,<br>sur toute une vie.</span>
+  </div>
+
+  <div class="txt p2">
+    <div class="main">
+      Dix annees entieres.<br>Pas pour vivre. <span class="red">Pour scroller.</span><br>
+      Et pendant que ce temps s'ecoule,<br>ta vraie vie n'attend pas.
+    </div>
+  </div>
+
+  <div class="txt p3">
+    <div class="cta-c">
+      Si on te rendait ces dix annees<br>maintenant, tu en ferais quoi ?<br>
+      Commente 👇
+    </div>
+  </div>
+
+  <div class="txt p4">
+    <span class="number">200 <span class="unit" style="font-size:40px;opacity:.45;">milliards</span></span>
+    <div class="main">
+      de dollars par an, c'est ce que<br>rapporte l'industrie qui vit de<br><span class="red">ton attention.</span> Plus tu restes, plus elle gagne.
+    </div>
+  </div>
+
+  <div class="txt p5">
+    <span class="number">0 <span class="unit">remboursement</span></span>
+    <div class="main">
+      Chaque minute perdue<br>est une minute perdue.<br>Pas de bouton retour<br>pour une vie.
+    </div>
+  </div>
+
+  <div class="txt p6">
+    <div class="main">
+      Le protocole inverse<br>le rapport de force en<br><span class="teal">7 jours.</span><br>Pas de privation.<br>Juste ton temps qui te revient.
+    </div>
+  </div>
+
+  <div class="txt p7">
+    <div class="cta">Guide gratuit<br>en bio 📲</div>
+  </div>
+
+  <div class="progress"></div>
+</div>
+
+<button class="replay" onclick="location.reload()">Relancer</button>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+
+const counterValue = document.getElementById('counterValue');
+let count = 0;
+const target = 1460;
+const steps = 34;
+const stepTime = 26000 / steps;
+const counterInterval = setInterval(function () {
+    count += Math.ceil(target / steps);
+    if (count > target) count = target;
+    counterValue.textContent = count;
+    if (count >= target) clearInterval(counterInterval);
+}, stepTime);
+</script>
+</body>
+</html>
