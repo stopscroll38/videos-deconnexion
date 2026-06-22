@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Endorphine Tolerance — TikTok 33s</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { background:#000; width:100%; height:100%; }
+body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #FDFBF7;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.stage {
+    width: 1080px;
+    height: 1920px;
+    position: relative;
+    will-change: transform;
+    animation: slowZoom 33s ease-in-out forwards;
+}
+
+@keyframes slowZoom {
+    from { transform: scale(1) translateZ(0); }
+    to   { transform: scale(1.07) translateZ(0); }
+}
+
+/* Progress bar */
+.progress {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 7px;
+    background: #14B8A6;
+    animation: progress 33s linear forwards;
+    z-index: 50;
+    will-change: width;
+}
+@keyframes progress { from { width: 0; } to { width: 100%; } }
+
+/* Background */
+.bg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 1080px;
+    height: 1920px;
+    background: radial-gradient(ellipse 80% 52% at 50% 56%, #FDECEA 0%, #FDFBF7 60%);
+}
+
+/* Top accent bar */
+.accent-bar {
+    position: absolute;
+    top: 54px;
+    left: 90px;
+    width: 80px;
+    height: 8px;
+    background: #E24B4A;
+    border-radius: 4px;
+}
+
+/* ===== VISUEL CENTRAL : pulsation endorphine + courbe de tolerance ===== */
+.pulse-wrap {
+    position: absolute;
+    top: 440px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(0);
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: opacity;
+    animation: wrapIn 1.4s ease-out 0.3s both;
+}
+
+@keyframes wrapIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(26px) translateZ(0); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) translateZ(0); }
+}
+
+.pulse-circle {
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 8px rgba(26,29,33,0.07);
+    background: linear-gradient(150deg, #0E8C80, #14B8A6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    will-change: transform;
+    animation: pulseShrink 18s ease-in 4s infinite;
+}
+@keyframes pulseShrink {
+    0%   { transform: scale(1) translateZ(0); background: linear-gradient(150deg, #0E8C80, #14B8A6); }
+    50%  { transform: scale(1.1) translateZ(0); background: linear-gradient(150deg, #0E8C80, #14B8A6); }
+    51%  { transform: scale(1) translateZ(0); }
+    75%  { transform: scale(1.03) translateZ(0); background: linear-gradient(150deg, #B23A30, #E24B4A); }
+    100% { transform: scale(1) translateZ(0); background: linear-gradient(150deg, #B23A30, #E24B4A); }
+}
+
+.pulse-ring {
+    position: absolute;
+    border: 4px solid rgba(255,255,255,0.55);
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    will-change: transform, opacity;
+    animation: ringExpand 2.4s ease-out infinite;
+}
+.pulse-ring.r2 { animation-delay: 0.8s; }
+.pulse-ring.r3 { animation-delay: 1.6s; }
+@keyframes ringExpand {
+    0%   { transform: scale(0.6) translateZ(0); opacity: 0.7; }
+    100% { transform: scale(1.7) translateZ(0); opacity: 0; }
+}
+
+.pulse-label {
+    font-size: 28px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.95);
+    text-align: center;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    z-index: 3;
+}
+
+/* Caption */
+.pulse-caption {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.4;
+    text-align: center;
+    margin-top: 22px;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+}
+
+/* Bar graph - tolerance qui monte */
+.bar-graph {
+    display: flex;
+    align-items: flex-end;
+    gap: 18px;
+    width: 460px;
+    height: 130px;
+    margin-top: 24px;
+}
+.bar {
+    flex: 1;
+    border-radius: 8px 8px 0 0;
+    background: #14B8A6;
+    will-change: height, background;
+}
+.b1 { height: 40%; animation: growBar1 1s ease-out 0.6s both; }
+.b2 { height: 60%; animation: growBar2 1s ease-out 0.9s both; background: #4FAE9C; }
+.b3 { height: 82%; animation: growBar3 1s ease-out 1.2s both; background: #C97A5A; }
+.b4 { height: 100%; animation: growBar4 1s ease-out 1.5s both; background: #E24B4A; }
+@keyframes growBar1 { from { height:0; } to { height:40%; } }
+@keyframes growBar2 { from { height:0; } to { height:60%; } }
+@keyframes growBar3 { from { height:0; } to { height:82%; } }
+@keyframes growBar4 { from { height:0; } to { height:100%; } }
+
+.bar-labels {
+    display: flex;
+    width: 460px;
+    justify-content: space-between;
+    margin-top: 14px;
+}
+.bar-label {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #1A1D21;
+    opacity: 0.5;
+}
+
+/* Text phases */
+.txt {
+    position: absolute;
+    opacity: 0;
+    will-change: opacity, transform;
+    left: 80px;
+    right: 80px;
+    top: 116px;
+    text-align: center;
+}
+
+@keyframes fadeTxt {
+    0%   { opacity: 0; transform: translateY(20px) translateZ(0); }
+    14%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    78%  { opacity: 1; transform: translateY(0) translateZ(0); }
+    100% { opacity: 0; transform: translateY(-14px) translateZ(0); }
+}
+
+/* Phase 1 - Hook 0-3s */
+.p1 { animation: fadeTxt 3.2s ease-out 0s both; }
+.p1 .stat {
+    font-size: 130px;
+    font-weight: 900;
+    color: #E24B4A;
+    line-height: 1;
+    display: block;
+}
+.p1 .stat-unit {
+    font-size: 48px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.45;
+}
+.p1 .sub {
+    font-size: 42px;
+    font-weight: 700;
+    color: #1A1D21;
+    line-height: 1.32;
+    display: block;
+    margin-top: 14px;
+}
+
+/* Phase 2 - Probleme 3-8s */
+.p2 { animation: fadeTxt 5.2s ease-out 3s both; }
+.p2 .main {
+    font-size: 47px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.38;
+}
+.p2 .red { color: #E24B4A; }
+
+/* Phase 3 - CTA commentaire 8-12s */
+.p3 { animation: fadeTxt 4.5s ease-out 8s both; }
+.p3 .cta-c {
+    font-size: 46px;
+    font-weight: 800;
+    color: #14B8A6;
+    line-height: 1.4;
+}
+
+/* Phase 4 - Revelation mecanique 12-18s */
+.p4 { animation: fadeTxt 6.5s ease-out 12s both; }
+.p4 .number {
+    font-size: 128px;
+    font-weight: 900;
+    color: #1A1D21;
+    line-height: 1;
+    display: block;
+}
+.p4 .main {
+    font-size: 45px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.35;
+    margin-top: 10px;
+}
+.p4 .red { color: #E24B4A; }
+
+/* Phase 5 - Stat choc 18-24s */
+.p5 { animation: fadeTxt 6.5s ease-out 18s both; }
+.p5 .number {
+    font-size: 136px;
+    font-weight: 900;
+    color: #E24B4A;
+    line-height: 1;
+    display: block;
+}
+.p5 .unit {
+    font-size: 50px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.45;
+}
+.p5 .main {
+    font-size: 43px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.38;
+    margin-top: 10px;
+}
+
+/* Phase 6 - Solution 24-28s */
+.p6 { animation: fadeTxt 4.5s ease-out 24s both; }
+.p6 .main {
+    font-size: 47px;
+    font-weight: 800;
+    color: #1A1D21;
+    line-height: 1.38;
+}
+.p6 .teal { color: #14B8A6; }
+
+/* Phase finale - CTA produit 28-33s */
+.p7 { animation: fadeTxt 5.5s ease-out 28s forwards; }
+.p7 .cta {
+    font-size: 80px;
+    font-weight: 900;
+    color: #14B8A6;
+    line-height: 1.18;
+}
+.p7 .sub {
+    font-size: 37px;
+    font-weight: 700;
+    color: #1A1D21;
+    opacity: 0.55;
+    display: block;
+    margin-top: 20px;
+    line-height: 1.4;
+}
+
+/* Replay button - hors champ a l'enregistrement */
+.replay {
+    position: fixed;
+    top: -80px; left: 10px;
+    z-index: 100;
+    padding: 12px 24px;
+    font-size: 20px;
+    background: #14B8A6;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="bg"></div>
+  <div class="accent-bar"></div>
+
+  <!-- Visuel central : pulsation endorphine + courbe de tolerance -->
+  <div class="pulse-wrap">
+    <div class="pulse-circle">
+      <div class="pulse-ring r1"></div>
+      <div class="pulse-ring r2"></div>
+      <div class="pulse-ring r3"></div>
+      <div class="pulse-label">DOSE<br>D'ENDORPHINE</div>
+    </div>
+    <div class="pulse-caption">ce que ton cerveau ressent a chaque like</div>
+    <div class="bar-graph">
+      <div class="bar b1"></div>
+      <div class="bar b2"></div>
+      <div class="bar b3"></div>
+      <div class="bar b4"></div>
+    </div>
+    <div class="bar-labels">
+      <span class="bar-label">jour 1</span>
+      <span class="bar-label">jour 7</span>
+      <span class="bar-label">jour 14</span>
+      <span class="bar-label">jour 30</span>
+    </div>
+  </div>
+
+  <!-- Phases texte -->
+  <div class="txt p1">
+    <span class="stat">0,3 <span class="stat-unit">sec</span></span>
+    <span class="sub">c'est le temps qu'il faut a ton cerveau<br>pour liberer de l'<strong>endorphine</strong><br>apres un like recu.</span>
+  </div>
+
+  <div class="txt p2">
+    <div class="main">
+      Chaque notification declenche<br>une mini dose de <span class="red">soulagement.</span><br>
+      Comme une drogue douce.<br>
+      Mais ton cerveau s'habitue vite.
+    </div>
+  </div>
+
+  <div class="txt p3">
+    <div class="cta-c">
+      Toi aussi tu checks direct<br>apres avoir poste ?<br>
+      Commente 👇
+    </div>
+  </div>
+
+  <div class="txt p4">
+    <span class="number">70%</span>
+    <div class="main">
+      d'endorphine en moins liberee<br>apres seulement deux semaines<br>d'usage intensif. C'est la<br><span class="red">tolerance</span> qui s'installe.
+    </div>
+  </div>
+
+  <div class="txt p5">
+    <span class="number">3 <span class="unit">x</span></span>
+    <div class="main">
+      plus de notifications necessaires<br>pour ressentir le meme<br>soulagement qu'au debut.
+    </div>
+  </div>
+
+  <div class="txt p6">
+    <div class="main">
+      Le protocole retablit<br>ta sensibilite naturelle<br>en <span class="teal">7 jours.</span><br>Pas de privation.<br>Juste un vrai reset.
+    </div>
+  </div>
+
+  <div class="txt p7">
+    <div class="cta">Guide gratuit<br>en bio 📲</div>
+    <span class="sub">Abonne-toi pour suivre<br>le protocole jour par jour</span>
+  </div>
+
+  <div class="progress"></div>
+</div>
+
+<button class="replay" onclick="location.reload()">Relancer</button>
+
+<script>
+function fitPreview() {
+    const mobile = window.innerWidth <= 768;
+    const scale = mobile
+        ? window.innerWidth / 1080
+        : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+    document.body.style.transformOrigin = 'top left';
+    document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+    document.body.style.position = 'absolute';
+    document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+    document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+}
+fitPreview();
+window.addEventListener('resize', fitPreview);
+</script>
+</body>
+</html>
