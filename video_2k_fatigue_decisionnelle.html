@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>StopScroll - Vidéo Fatigue décisionnelle</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #000; width: 100%; height: 100%; overflow: hidden; }
+
+        body {
+            width: 1080px;
+            height: 1920px;
+            background: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+            color: #1A1D21;
+            -webkit-font-smoothing: antialiased;
+            position: absolute;
+        }
+
+        .stage {
+            width: 1080px;
+            height: 1920px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            animation: slowZoom 33s ease-in-out forwards;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1) translateZ(0); }
+            to   { transform: scale(1.07) translateZ(0); }
+        }
+
+        .safe-zone {
+            position: absolute;
+            top: 150px;
+            bottom: 400px;
+            left: 80px;
+            right: 150px;
+            display: block;
+            z-index: 5;
+        }
+
+        .txt {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            opacity: 0;
+            transform: translateY(30px) translateZ(0);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            will-change: opacity, transform;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .txt.active {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+
+        .txt.subtitle .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(18px) scale(0.85) translateZ(0);
+            transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+            will-change: opacity, transform;
+            margin: 0 6px;
+        }
+        .txt.subtitle .word.show {
+            opacity: 1;
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        .teal { color: #14B8A6; }
+        .red { color: #E24B4A; }
+        .bold { font-weight: 700; }
+        .heavy { font-weight: 900; }
+
+        .replay {
+            position: fixed;
+            top: -100px; left: 10px;
+            z-index: 100;
+            padding: 12px 24px;
+            font-size: 20px;
+            background: #14B8A6;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        .visual-center {
+            position: absolute;
+            top: 70%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            will-change: transform;
+            z-index: 1;
+            width: 460px;
+            height: 460px;
+        }
+
+        .gauge-ring {
+            position: absolute;
+            top: 0; left: 0;
+            width: 460px;
+            height: 460px;
+            border-radius: 50%;
+            background: conic-gradient(#14B8A6 0deg, #14B8A6 var(--fill, 360deg), #EDEAE2 var(--fill, 360deg), #EDEAE2 360deg);
+            transition: --fill 1s linear;
+            animation: drain 26s linear forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        @property --fill {
+            syntax: '<angle>';
+            initial-value: 360deg;
+            inherits: false;
+        }
+        @keyframes drain {
+            0%   { --fill: 360deg; }
+            36%  { --fill: 360deg; }
+            100% { --fill: 25deg; }
+        }
+        .gauge-inner {
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            background: #FDFBF7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .gauge-label {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1A1D21;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .gauge-value {
+            font-size: 88px;
+            font-weight: 900;
+            color: #E24B4A;
+            animation: countdown 26s steps(28) forwards;
+        }
+        @keyframes countdown {
+            0%   { content: "100%"; }
+        }
+        .gauge-value::after {
+            content: attr(data-val);
+        }
+    </style>
+</head>
+<body>
+
+    <button class="replay" onclick="startVideo()">🔄 Relancer</button>
+
+    <div class="stage">
+
+        <div class="safe-zone">
+            <div class="txt subtitle heavy" id="phase1" style="top: 28%; font-size: 68px; line-height: 1.2;">Personne ne parle de ça, mais ton cerveau tombe en panne de volonté. Bien avant midi.</div>
+            <div class="txt subtitle bold" id="phase2" style="top: 35%; font-size: 54px; line-height: 1.3;">Chaque notif que tu ouvres, chaque post que tu juges, chaque réponse que tu tapes, c'est une décision. Et ton cerveau n'en a qu'un stock limité par jour.</div>
+            <div class="txt subtitle bold teal" id="phase3" style="top: 38%; font-size: 50px; line-height: 1.3;">À quelle heure tu sens que tu n'as plus de jus pour réfléchir ? Dis l'heure en commentaire 👇</div>
+            <div class="txt subtitle" id="phase4" style="top: 33%; font-size: 54px; line-height: 1.3;">Ça s'appelle la fatigue décisionnelle. Ton cortex préfrontal traite un swipe et un choix important avec la même réserve d'énergie.</div>
+            <div class="txt subtitle red bold" id="phase5" style="top: 33%; font-size: 56px; line-height: 1.3;">Ton téléphone te fait prendre plus de deux cents micro-décisions avant midi. Et il les prend avant les vraies.</div>
+            <div class="txt subtitle" id="phase6" style="top: 34%; font-size: 54px; line-height: 1.3;">La solution : bloquer les notifications les deux premières heures, et réserver tes vraies décisions pour ce moment-là, pas pour après le scroll.</div>
+            <div class="txt heavy teal" id="phase7" style="top: 35%; font-size: 64px; line-height: 1.3;">
+                Guide gratuit en bio <span style="font-family: initial;">📲</span>
+                <div style="font-size: 32px; color: #1A1D21; margin-top: 40px; font-weight:700;">Envoie ça à quelqu'un qui en a besoin</div>
+            </div>
+        </div>
+
+        <div class="visual-center">
+            <div class="gauge-ring">
+                <div class="gauge-inner">
+                    <div class="gauge-value" id="gaugeNum" data-val="100%"></div>
+                    <div class="gauge-label">Réserve mentale</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PHASES = [
+            { id: 'phase1', duration: 3000 },
+            { id: 'phase2', duration: 5000 },
+            { id: 'phase3', duration: 4000 },
+            { id: 'phase4', duration: 5000 },
+            { id: 'phase5', duration: 5000 },
+            { id: 'phase6', duration: 4000 },
+            { id: 'phase7', duration: 7000 }
+        ];
+
+        let timers = [];
+
+        function wrapWords() {
+            document.querySelectorAll('.txt.subtitle').forEach((el) => {
+                const words = el.textContent.trim().split(/\s+/);
+                el.innerHTML = words.map(w => '<span class="word">' + w + '</span>').join(' ');
+            });
+        }
+        wrapWords();
+
+        function revealWords(phaseEl, duration) {
+            const words = phaseEl.querySelectorAll('.word');
+            if (!words.length) return [];
+            const revealWindow = duration * 0.75;
+            const step = revealWindow / words.length;
+            const localTimers = [];
+            words.forEach((w, i) => {
+                localTimers.push(setTimeout(() => w.classList.add('show'), i * step));
+            });
+            return localTimers;
+        }
+
+        function animateGauge() {
+            const el = document.getElementById('gaugeNum');
+            const steps = [
+                { t: 0, v: '100%' },
+                { t: 9000, v: '100%' },
+                { t: 12000, v: '78%' },
+                { t: 17000, v: '54%' },
+                { t: 22000, v: '31%' },
+                { t: 26000, v: '12%' }
+            ];
+            steps.forEach(s => {
+                timers.push(setTimeout(() => { el.setAttribute('data-val', s.v); }, s.t));
+            });
+        }
+
+        function startVideo() {
+            timers.forEach(clearTimeout);
+            timers = [];
+            document.querySelectorAll('.txt').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+            document.getElementById('gaugeNum').setAttribute('data-val', '100%');
+
+            const ring = document.querySelector('.gauge-ring');
+            ring.style.animation = 'none';
+            void ring.offsetWidth;
+            ring.style.animation = 'drain 26s linear forwards';
+
+            animateGauge();
+
+            let currentDelay = 0;
+            PHASES.forEach((phase) => {
+                const phaseEl = document.getElementById(phase.id);
+
+                let tActive = setTimeout(() => {
+                    phaseEl.classList.add('active');
+                    const wordTimers = revealWords(phaseEl, phase.duration);
+                    timers.push(...wordTimers);
+                }, currentDelay);
+
+                let tRemove = setTimeout(() => {
+                    phaseEl.classList.remove('active');
+                    phaseEl.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+                }, currentDelay + phase.duration - 200);
+
+                timers.push(tActive, tRemove);
+                currentDelay += phase.duration;
+            });
+        }
+
+        function fitPreview() {
+            const mobile = window.innerWidth <= 768;
+            const scale = mobile
+                ? window.innerWidth / 1080
+                : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+            document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+            document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+        }
+
+        window.addEventListener('resize', fitPreview);
+        fitPreview();
+
+        window.addEventListener('load', startVideo);
+    </script>
+</body>
+</html>
