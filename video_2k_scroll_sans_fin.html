@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>StopScroll - Vidéo Scroll Sans Fin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #000; width: 100%; height: 100%; overflow: hidden; }
+
+        body {
+            width: 1080px;
+            height: 1920px;
+            background: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+            color: #1A1D21;
+            -webkit-font-smoothing: antialiased;
+            position: absolute;
+        }
+
+        .stage {
+            width: 1080px;
+            height: 1920px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            animation: slowZoom 18s ease-in-out forwards;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1) translateZ(0); }
+            to   { transform: scale(1.07) translateZ(0); }
+        }
+
+        .safe-zone {
+            position: absolute;
+            top: 150px;
+            bottom: 400px;
+            left: 80px;
+            right: 150px;
+            display: block;
+            z-index: 5;
+        }
+
+        .txt {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            opacity: 0;
+            transform: translateY(30px) translateZ(0);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            will-change: opacity, transform;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .txt.active {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+
+        .txt.subtitle .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(18px) scale(0.85) translateZ(0);
+            transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+            will-change: opacity, transform;
+            margin: 0 6px;
+        }
+        .txt.subtitle .word.show {
+            opacity: 1;
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        .teal { color: #14B8A6; }
+        .red { color: #E24B4A; }
+        .bold { font-weight: 700; }
+        .heavy { font-weight: 900; }
+
+        .replay {
+            position: fixed;
+            top: -100px; left: 10px;
+            z-index: 100;
+            padding: 12px 24px;
+            font-size: 20px;
+            background: #14B8A6;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        .visual-center {
+            position: absolute;
+            top: 70%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        /* Cadre "téléphone" représentant un flux qui ne s'arrête jamais */
+        .phone-frame {
+            width: 420px;
+            height: 620px;
+            border-radius: 40px;
+            border: 8px solid #1A1D21;
+            background: #FFFFFF;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: linear-gradient(#FFFFFF, rgba(255,255,255,0));
+            z-index: 3;
+        }
+        .phone-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 90px;
+            background: linear-gradient(rgba(255,255,255,0), #FFFFFF);
+            z-index: 3;
+        }
+        .feed {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+            padding: 30px 24px;
+            animation: feedScroll 4s linear infinite;
+            will-change: transform;
+        }
+        @keyframes feedScroll {
+            from { transform: translateY(0) translateZ(0); }
+            to   { transform: translateY(-368px) translateZ(0); }
+        }
+        .card {
+            height: 160px;
+            border-radius: 20px;
+            background: #FDFBF7;
+            border: 3px solid #1A1D21;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            position: relative;
+        }
+        .card::before {
+            content: '';
+            width: 60%;
+            height: 14px;
+            border-radius: 7px;
+            background: #E5E1D8;
+        }
+        .card.accent { border-color: #14B8A6; background: #F0FBF9; }
+        .card.accent2 { border-color: #E24B4A; background: #FDF0EF; }
+
+        /* Icône "infini" pulsante au centre, signal qu'il n'y a jamais de fin */
+        .infinity-badge {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1A1D21;
+            border-radius: 30px;
+            z-index: 4;
+            animation: pulseBadge 1.6s ease-in-out infinite;
+        }
+        @keyframes pulseBadge {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.12); }
+        }
+        .infinity-badge svg {
+            width: 54px;
+            height: 28px;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="replay" onclick="startVideo()">🔄 Relancer</button>
+
+    <div class="stage">
+
+        <div class="safe-zone">
+            <div class="txt subtitle heavy" id="phase1" style="top: 28%; font-size: 66px; line-height: 1.2;">POV : tu voulais juste checker un truc en scrollant, et d'un coup il est deux heures plus tard.</div>
+            <div class="txt subtitle bold" id="phase2" style="top: 35%; font-size: 54px; line-height: 1.3;">Ton appli n'a pas de fin, volontairement. Pas de bas de page, pas de signal d'arrêt : ton cerveau ne sait jamais quand s'arrêter.</div>
+            <div class="txt subtitle bold teal" id="phase3" style="top: 40%; font-size: 50px; line-height: 1.3;">Toi aussi t'as déjà voulu fermer l'appli et scrollé vingt minutes de plus ? Dis-moi combien de temps t'as tenu 👇</div>
+            <div class="txt subtitle red bold" id="phase4" style="top: 34%; font-size: 54px; line-height: 1.3;">Ce n'est pas un manque de volonté, c'est un flux sans fin conçu pour ça. Un minuteur de sortie force enfin le stop que l'appli refuse de te donner.</div>
+            <div class="txt heavy teal" id="phase5" style="top: 35%; font-size: 64px; line-height: 1.3;">
+                Guide gratuit en bio <span style="font-family: initial;">📲</span>
+                <div style="font-size: 32px; color: #1A1D21; margin-top: 40px; font-weight:700;">Envoie ça à quelqu'un qui en a besoin</div>
+            </div>
+        </div>
+
+        <div class="visual-center">
+            <div class="phone-frame">
+                <div class="feed">
+                    <div class="card"></div>
+                    <div class="card accent"></div>
+                    <div class="card accent2"></div>
+                    <div class="card"></div>
+                    <div class="card accent"></div>
+                    <div class="card accent2"></div>
+                    <div class="card"></div>
+                    <div class="card accent"></div>
+                    <div class="card accent2"></div>
+                    <div class="card"></div>
+                </div>
+                <div class="infinity-badge">
+                    <svg viewBox="0 0 54 28" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.5 4C7.148 4 2 9.148 2 15.5S7.148 27 13.5 27c4.2 0 7.87-2.24 9.9-5.6.02-.03 3.68-6.02 3.68-6.02s3.66 5.99 3.68 6.02c2.03 3.36 5.7 5.6 9.9 5.6C47.052 27 52.2 21.852 52.2 15.5S47.052 4 40.68 4c-4.2 0-7.87 2.24-9.9 5.6-.02.03-3.68 6.02-3.68 6.02s-3.66-5.99-3.68-6.02C21.37 6.24 17.7 4 13.5 4z" fill="none" stroke="#FDFBF7" stroke-width="4"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const PHASES = [
+            { id: 'phase1', duration: 3000 },
+            { id: 'phase2', duration: 4000 },
+            { id: 'phase3', duration: 3000 },
+            { id: 'phase4', duration: 4000 },
+            { id: 'phase5', duration: 4000 }
+        ];
+
+        let timers = [];
+
+        function wrapWords() {
+            document.querySelectorAll('.txt.subtitle').forEach((el) => {
+                const words = el.textContent.trim().split(/\s+/);
+                el.innerHTML = words.map(w => '<span class="word">' + w + '</span>').join(' ');
+            });
+        }
+        wrapWords();
+
+        function revealWords(phaseEl, duration) {
+            const words = phaseEl.querySelectorAll('.word');
+            if (!words.length) return [];
+            const revealWindow = duration * 0.75;
+            const step = revealWindow / words.length;
+            const localTimers = [];
+            words.forEach((w, i) => {
+                localTimers.push(setTimeout(() => w.classList.add('show'), i * step));
+            });
+            return localTimers;
+        }
+
+        function startVideo() {
+            timers.forEach(clearTimeout);
+            timers = [];
+            document.querySelectorAll('.txt').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+
+            let currentDelay = 0;
+            PHASES.forEach((phase) => {
+                const phaseEl = document.getElementById(phase.id);
+
+                let tActive = setTimeout(() => {
+                    phaseEl.classList.add('active');
+                    const wordTimers = revealWords(phaseEl, phase.duration);
+                    timers.push(...wordTimers);
+                }, currentDelay);
+
+                let tRemove = setTimeout(() => {
+                    phaseEl.classList.remove('active');
+                    phaseEl.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+                }, currentDelay + phase.duration - 200);
+
+                timers.push(tActive, tRemove);
+                currentDelay += phase.duration;
+            });
+        }
+
+        function fitPreview() {
+            const mobile = window.innerWidth <= 768;
+            const scale = mobile
+                ? window.innerWidth / 1080
+                : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+            document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+            document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+        }
+
+        window.addEventListener('resize', fitPreview);
+        fitPreview();
+
+        window.addEventListener('load', startVideo);
+    </script>
+</body>
+</html>
