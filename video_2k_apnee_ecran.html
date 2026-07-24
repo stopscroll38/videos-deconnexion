@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>StopScroll - Vidéo Apnée d'écran</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #000; width: 100%; height: 100%; overflow: hidden; }
+
+        body {
+            width: 1080px;
+            height: 1920px;
+            background: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+            color: #1A1D21;
+            -webkit-font-smoothing: antialiased;
+            position: absolute;
+        }
+
+        .stage {
+            width: 1080px;
+            height: 1920px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            animation: slowZoom 18s ease-in-out forwards;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1) translateZ(0); }
+            to   { transform: scale(1.07) translateZ(0); }
+        }
+
+        .safe-zone {
+            position: absolute;
+            top: 150px;
+            bottom: 400px;
+            left: 80px;
+            right: 150px;
+            display: block;
+            z-index: 5;
+        }
+
+        .txt {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            opacity: 0;
+            transform: translateY(30px) translateZ(0);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            will-change: opacity, transform;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .txt.active {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+
+        .txt.subtitle .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(18px) scale(0.85) translateZ(0);
+            transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+            will-change: opacity, transform;
+            margin: 0 6px;
+        }
+        .txt.subtitle .word.show {
+            opacity: 1;
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        .teal { color: #14B8A6; }
+        .red { color: #E24B4A; }
+        .bold { font-weight: 700; }
+        .heavy { font-weight: 900; }
+
+        .replay {
+            position: fixed;
+            top: -100px; left: 10px;
+            z-index: 100;
+            padding: 12px 24px;
+            font-size: 20px;
+            background: #14B8A6;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        .visual-center {
+            position: absolute;
+            top: 70%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        /* Moniteur de respiration : une trace type EKG défile en continu,
+           amplitude normale puis quasi plate au centre ("apnée"), en boucle. */
+        .glow {
+            animation: glowPulse 2.2s ease-in-out infinite;
+            transform-origin: 220px 190px;
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.12; transform: scale(1); }
+            50%      { opacity: 0.28; transform: scale(1.15); }
+        }
+
+        .wave-track {
+            animation: waveScroll 3.2s linear infinite;
+            will-change: transform;
+        }
+        @keyframes waveScroll {
+            from { transform: translateX(0) translateZ(0); }
+            to   { transform: translateX(-400px) translateZ(0); }
+        }
+
+        .rec-dot {
+            animation: recBlink 1.1s ease-in-out infinite;
+            transform-origin: 388px 108px;
+        }
+        @keyframes recBlink {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0.25; }
+        }
+
+        .alert-ring {
+            animation: ringPulse 1.8s ease-in-out infinite;
+            transform-origin: 220px 400px;
+        }
+        @keyframes ringPulse {
+            0%   { opacity: 0.55; transform: scale(0.85); }
+            70%  { opacity: 0;    transform: scale(1.5); }
+            100% { opacity: 0;    transform: scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="replay" onclick="startVideo()">🔄 Relancer</button>
+
+    <div class="stage">
+
+        <div class="safe-zone">
+            <div class="txt subtitle heavy" id="phase1" style="top: 28%; font-size: 62px; line-height: 1.2;">Ce moment où tu reposes ton téléphone et tu sens que tu retenais ta respiration.</div>
+            <div class="txt subtitle bold" id="phase2" style="top: 35%; font-size: 52px; line-height: 1.3;">Ça s'appelle l'apnée d'écran. Ton cerveau traite chaque notification comme un danger, alors il coupe ta respiration et contracte tes épaules sans que tu le remarques.</div>
+            <div class="txt subtitle bold teal" id="phase3" style="top: 40%; font-size: 50px; line-height: 1.3;">Toi aussi tu sens tes épaules remonter après une session de scroll ? Dis-moi où se loge ta tension 👇</div>
+            <div class="txt subtitle red bold" id="phase4" style="top: 35%; font-size: 54px; line-height: 1.3;">Ton corps confond scroll et danger, il bloque ton souffle pour rester en alerte. Trois respirations profondes avant d'ouvrir l'appli cassent le réflexe.</div>
+            <div class="txt heavy teal" id="phase5" style="top: 35%; font-size: 64px; line-height: 1.3;">
+                Guide gratuit en bio <span style="font-family: initial;">📲</span>
+                <div style="font-size: 32px; color: #1A1D21; margin-top: 40px; font-weight:700;">Sauvegarde ce protocole pour plus tard 💾</div>
+            </div>
+        </div>
+
+        <div class="visual-center">
+            <svg viewBox="0 0 440 460" width="440" height="460" xmlns="http://www.w3.org/2000/svg" style="overflow: visible;">
+                <!-- glow derrière le moniteur -->
+                <circle class="glow" cx="220" cy="190" r="185" fill="#14B8A6"/>
+
+                <!-- boîtier du moniteur -->
+                <rect x="20" y="90" width="400" height="200" rx="24" fill="#1A1D21"/>
+                <rect x="20" y="90" width="400" height="200" rx="24" fill="none" stroke="#1A1D21" stroke-width="8"/>
+
+                <!-- trace de respiration, défile en continu -->
+                <clipPath id="screenClip">
+                    <rect x="20" y="90" width="400" height="200" rx="24"/>
+                </clipPath>
+                <g clip-path="url(#screenClip)">
+                    <g class="wave-track">
+                        <path d="M20,190 L40,140 L60,190 L80,235 L100,190 L120,150 L140,190 L160,180 L180,198 L200,182 L220,198 L240,180 L260,198 L280,182 L300,190 L320,230 L340,190 L360,145 L380,190 L400,225 L420,190 L440,140 L460,190 L480,235 L500,190 L520,150 L540,190 L560,180 L580,198 L600,182 L620,198 L640,180 L660,198 L680,182 L700,190 L720,230 L740,190 L760,145 L780,190 L800,225 L820,190"
+                              fill="none" stroke="#14B8A6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </g>
+                </g>
+
+                <!-- indicateur "REC" clignotant -->
+                <circle class="rec-dot" cx="388" cy="108" r="9" fill="#E24B4A"/>
+
+                <!-- libellé au-dessus du moniteur -->
+                <text x="220" y="60" font-family="Inter, sans-serif" font-weight="900" font-size="30" fill="#1A1D21" text-anchor="middle">TON SOUFFLE</text>
+
+                <!-- silhouette téléphone + onde d'alerte en dessous -->
+                <circle class="alert-ring" cx="220" cy="400" r="46" fill="none" stroke="#E24B4A" stroke-width="6"/>
+                <rect x="192" y="358" width="56" height="90" rx="12" fill="#FDFBF7" stroke="#1A1D21" stroke-width="6"/>
+                <circle cx="220" cy="432" r="4" fill="#1A1D21"/>
+                <text x="220" y="340" font-family="Inter, sans-serif" font-weight="900" font-size="26" fill="#E24B4A" text-anchor="middle">APNÉE</text>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const PHASES = [
+            { id: 'phase1', duration: 3000 },  // 0-3s (Hook)
+            { id: 'phase2', duration: 4000 },  // 3-7s (Problème)
+            { id: 'phase3', duration: 3000 },  // 7-10s (CTA Commentaire)
+            { id: 'phase4', duration: 4000 },  // 10-14s (Cause + solution punchy)
+            { id: 'phase5', duration: 4000 }   // 14-18s (CTA Produit)
+        ];
+
+        let timers = [];
+
+        function wrapWords() {
+            document.querySelectorAll('.txt.subtitle').forEach((el) => {
+                const words = el.textContent.trim().split(/\s+/);
+                el.innerHTML = words.map(w => '<span class="word">' + w + '</span>').join(' ');
+            });
+        }
+        wrapWords();
+
+        function revealWords(phaseEl, duration) {
+            const words = phaseEl.querySelectorAll('.word');
+            if (!words.length) return [];
+            const revealWindow = duration * 0.75;
+            const step = revealWindow / words.length;
+            const localTimers = [];
+            words.forEach((w, i) => {
+                localTimers.push(setTimeout(() => w.classList.add('show'), i * step));
+            });
+            return localTimers;
+        }
+
+        function startVideo() {
+            timers.forEach(clearTimeout);
+            timers = [];
+            document.querySelectorAll('.txt').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+
+            let currentDelay = 0;
+            PHASES.forEach((phase) => {
+                const phaseEl = document.getElementById(phase.id);
+
+                let tActive = setTimeout(() => {
+                    phaseEl.classList.add('active');
+                    const wordTimers = revealWords(phaseEl, phase.duration);
+                    timers.push(...wordTimers);
+                }, currentDelay);
+
+                let tRemove = setTimeout(() => {
+                    phaseEl.classList.remove('active');
+                    phaseEl.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+                }, currentDelay + phase.duration - 200);
+
+                timers.push(tActive, tRemove);
+                currentDelay += phase.duration;
+            });
+        }
+
+        function fitPreview() {
+            const mobile = window.innerWidth <= 768;
+            const scale = mobile
+                ? window.innerWidth / 1080
+                : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+            document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+            document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+        }
+
+        window.addEventListener('resize', fitPreview);
+        fitPreview();
+
+        window.addEventListener('load', startVideo);
+    </script>
+</body>
+</html>
