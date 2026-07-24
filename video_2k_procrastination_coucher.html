@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>StopScroll - Vidéo Procrastination du Coucher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #000; width: 100%; height: 100%; overflow: hidden; }
+
+        body {
+            width: 1080px;
+            height: 1920px;
+            background: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+            color: #1A1D21;
+            -webkit-font-smoothing: antialiased;
+            position: absolute;
+        }
+
+        .stage {
+            width: 1080px;
+            height: 1920px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            animation: slowZoom 18s ease-in-out forwards;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1) translateZ(0); }
+            to   { transform: scale(1.07) translateZ(0); }
+        }
+
+        .safe-zone {
+            position: absolute;
+            top: 150px;
+            bottom: 400px;
+            left: 80px;
+            right: 150px;
+            display: block;
+            z-index: 5;
+        }
+
+        .txt {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            opacity: 0;
+            transform: translateY(30px) translateZ(0);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            will-change: opacity, transform;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .txt.active {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+
+        .txt.subtitle .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(18px) scale(0.85) translateZ(0);
+            transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+            will-change: opacity, transform;
+            margin: 0 6px;
+        }
+        .txt.subtitle .word.show {
+            opacity: 1;
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        .teal { color: #14B8A6; }
+        .red { color: #E24B4A; }
+        .bold { font-weight: 700; }
+        .heavy { font-weight: 900; }
+
+        .replay {
+            position: fixed;
+            top: -100px; left: 10px;
+            z-index: 100;
+            padding: 12px 24px;
+            font-size: 20px;
+            background: #14B8A6;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        .visual-center {
+            position: absolute;
+            top: 70%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        /* Sablier : le sommeil (haut) s'échappe en "Zzz" et se déverse en
+           grains rouges dans le scroll (bas), en boucle continue — métaphore
+           du temps de sommeil volé pour "se venger" de sa journée. */
+        .grain {
+            animation: fall 1.4s linear infinite;
+        }
+        .grain.g2 { animation-delay: 0.47s; }
+        .grain.g3 { animation-delay: 0.94s; }
+        @keyframes fall {
+            0%   { opacity: 0; transform: translateY(0) translateZ(0) scale(0.6); }
+            10%  { opacity: 1; }
+            85%  { opacity: 1; transform: translateY(178px) translateZ(0) scale(1); }
+            100% { opacity: 0; transform: translateY(188px) translateZ(0) scale(1); }
+        }
+
+        .zzz {
+            opacity: 0;
+            animation: floatAway 2.2s ease-in infinite;
+        }
+        .zzz.z2 { animation-delay: 0.65s; }
+        .zzz.z3 { animation-delay: 1.3s; }
+        @keyframes floatAway {
+            0%   { opacity: 0; transform: translateY(0) translateZ(0); }
+            20%  { opacity: 0.9; }
+            100% { opacity: 0; transform: translateY(-55px) translateZ(0); }
+        }
+
+        .glow {
+            animation: glowPulse 1.8s ease-in-out infinite;
+            transform-origin: 160px 360px;
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.14; transform: scale(1); }
+            50%      { opacity: 0.32; transform: scale(1.18); }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="replay" onclick="startVideo()">🔄 Relancer</button>
+
+    <div class="stage">
+
+        <div class="safe-zone">
+            <div class="txt subtitle heavy" id="phase1" style="top: 29%; font-size: 66px; line-height: 1.2;">Aujourd'hui j'ai appris que scroller au lit a un vrai nom scientifique.</div>
+            <div class="txt subtitle bold" id="phase2" style="top: 35%; font-size: 52px; line-height: 1.3;">Ça s'appelle la procrastination du coucher par vengeance. Ta journée ne t'appartenait pas, alors ton cerveau vole ces heures de sommeil pour se sentir enfin libre.</div>
+            <div class="txt subtitle bold teal" id="phase3" style="top: 40%; font-size: 50px; line-height: 1.3;">Toi aussi tu scrolles la nuit pour te venger de ta journée ? Dis-moi l'heure à laquelle tu culpabilises 👇</div>
+            <div class="txt subtitle red bold" id="phase4" style="top: 34%; font-size: 54px; line-height: 1.3;">Ton cerveau confond temps libre et temps d'écran. Un vrai couvre-feu numérique te rend ces heures sans te voler ton sommeil.</div>
+            <div class="txt heavy teal" id="phase5" style="top: 35%; font-size: 64px; line-height: 1.3;">
+                Guide gratuit en bio <span style="font-family: initial;">📲</span>
+                <div style="font-size: 32px; color: #1A1D21; margin-top: 40px; font-weight:700;">Abonne-toi pour suivre le protocole jour par jour</div>
+            </div>
+        </div>
+
+        <div class="visual-center">
+            <svg viewBox="0 0 320 460" width="420" height="460" xmlns="http://www.w3.org/2000/svg" style="overflow: visible;">
+                <!-- glow derrière le bulbe scroll -->
+                <circle class="glow" cx="160" cy="360" r="75" fill="#E24B4A"/>
+
+                <!-- bulbe haut : SOMMEIL -->
+                <path d="M 40 20 L 280 20 L 178 222 L 142 222 Z" fill="#F0FBF9" stroke="#1A1D21" stroke-width="8" stroke-linejoin="round"/>
+                <!-- bulbe bas : SCROLL -->
+                <path d="M 142 238 L 178 238 L 280 440 L 40 440 Z" fill="#FDF0EF" stroke="#1A1D21" stroke-width="8" stroke-linejoin="round"/>
+                <!-- col du sablier -->
+                <rect x="142" y="222" width="36" height="16" fill="#1A1D21"/>
+
+                <text x="160" y="95" font-family="Inter, sans-serif" font-weight="900" font-size="28" fill="#14B8A6" text-anchor="middle">SOMMEIL</text>
+                <text x="160" y="375" font-family="Inter, sans-serif" font-weight="900" font-size="28" fill="#E24B4A" text-anchor="middle">SCROLL</text>
+
+                <!-- Zzz qui s'échappent du sommeil -->
+                <text class="zzz z1" x="158" y="60" font-family="Inter, sans-serif" font-weight="900" font-size="34" fill="#14B8A6">Z</text>
+                <text class="zzz z2" x="188" y="50" font-family="Inter, sans-serif" font-weight="900" font-size="26" fill="#14B8A6">z</text>
+                <text class="zzz z3" x="130" y="45" font-family="Inter, sans-serif" font-weight="900" font-size="20" fill="#14B8A6">z</text>
+
+                <!-- grains qui tombent dans le scroll -->
+                <circle class="grain g1" cx="160" cy="232" r="8" fill="#E24B4A"/>
+                <circle class="grain g2" cx="160" cy="232" r="8" fill="#E24B4A"/>
+                <circle class="grain g3" cx="160" cy="232" r="8" fill="#E24B4A"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const PHASES = [
+            { id: 'phase1', duration: 3000 },  // 0-3s (Hook)
+            { id: 'phase2', duration: 4000 },  // 3-7s (Problème)
+            { id: 'phase3', duration: 3000 },  // 7-10s (CTA Commentaire)
+            { id: 'phase4', duration: 4000 },  // 10-14s (Cause + solution punchy)
+            { id: 'phase5', duration: 4000 }   // 14-18s (CTA Produit)
+        ];
+
+        let timers = [];
+
+        function wrapWords() {
+            document.querySelectorAll('.txt.subtitle').forEach((el) => {
+                const words = el.textContent.trim().split(/\s+/);
+                el.innerHTML = words.map(w => '<span class="word">' + w + '</span>').join(' ');
+            });
+        }
+        wrapWords();
+
+        function revealWords(phaseEl, duration) {
+            const words = phaseEl.querySelectorAll('.word');
+            if (!words.length) return [];
+            const revealWindow = duration * 0.75;
+            const step = revealWindow / words.length;
+            const localTimers = [];
+            words.forEach((w, i) => {
+                localTimers.push(setTimeout(() => w.classList.add('show'), i * step));
+            });
+            return localTimers;
+        }
+
+        function startVideo() {
+            timers.forEach(clearTimeout);
+            timers = [];
+            document.querySelectorAll('.txt').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+
+            let currentDelay = 0;
+            PHASES.forEach((phase) => {
+                const phaseEl = document.getElementById(phase.id);
+
+                let tActive = setTimeout(() => {
+                    phaseEl.classList.add('active');
+                    const wordTimers = revealWords(phaseEl, phase.duration);
+                    timers.push(...wordTimers);
+                }, currentDelay);
+
+                let tRemove = setTimeout(() => {
+                    phaseEl.classList.remove('active');
+                    phaseEl.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+                }, currentDelay + phase.duration - 200);
+
+                timers.push(tActive, tRemove);
+                currentDelay += phase.duration;
+            });
+        }
+
+        function fitPreview() {
+            const mobile = window.innerWidth <= 768;
+            const scale = mobile
+                ? window.innerWidth / 1080
+                : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+            document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+            document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+        }
+
+        window.addEventListener('resize', fitPreview);
+        fitPreview();
+
+        window.addEventListener('load', startVideo);
+    </script>
+</body>
+</html>
