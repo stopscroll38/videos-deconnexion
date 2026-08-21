@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>StopScroll - Vidéo Tech Neck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; background: #000; width: 100%; height: 100%; overflow: hidden; }
+
+        body {
+            width: 1080px;
+            height: 1920px;
+            background: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+            color: #1A1D21;
+            -webkit-font-smoothing: antialiased;
+            position: absolute;
+        }
+
+        .stage {
+            width: 1080px;
+            height: 1920px;
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+            animation: slowZoom 18s ease-in-out forwards;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1) translateZ(0); }
+            to   { transform: scale(1.07) translateZ(0); }
+        }
+
+        .safe-zone {
+            position: absolute;
+            top: 150px;
+            bottom: 400px;
+            left: 80px;
+            right: 150px;
+            display: block;
+            z-index: 5;
+        }
+
+        .txt {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            opacity: 0;
+            transform: translateY(30px) translateZ(0);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            will-change: opacity, transform;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .txt.active {
+            opacity: 1;
+            transform: translateY(0) translateZ(0);
+        }
+
+        .txt.subtitle .word {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(18px) scale(0.85) translateZ(0);
+            transition: opacity 0.22s ease-out, transform 0.22s ease-out;
+            will-change: opacity, transform;
+            margin: 0 6px;
+        }
+        .txt.subtitle .word.show {
+            opacity: 1;
+            transform: translateY(0) scale(1) translateZ(0);
+        }
+
+        .teal { color: #14B8A6; }
+        .red { color: #E24B4A; }
+        .bold { font-weight: 700; }
+        .heavy { font-weight: 900; }
+
+        .replay {
+            position: fixed;
+            top: -100px; left: 10px;
+            z-index: 100;
+            padding: 12px 24px;
+            font-size: 20px;
+            background: #14B8A6;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+
+        .visual-center {
+            position: absolute;
+            top: 70%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(0);
+            will-change: transform;
+            z-index: 1;
+        }
+
+        /* Jauge de pression cervicale : la tête penche en boucle, synchronisée
+           avec l'aiguille de la jauge qui monte de 5 kg vers 27 kg puis redescend. */
+        .glow {
+            animation: glowPulse 2.2s ease-in-out infinite;
+            transform-origin: 220px 320px;
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.12; transform: scale(1); }
+            50%      { opacity: 0.26; transform: scale(1.12); }
+        }
+
+        .head-tilt {
+            animation: headTilt 3.4s ease-in-out infinite;
+            transform-origin: 220px 175px;
+        }
+        @keyframes headTilt {
+            0%   { transform: rotate(0deg); }
+            50%  { transform: rotate(42deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .needle {
+            animation: needleSwing 3.4s ease-in-out infinite;
+            transform-origin: 220px 400px;
+        }
+        @keyframes needleSwing {
+            0%   { transform: rotate(-62deg); }
+            50%  { transform: rotate(62deg); }
+            100% { transform: rotate(-62deg); }
+        }
+
+        .danger-dot {
+            animation: dangerPulse 1.4s ease-in-out infinite;
+            transform-origin: 372px 438px;
+        }
+        @keyframes dangerPulse {
+            0%, 100% { opacity: 0.35; transform: scale(1); }
+            50%      { opacity: 1;    transform: scale(1.35); }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="replay" onclick="startVideo()">🔄 Relancer</button>
+
+    <div class="stage">
+
+        <div class="safe-zone">
+            <div class="txt subtitle heavy" id="phase1" style="top: 28%; font-size: 62px; line-height: 1.2;">Personne ne parle de ça : ton téléphone ajoute vingt-sept kilos de pression sur ta nuque.</div>
+            <div class="txt subtitle bold" id="phase2" style="top: 35%; font-size: 52px; line-height: 1.3;">Ta tête pèse cinq kilos, mais penchée à soixante degrés pour lire un écran, elle en pèse vingt-sept. Ton cou porte cette charge des heures par jour sans jamais s'arrêter.</div>
+            <div class="txt subtitle bold teal" id="phase3" style="top: 40%; font-size: 50px; line-height: 1.3;">Toi aussi ta nuque craque quand tu relèves la tête du téléphone ? Dis-moi depuis quand ça dure 👇</div>
+            <div class="txt subtitle red bold" id="phase4" style="top: 35%; font-size: 54px; line-height: 1.3;">Ce n'est pas l'âge qui use ta nuque, c'est l'angle de ton regard. Remonter l'écran à hauteur des yeux supprime cette pression instantanément.</div>
+            <div class="txt heavy teal" id="phase5" style="top: 35%; font-size: 64px; line-height: 1.3;">
+                Guide gratuit en bio <span style="font-family: initial;">📲</span>
+                <div style="font-size: 32px; color: #1A1D21; margin-top: 40px; font-weight:700;">Envoie ça à quelqu'un qui en a besoin</div>
+            </div>
+        </div>
+
+        <div class="visual-center">
+            <svg viewBox="0 0 440 480" width="420" height="458" xmlns="http://www.w3.org/2000/svg" style="overflow: visible;">
+                <!-- glow derrière la jauge -->
+                <circle class="glow" cx="220" cy="320" r="195" fill="#14B8A6"/>
+
+                <defs>
+                    <linearGradient id="gaugeGrad" x1="70" y1="0" x2="370" y2="0" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#14B8A6"/>
+                        <stop offset="100%" stop-color="#E24B4A"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- libellé au-dessus -->
+                <text x="220" y="30" font-family="Inter, sans-serif" font-weight="900" font-size="28" fill="#1A1D21" text-anchor="middle">TA NUQUE SOUS PRESSION</text>
+
+                <!-- silhouette tête + nuque qui penche en boucle -->
+                <g class="head-tilt">
+                    <rect x="200" y="150" width="40" height="55" rx="14" fill="#1A1D21"/>
+                    <circle cx="220" cy="108" r="48" fill="#1A1D21"/>
+                    <circle cx="240" cy="102" r="5" fill="#FDFBF7"/>
+                </g>
+
+                <!-- téléphone regardé -->
+                <rect x="196" y="215" width="48" height="80" rx="10" fill="#FDFBF7" stroke="#1A1D21" stroke-width="6"/>
+                <rect x="204" y="226" width="32" height="46" rx="3" fill="#14B8A6" opacity="0.35"/>
+
+                <!-- jauge de pression -->
+                <path d="M70,400 A150,150 0 0 1 370,400" fill="none" stroke="url(#gaugeGrad)" stroke-width="20" stroke-linecap="round"/>
+                <g class="needle">
+                    <line x1="220" y1="400" x2="220" y2="262" stroke="#1A1D21" stroke-width="10" stroke-linecap="round"/>
+                </g>
+                <circle cx="220" cy="400" r="16" fill="#1A1D21"/>
+
+                <!-- repères -->
+                <text x="72" y="440" font-family="Inter, sans-serif" font-weight="900" font-size="30" fill="#14B8A6" text-anchor="start">5 KG</text>
+                <text x="368" y="440" font-family="Inter, sans-serif" font-weight="900" font-size="30" fill="#E24B4A" text-anchor="end">27 KG</text>
+                <circle class="danger-dot" cx="372" cy="438" r="7" fill="#E24B4A"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const PHASES = [
+            { id: 'phase1', duration: 3000 },  // 0-3s (Hook)
+            { id: 'phase2', duration: 4000 },  // 3-7s (Problème)
+            { id: 'phase3', duration: 3000 },  // 7-10s (CTA Commentaire)
+            { id: 'phase4', duration: 4000 },  // 10-14s (Cause + solution punchy)
+            { id: 'phase5', duration: 4000 }   // 14-18s (CTA Produit)
+        ];
+
+        let timers = [];
+
+        function wrapWords() {
+            document.querySelectorAll('.txt.subtitle').forEach((el) => {
+                const words = el.textContent.trim().split(/\s+/);
+                el.innerHTML = words.map(w => '<span class="word">' + w + '</span>').join(' ');
+            });
+        }
+        wrapWords();
+
+        function revealWords(phaseEl, duration) {
+            const words = phaseEl.querySelectorAll('.word');
+            if (!words.length) return [];
+            const revealWindow = duration * 0.75;
+            const step = revealWindow / words.length;
+            const localTimers = [];
+            words.forEach((w, i) => {
+                localTimers.push(setTimeout(() => w.classList.add('show'), i * step));
+            });
+            return localTimers;
+        }
+
+        function startVideo() {
+            timers.forEach(clearTimeout);
+            timers = [];
+            document.querySelectorAll('.txt').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+
+            let currentDelay = 0;
+            PHASES.forEach((phase) => {
+                const phaseEl = document.getElementById(phase.id);
+
+                let tActive = setTimeout(() => {
+                    phaseEl.classList.add('active');
+                    const wordTimers = revealWords(phaseEl, phase.duration);
+                    timers.push(...wordTimers);
+                }, currentDelay);
+
+                let tRemove = setTimeout(() => {
+                    phaseEl.classList.remove('active');
+                    phaseEl.querySelectorAll('.word').forEach(el => el.classList.remove('show'));
+                }, currentDelay + phase.duration - 200);
+
+                timers.push(tActive, tRemove);
+                currentDelay += phase.duration;
+            });
+        }
+
+        function fitPreview() {
+            const mobile = window.innerWidth <= 768;
+            const scale = mobile
+                ? window.innerWidth / 1080
+                : Math.min(window.innerWidth / 1080, window.innerHeight / 1920);
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.transform = 'scale(' + scale + ') translateZ(0)';
+            document.body.style.left = ((window.innerWidth  - 1080 * scale) / 2) + 'px';
+            document.body.style.top  = ((window.innerHeight - 1920 * scale) / 2) + 'px';
+        }
+
+        window.addEventListener('resize', fitPreview);
+        fitPreview();
+
+        window.addEventListener('load', startVideo);
+    </script>
+</body>
+</html>
